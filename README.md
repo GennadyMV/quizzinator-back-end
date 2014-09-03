@@ -4,7 +4,7 @@
 
 * <a href="https://docs.google.com/spreadsheet/ccc?key=0AjyisrLSDJEqdHZzWnpfVHVWZGFKOW9veTgydU5aaUE&usp=sharing">Product backlog</a>
 
-* <strong>Sprint backlogs</strong>
+* <strong>Sprint backlogs:</strong>
   * <a href="https://docs.google.com/spreadsheet/ccc?key=0AjyisrLSDJEqdG5VelUtVTF2eFAyZjJsVkZaYzFiQ1E&usp=sharing">Sprint 1</a>
 
 ##Definition of Done
