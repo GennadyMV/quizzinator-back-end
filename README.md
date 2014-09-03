@@ -11,3 +11,7 @@ https://docs.google.com/spreadsheet/ccc?key=0AjyisrLSDJEqdHZzWnpfVHVWZGFKOW9veTg
 ##Definition of Done
 
 https://docs.google.com/document/d/1SwcFxa7qVOEfSLvijWc41dPDn3b5w8IVEJnMN5KYqR0/edit?usp=sharing
+
+##Jenkins
+
+http://ohtu.jamo.io/job/kaint-ohtu/
