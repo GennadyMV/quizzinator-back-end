@@ -1,4 +1,4 @@
-#KAINT
+#Kysely- ja vertaispalautesovellus
 
 ##Product backlog
 
