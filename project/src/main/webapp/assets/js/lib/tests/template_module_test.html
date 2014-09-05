@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="../../../css/qunit.css">
+
+		<script src="../../vendor/jquery.min.js"></script>
+		<script src="../../vendor/qunit.js"></script>
+		
+		<!-- Handlebars -->
+    	<script src="../../vendor/handlebars.js"></script>
+
+    	<!-- Module -->
+		<script src="../modules/template_module.js"></script>
+
+		<script>
+			QUnit.test('Quiz title is rendered correctly', function( assert ) {
+				var test_quiz = {
+					title: 'My awesome quiz',
+					items: []
+				}
+
+				assert.equal(TEMPLATE.render_quiz(test_quiz).contains('My awesome quiz'), true);
+			});
+
+			QUnit.test('Quiz item is rendered correctly when one item', function( assert ){
+				var test_quiz = {
+					title: 'My awesome quiz',
+					items: [
+						{
+							title: 'My awesome question',
+							type: 'open_question'
+						}
+					]
+				}
+
+				assert.equal(TEMPLATE.render_quiz(test_quiz).contains('My awesome question'), true);
+			});
+
+			QUnit.test('Quiz items are rended rendered correctly when multiple items', function( assert ){
+				var test_quiz = {
+					title: 'My awesome quiz',
+					items: [
+						{
+							title: 'First awesome question',
+							type: 'open_question'
+						},
+						{
+							title: 'Second awesome question',
+							type: 'open_question'
+						}
+					]
+				}
+
+				assert.equal(TEMPLATE.render_quiz(test_quiz).contains('First awesome question'), true);
+				assert.equal(TEMPLATE.render_quiz(test_quiz).contains('Second awesome question'), true);
+			});
+		</script>
+	</head>
+	<body>
+		<div id="qunit"></div>
+	</body>
+</html>

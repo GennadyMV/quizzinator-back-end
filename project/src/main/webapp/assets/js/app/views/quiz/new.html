@@ -1,0 +1,58 @@
+<div class="page-header page-header-button">
+	<h1>Create a quiz</h1>
+	<div class="btn-group pull-right btn-header">
+	  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+	    <i class="fa fa-plus"></i> Add an item
+	  </button>
+	  <ul class="dropdown-menu" role="menu">
+	    <li><a style="cursor: pointer" data-toggle="modal" data-target="#open-question-modal">Open question</a></li>
+	  </ul>
+	</div>
+</div>
+
+<div class="alert" ng-class="{'alert-success': message.type == 'success'}" ng-show="message">{{message.content}}</div>
+
+<!-- Form -->
+<form name="createQuiz">
+	<div class="form-group">
+		<label>Title</label>
+		<input type="text" name="title" class="form-control" ng-model="quiz.title" required>
+	</div>
+
+	<ul class="media-list" id="quiz-item-list">
+		<li ng-repeat="item in quiz.items" class="media quiz-item" handle="quiz-item-list" ng-model="item.order" sortable>
+			<div class="form-group">
+				<label>{{item.title}}</label>
+				<textarea class="form-control"></textarea>
+			</div>
+		</li>
+	</ul>
+
+	<button class="btn btn-primary" ng-click="save_quiz()" ng-disabled="createQuiz.$invalid"><i class="fa fa-check"></i> Save</button>
+</form>
+
+<!-- Open question modal -->
+<div class="modal fade" id="open-question-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Create an open question</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+        	<form name="createOpenQuestion">
+        		<label>Title</label>
+        		<input type="text" ng-model="new_item.open_question.title" class="form-control" required>
+        	</form>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+      	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+        <button type="button" class="btn btn-primary" ng-click="add_open_question()" ng-disabled="createOpenQuestion.$invalid"><i class="fa fa-check"></i> Save</button>
+      </div>
+    </div>
+  </div>
+</div>
