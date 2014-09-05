@@ -23,12 +23,11 @@ public class KyselyController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/kysely/{id}")
-    public String haeKysely(@PathVariable(value = "id") Long id) {
+    @RequestMapping(value = "/kysely/{id}", produces="application/json")
+    public Kysely haeKysely(@PathVariable(value = "id") Long id) {
         Kysely k = kyselyRepo.findOne(id);
-        if (k==null) return "not found";
         
-        return k.getKysymys();
+        return k;
     }
     
     @RequestMapping(value = "/kysely", method = RequestMethod.POST)
