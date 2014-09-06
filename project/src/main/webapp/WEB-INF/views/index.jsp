@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Quiznator</title>
         <link href="<c:url value="/assets/js/vendor/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet">
         <link href="<c:url value="/assets/css/site.css"/>" rel="stylesheet">
         <!-- jQuery -->
