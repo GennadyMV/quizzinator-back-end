@@ -14,12 +14,13 @@
     </head>
 
     <h1>Kyselyt</h1>
-    <c:if test="${not empty kyselyt}">
+    <c:if test="${not empty quizzes}">
     <table>
-        <c:forEach var="kysely" items="${kyselyt}">
+        <tr><th>id</th><th>kysymys</th></tr>
+        <c:forEach var="quiz" items="${quizzes}">
             <tr>
-                <td>${kysely.id}</td>
-                <td>${kysely.kysymys}</td>
+                <td>${quiz.id}</td>
+                <td>${quiz.question}</td>
             </tr>
         </c:forEach>
     </table>
@@ -27,8 +28,8 @@
     
 
     <h2>Lis‰‰ kysely</h2>
-    <form method="post" action="kysely">
-        <textarea name="kysymys"></textarea><br>
+    <form method="post" action="/quiz">
+        <textarea name="question"></textarea><br>
         <button type="submit">tallenna</button>
     </form>
 </html>

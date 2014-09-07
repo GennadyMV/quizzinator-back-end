@@ -1,3 +1,6 @@
 target/
 .swp.*
 *~
+/project/nbactions.xml
+/project/nb-configuration.xml
+**/glassfish-web.xml

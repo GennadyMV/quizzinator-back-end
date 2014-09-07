@@ -8,7 +8,7 @@ public class IndexController {
     
     @RequestMapping(value = "/")
     public String render_index() {
-            return "index";
+        return "index";
     }
     
 }
