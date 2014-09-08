@@ -6,33 +6,40 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 
 	$scope.new_item = {
 		open_question: {
-			title: ''
+			question: ''
 		}
 	}
 
 	$scope.add_open_question = function(){
 		$scope.quiz.items.push({
-			title: $scope.new_item.open_question.title,
-			order: 0
+			question: $scope.new_item.open_question.question,
+			itemOrder: 0,
+			itemType: 'open_question'
 		});
 
-		$scope.new_item.open_question.title = '';
+		$scope.new_item.open_question.question = '';
 	}
 
 	$scope.save_quiz = function(){
-		$scope.message = {
-			content: 'The quiz has been saved!',
-			type: 'success'
-		};
-		/*
-			QuizAPI.create_quiz({
-				done: function(){
-					$scope.message_success = 'The quiz has been saved!';
-				},
-				fail: function(){
-					$scope.message_danger = 'Error saving the quiz!';
-				}
-			});
-		*/
+		var quiz = {
+			title: $scope.quiz.title,
+			openQuestions: $.grep($scope.quiz.items, function(item){ return item.item_type == 'open_question' })
+		}
+
+		QuizAPI.create_quiz({
+			quiz: quiz,
+			done: function(){
+				$scope.message = {
+					content: 'The quiz has been saved!',
+					type: 'success'
+				};
+			},
+			fail: function(){
+				$scope.message = {
+					content: 'Error saving the quiz!',
+					type: 'danger'
+				};
+			}
+		});
 	}
 }]);

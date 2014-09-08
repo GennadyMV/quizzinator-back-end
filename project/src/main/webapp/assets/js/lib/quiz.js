@@ -5,19 +5,13 @@ $.fn.extend({
             var quiz_id = $(_this).attr('data-quizId');
 
             $(_this).addClass('panel panel-default');
-            $(_this).html(TEMPLATE.render_quiz({
-                title: 'My awesome quiz',
-                items: [
-                {
-                    type: 'open_question',
-                    title: 'Lorem ipsum?'
-                },
-                {
-                    type: 'open_question',
-                    title: 'Lorem ipsum?'
+            
+            API.get_quiz({
+                id: quiz_id,
+                done: function(quiz){
+                    $(_this).html(TEMPLATE.render_quiz(quiz));
                 }
-                ]
-            }));
+            })
         });
     }
 });
