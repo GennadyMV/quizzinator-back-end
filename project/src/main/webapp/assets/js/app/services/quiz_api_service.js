@@ -2,7 +2,7 @@ QuizApp.service('QuizAPI', function(){
 	var _public = {};
 	
 	_public.create_quiz = function(options){
-		$.post('/quiz', options.quiz)
+		$.post('/quiz', JSON.stringify(options.quiz))
 		.done(function(){
 			options.done();
 		})

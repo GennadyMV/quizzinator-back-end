@@ -33,12 +33,16 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 					content: 'The quiz has been saved!',
 					type: 'success'
 				};
+
+				$scope.$apply();
 			},
 			fail: function(){
 				$scope.message = {
 					content: 'Error saving the quiz!',
 					type: 'danger'
 				};
+
+				$scope.$apply();
 			}
 		});
 	}

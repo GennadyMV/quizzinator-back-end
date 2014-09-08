@@ -10,7 +10,7 @@
 	</div>
 </div>
 
-<div class="alert" ng-class="{'alert-success': message.type == 'success'}" ng-show="message">{{message.content}}</div>
+<div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
 
 <!-- Form -->
 <form name="createQuiz">
