@@ -1,5 +1,6 @@
 target/
 .swp.*
+**/*.swp
 *~
 /project/nbactions.xml
 /project/nb-configuration.xml
