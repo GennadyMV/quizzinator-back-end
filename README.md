@@ -2,6 +2,7 @@
 
 ##CI-palvelin ja sovelluksen tuotantoversio
 
+* Tuotantoversio: <a href="http://t-aale.users.cs.helsinki.fi/">Quiznator</a>
 * CI-pavelin: <a href="http://ohtu.jamo.io/job/kaint-ohtu/">Jenkins</a>
 
 ##Backlogs
