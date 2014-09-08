@@ -25,7 +25,7 @@ public class SeleniumTest {
     @Before
     public void setUp() {
         this.driver = new HtmlUnitDriver();
-        this.baseAddress = "...";
+        this.baseAddress = "http://localhost:8080/";
     }
 
     @Test
@@ -34,4 +34,12 @@ public class SeleniumTest {
         driver.get("http://www.google.com");
         System.out.println("Page title is: " + driver.getTitle());
     }
+    
+    @Test
+    public void koeTesti() {
+        driver.get(baseAddress);
+        
+        Assert.assertTrue(driver.getPageSource().contains("Create a quiz"));
+    }
+    
 }
