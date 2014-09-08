@@ -72,12 +72,11 @@
             
             <!-- testing related -->
             <dependency>
-                    <groupId>org.seleniumhq.selenium</groupId>
-                    <artifactId>selenium-java</artifactId>
-                    <version>2.35.0</version>
-                    <scope>test</scope>
+                <groupId>org.seleniumhq.selenium</groupId>
+                <artifactId>selenium-java</artifactId>
+                <version>2.42.2</version>
+                <scope>test</scope>
             </dependency>
-
 
             <dependency>
                 <groupId>xml-apis</groupId>
@@ -110,6 +109,7 @@
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                 </plugin>
+                
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -132,7 +132,7 @@
                         <storyReport>${basedir}/target/easyb/easyb-report.html
                         </storyReport>
                     </configuration>
-            </plugin>
+                </plugin>
             </plugins>
     </build>
 
