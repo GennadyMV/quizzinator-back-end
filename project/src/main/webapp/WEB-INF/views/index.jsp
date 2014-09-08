@@ -3,6 +3,17 @@
 <!DOCTYPE html>
 <html>
     <head>
+        
+    <script>
+        window.onload = function() {
+            console.log("sdasdasdasd");
+            var newElem = document.createElement("div");
+            newElem.setAttribute("id", "testtest");
+            newElem.innerHTML="aaaaaaaaaa";
+            document.body.appendChild(newElem);
+        };
+    </script>
+        
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Quiznator</title>
         <link href="<c:url value="/assets/js/vendor/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet">
