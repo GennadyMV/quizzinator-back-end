@@ -4,10 +4,10 @@ QuizApp.service('QuizAPI', function(){
 	_public.create_quiz = function(options){
 		$.post('/quiz', options.quiz)
 		.done(function(){
-			options.done(data);
+			options.done();
 		})
 		.fail(function(){
-			options.fail(data);
+			options.fail();
 		});
 	}
 
