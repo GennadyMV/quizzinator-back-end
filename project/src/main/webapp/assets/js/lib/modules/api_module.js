@@ -5,13 +5,15 @@ var API = (function(){
 			$.get('/quiz/' + options.id)
 			.done(function(data){
 				var items = [];
+
 				data.openQuestions.forEach(function(q){
-					q.itemType = 'open_question'
+					q.item_type = 'open_question'
+					items.push(q);
 				});
 
 				var quiz = {
-					data.title,
-					items: items
+					title: data.title,
+					items: items.sort(function(a, b){ return a.itemOrder - b.itemOrder; })
 				}
 
 				options.done(quiz);

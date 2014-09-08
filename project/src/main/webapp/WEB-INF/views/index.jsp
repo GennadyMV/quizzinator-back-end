@@ -18,6 +18,7 @@
         <!-- Application files -->
         <script src="<c:url value="/assets/js/app/app.js"/>"></script>
         <script src="<c:url value="/assets/js/app/services/quiz_api_service.js"/>"></script>
+        <script src="<c:url value="/assets/js/app/controllers/quiz_list_controller.js"/>"></script>
         <script src="<c:url value="/assets/js/app/controllers/create_quiz_controller.js"/>"></script>
         <script src="<c:url value="/assets/js/app/directives/sortable.js"/>"></script>
 
@@ -45,9 +46,9 @@
                 </div>
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <!--<ul class="nav navbar-nav">
-                      
-                    </ul>-->
+                    <ul class="nav navbar-nav">
+                        <li><a href="#/quiz/all">Quizes</a></li>
+                    </ul>
                     <a href="#/quiz/new" class="btn btn-success navbar-btn navbar-right"><i class="fa fa-plus"></i> Create a quiz</a>
                 </div>
             </div>

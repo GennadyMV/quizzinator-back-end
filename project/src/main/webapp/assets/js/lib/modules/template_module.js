@@ -3,7 +3,7 @@ var TEMPLATE = (function(){
 
 	var templates = {
 		quiz_body: '<div class="panel-heading"><h3 class="panel-title">{{title}}</h3></div><div class="panel-body">{{{body}}}<div class="form-group"><button class="btn btn-primary submit-quiz">Send</button></div></div>',
-		open_question: '<div class="form-group quiz-item" data-type="open_question" data-itemId="1"><label>{{title}}</label><textarea class="form-control"></textarea></div>'
+		open_question: '<div class="form-group quiz-item" data-type="open_question" data-itemId="{{id}}"><label>{{question}}</label><textarea class="form-control"></textarea></div>'
 	}
 
 	_public.render_quiz = function(data){
@@ -11,7 +11,7 @@ var TEMPLATE = (function(){
 		var quiz_body = "";
 
 		data.items.forEach(function(item){
-			var item_template = Handlebars.compile(templates[item.type]);
+			var item_template = Handlebars.compile(templates[item.item_type]);
 			quiz_body += item_template(item);
 		});
 

@@ -20,10 +20,10 @@
 	</div>
 
 	<ul class="media-list" id="quiz-item-list">
-		<li ng-repeat="item in quiz.items" class="media quiz-item" handle="quiz-item-list" ng-model="item.itemOrder" sortable>
+		<li ng-repeat="item in quiz.items" class="media quiz-item" handle="quiz-item-list" ng-model="item.item_order" sortable>
 			<div class="form-group">
 				<label>{{item.question}}</label>
-				<textarea class="form-control"></textarea>
+				<textarea class="form-control" disabled></textarea>
 			</div>
 		</li>
 	</ul>

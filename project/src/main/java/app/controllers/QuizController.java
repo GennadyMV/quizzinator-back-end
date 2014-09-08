@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class QuizController {
@@ -22,10 +23,10 @@ public class QuizController {
     @Autowired
     private OpenQuestionRepository openQuestionRepo;
     
-    @RequestMapping(value = "/quiz")
-    public String getQuizzes(Model model) {
-        model.addAttribute("quizzes", quizRepo.findAll());
-        return "quiz";
+    @ResponseBody
+    @RequestMapping(value = "/quiz", produces="application/json")
+    public List<Quiz> getQuizzes() {
+        return quizRepo.findAll();
     }
     
     @ResponseBody
@@ -37,7 +38,7 @@ public class QuizController {
     }
     
     @RequestMapping(value = "/quiz", method = RequestMethod.POST, consumes = "application/json")
-    public String newQuiz(@RequestParam Quiz quiz) {
+    public String newQuiz(@RequestBody Quiz quiz) {
         openQuestionRepo.save(quiz.getOpenQuestions());
         Long id = quizRepo.save(quiz).getId();
         

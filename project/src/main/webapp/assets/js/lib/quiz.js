@@ -1,3 +1,4 @@
+
 $.fn.extend({
     quiz: function(options){
         return this.each(function(){
@@ -11,7 +12,7 @@ $.fn.extend({
                 done: function(quiz){
                     $(_this).html(TEMPLATE.render_quiz(quiz));
                 }
-            })
+            });
         });
     }
 });

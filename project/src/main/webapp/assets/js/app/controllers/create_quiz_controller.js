@@ -13,21 +13,18 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 	$scope.add_open_question = function(){
 		$scope.quiz.items.push({
 			question: $scope.new_item.open_question.question,
-			itemOrder: 0,
-			itemType: 'open_question'
+			item_order: 0,
+			item_type: 'open_question'
 		});
 
 		$scope.new_item.open_question.question = '';
 	}
 
 	$scope.save_quiz = function(){
-		var quiz = {
-			title: $scope.quiz.title,
-			openQuestions: $.grep($scope.quiz.items, function(item){ return item.item_type == 'open_question' })
-		}
-
+		console.log($scope.quiz);
+		
 		QuizAPI.create_quiz({
-			quiz: quiz,
+			quiz: $scope.quiz,
 			done: function(){
 				$scope.message = {
 					content: 'The quiz has been saved!',
