@@ -36,22 +36,10 @@ public class QuizController {
         return k;
     }
     
-    @RequestMapping(value = "/quiz", method = RequestMethod.POST)
-    public String newQuiz(@RequestParam(required = true) String title) {
-        Quiz k = new Quiz();
-        k.setTitle(title);
-        
-        OpenQuestion oq = new OpenQuestion();
-        oq.setQuestion("asd");
-        oq.setItemOrder(0);
-        
-        openQuestionRepo.save(oq);
-        
-        List<OpenQuestion> oqlist = new ArrayList<OpenQuestion>();
-        oqlist.add(oq);
-        k.setOpenQuestions(oqlist);
-        
-        Long id = quizRepo.save(k).getId();
+    @RequestMapping(value = "/quiz", method = RequestMethod.POST, consumes = "application/json")
+    public String newQuiz(@RequestParam Quiz quiz) {
+        openQuestionRepo.save(quiz.getOpenQuestions());
+        Long id = quizRepo.save(quiz).getId();
         
         return "redirect:/quiz/" + id;
     }
