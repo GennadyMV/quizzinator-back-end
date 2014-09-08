@@ -1,7 +1,11 @@
 package app.controllers;
 
+import app.domain.OpenQuestion;
 import app.domain.Quiz;
+import app.repositories.OpenQuestionRepository;
 import app.repositories.QuizRepository;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class QuizController {
     @Autowired
     private QuizRepository quizRepo;
+    @Autowired
+    private OpenQuestionRepository openQuestionRepo;
     
     @RequestMapping(value = "/quiz")
     public String getQuizzes(Model model) {
@@ -31,9 +37,20 @@ public class QuizController {
     }
     
     @RequestMapping(value = "/quiz", method = RequestMethod.POST)
-    public String newQuiz(@RequestParam(required = true) String question) {
+    public String newQuiz(@RequestParam(required = true) String title) {
         Quiz k = new Quiz();
-        k.setQuestion(question);
+        k.setTitle(title);
+        
+        OpenQuestion oq = new OpenQuestion();
+        oq.setQuestion("asd");
+        oq.setItemOrder(0);
+        
+        openQuestionRepo.save(oq);
+        
+        List<OpenQuestion> oqlist = new ArrayList<OpenQuestion>();
+        oqlist.add(oq);
+        k.setOpenQuestions(oqlist);
+        
         Long id = quizRepo.save(k).getId();
         
         return "redirect:/quiz/" + id;

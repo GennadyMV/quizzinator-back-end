@@ -20,7 +20,7 @@
         <c:forEach var="quiz" items="${quizzes}">
             <tr>
                 <td>${quiz.id}</td>
-                <td>${quiz.question}</td>
+                <td>${quiz.title}</td>
             </tr>
         </c:forEach>
     </table>
@@ -29,7 +29,7 @@
 
     <h2>Lis‰‰ kysely</h2>
     <form method="post" action="/quiz">
-        <textarea name="question"></textarea><br>
+        <textarea name="title"></textarea><br>
         <button type="submit">tallenna</button>
     </form>
 </html>
