@@ -1,13 +1,14 @@
 package app.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 public class Quiz extends AbstractPersistable<Long> {
+    @NotNull
     private String title;
     
     @OneToMany
