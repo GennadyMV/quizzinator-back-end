@@ -1,0 +1,1 @@
+eval java -jar project/src/main/webapp/assets/tests/nightwatch/selenium-server-standalone-2.39.0.jar

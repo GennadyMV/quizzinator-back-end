@@ -21,11 +21,14 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 	}
 
 	$scope.save_quiz = function(){
-		console.log($scope.quiz);
-		
 		QuizAPI.create_quiz({
 			quiz: $scope.quiz,
 			done: function(){
+				$scope.quiz = {
+					title: '',
+					items: []
+				}
+				
 				$scope.message = {
 					content: 'The quiz has been saved!',
 					type: 'success'

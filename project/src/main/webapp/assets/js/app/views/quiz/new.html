@@ -1,11 +1,11 @@
 <div class="page-header page-header-button">
 	<h1>Create a quiz</h1>
 	<div class="btn-group pull-right btn-header">
-	  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+	  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="add-item">
 	    <i class="fa fa-plus"></i> Add an item
 	  </button>
 	  <ul class="dropdown-menu" role="menu">
-	    <li><a style="cursor: pointer" data-toggle="modal" data-target="#open-question-modal">Open question</a></li>
+	    <li><a style="cursor: pointer" data-toggle="modal" data-target="#open-question-modal" id="add-open-question">Open question</a></li>
 	  </ul>
 	</div>
 </div>
@@ -28,7 +28,7 @@
 		</li>
 	</ul>
 
-	<button class="btn btn-primary" ng-click="save_quiz()" ng-disabled="createQuiz.$invalid"><i class="fa fa-check"></i> Save</button>
+	<button class="btn btn-primary" ng-click="save_quiz()" ng-disabled="createQuiz.$invalid" id="save-quiz"><i class="fa fa-check"></i> Save</button>
 </form>
 
 <!-- Open question modal -->
@@ -43,13 +43,13 @@
 	      <div class="modal-body">
 	        <div class="form-group">
 	        	<label>Title</label>
-	        	<input type="text" ng-model="new_item.open_question.question" class="form-control" required>
+	        	<input type="text" id="new-open-question-question" ng-model="new_item.open_question.question" class="form-control" required>
 	        </div>
 	      </div>
 	      
 	      <div class="modal-footer">
 	      	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-	        <button type="submit" class="btn btn-primary" ng-click="add_open_question()" ng-disabled="createOpenQuestion.$invalid"><i class="fa fa-check"></i> Save</button>
+	        <button type="submit" class="btn btn-primary" id="create-open-question" ng-click="add_open_question()" ng-disabled="createOpenQuestion.$invalid"><i class="fa fa-check"></i> Save</button>
 	      </div>
   	</form>
     </div>

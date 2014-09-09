@@ -1,0 +1,1 @@
+eval ./nightwatch/bin/nightwatch -t project/src/main/webapp/assets/tests/nightwatch/tests/*
