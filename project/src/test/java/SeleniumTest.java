@@ -14,7 +14,7 @@ public class SeleniumTest {
     private String baseAddress;
     private String port;
 
-    @Before
+    /*@Before
     public void setUp() {
         HtmlUnitDriver hud = new HtmlUnitDriver(BrowserVersion.FIREFOX_24);
         hud.setJavascriptEnabled(true);
@@ -57,5 +57,5 @@ public class SeleniumTest {
         
         //Assert.assertTrue(driver.getPageSource().contains("The quiz has been saved!"));
 
-    }
+    }*/
 }
