@@ -1,0 +1,1 @@
+eval ./nightwatch -c ./settings.json -e local -g tests/
