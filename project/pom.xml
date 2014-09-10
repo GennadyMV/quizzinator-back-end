@@ -155,6 +155,7 @@
                   <configuration>
                     <jsSrcDir>src/main/webapp/assets/js/</jsSrcDir>
                     <jsTestSrcDir>src/main/webapp/assets/js/tests</jsTestSrcDir>
+                    <jasmineTargetDir>src/main/webapp/assets/js/tests</jasmineTargetDir>
                     <sourceIncludes>
                       <include>vendor/jquery.min.js</include>
                       <include>vendor/jquery-ui.min.js</include>
