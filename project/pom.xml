@@ -162,7 +162,10 @@
                       <include>vendor/handlebars.js</include>
                       <include>vendor/angular.min.js</include>
                       <include>vendor/angular-route.js</include>
+                      <include>vendor/angular-mock.js</include>
                       <include>lib/modules/template_module.js</include>
+                      <include>app/app.js</include>
+                      <include>app/controllers/*.js</include>
                     </sourceIncludes>
                   </configuration>
                 </plugin>
