@@ -1,5 +1,5 @@
 language: java
 
-before_script: cd project
+before_install: cd project
 
 install: mvn clean test
