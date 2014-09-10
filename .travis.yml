@@ -1,5 +1,7 @@
 language: java
 
-before_script: cd/project
+env:
+  global:
+    - REPO="ohtu/project"
 
 install: mvn clean test
