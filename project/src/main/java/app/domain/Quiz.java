@@ -2,6 +2,7 @@ package app.domain;
 
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -11,7 +12,7 @@ public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private String title;
     
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<OpenQuestion> openQuestions;
 
     public String getTitle() {
