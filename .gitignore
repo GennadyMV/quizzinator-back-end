@@ -5,3 +5,4 @@ target/
 /project/nbactions.xml
 /project/nb-configuration.xml
 **/glassfish-web.xml
+project/src/main/webapp/assets/js/tests/TEST-jasmine.xml

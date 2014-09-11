@@ -39,11 +39,11 @@ public class QuizControllerTest {
     public void testEmptyQuizList() throws Exception {
         this.mockMvc.perform(get("/quiz"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("[]")));
+                .andExpect(content().string("[]"));
     }
 
     @Test
-    public void testAddingRedirects() throws Exception {
+    public void testPostingJsonQuiz() throws Exception {
         String jsonQuiz = "{\"title\": \"kysymys 1\", \"openQuestions\": []}";
         
         this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON))
