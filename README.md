@@ -4,6 +4,8 @@
 
 * Tuotantoversio: <a href="http://t-aale.users.cs.helsinki.fi/">Quiznator</a>
 * CI-pavelin: <a href="http://ohtu.jamo.io/job/kaint-ohtu/">Jenkins</a>
+* Pluginin repo: <a href="https://github.com/kaint-ohtu/quiz-lib">quiz-lib</a>
+* Pluginin tuotantoversio: 
 
 ##Backlogs
 
