@@ -58,6 +58,7 @@ public class QuizControllerTest {
                 .andExpect(redirectedUrlPattern("/quiz/*"));
     }
     
+    /**
     @Test
     public void addingToDatabase() throws Exception {
         String jsonQuiz = "{\"title\": \"testquiz 1\", \"openQuestions\": []}";
@@ -74,7 +75,7 @@ public class QuizControllerTest {
         throw new AssertionError();
     }
     
-    /**
+    
     @Test
     public void correctOpenQuestionsAdded() throws Exception {
         String jsonQuiz = "{\"title\": \"testquiz 2\","
