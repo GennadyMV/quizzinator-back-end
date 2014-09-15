@@ -4,13 +4,14 @@ import app.domain.Quiz;
 import app.repositories.OpenQuestionRepository;
 import app.repositories.QuizRepository;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 public class QuizController {
@@ -27,14 +28,16 @@ public class QuizController {
     
     @ResponseBody
     @RequestMapping(value = "/quiz/{id}", produces="application/json")
-    public Quiz getQuiz(@PathVariable(value = "id") Long id) {
+    public Quiz getQuiz(@PathVariable(value = "id") Long id, HttpServletResponse response) {
         Quiz quiz = quizRepo.findOne(id);
+        
+        response.setHeader("Access-Control-Allow-Origin", "*");
         return quiz;
     }
     
     @RequestMapping(value = "/quiz", method = RequestMethod.POST, consumes = "application/json")
     public String newQuiz(@RequestBody Quiz quiz) {
-        openQuestionRepo.save(quiz.getOpenQuestions());
+        //openQuestionRepo.save(quiz.getOpenQuestions());
         Long id = quizRepo.save(quiz).getId();
         
         return "redirect:/quiz/" + id;

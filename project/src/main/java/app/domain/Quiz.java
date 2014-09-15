@@ -12,9 +12,16 @@ public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private String title;
     
+    @NotNull
+    private String items;
+    
+    /**
     @OneToMany(fetch = FetchType.EAGER)
     private List<OpenQuestion> openQuestions;
-
+    * **/
+    
+    
+    
     public String getTitle() {
         return title;
     }
@@ -22,7 +29,16 @@ public class Quiz extends AbstractPersistable<Long> {
     public void setTitle(String title) {
         this.title = title;
     }
+    
+    public String getItems() {
+        return items;
+    }
+    
+    public void setItems(String items) {
+        this.items = items;
+    }
 
+    /**
     public List<OpenQuestion> getOpenQuestions() {
         return openQuestions;
     }
@@ -30,4 +46,5 @@ public class Quiz extends AbstractPersistable<Long> {
     public void setOpenQuestions(List<OpenQuestion> openQuestions) {
         this.openQuestions = openQuestions;
     }
+    * */
 }
