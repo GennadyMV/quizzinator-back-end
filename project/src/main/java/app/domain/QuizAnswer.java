@@ -8,9 +8,6 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 public class QuizAnswer extends AbstractPersistable<Long> {
-    @ManyToOne
-    private Quiz quiz;
-    
     @NotBlank
     private String ip;
     
@@ -19,14 +16,6 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     
     @NotBlank
     private String answer;
-    
-    public Quiz getQuiz() {
-        return quiz;
-    }
-    
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
-    }
     
     public String getIp() {
         return ip;
