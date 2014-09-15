@@ -52,13 +52,15 @@ public class QuizControllerTest {
     /**
     @Test
     public void testPostingJsonQuiz() throws Exception {
-        String jsonQuiz = "{\"title\": \"kysymys 1\", \"openQuestions\": []}";
+        String jsonQuiz = "{\"title\": \"kysymys 1\", \"items\": [{" + 
+            "\"question\": \"wazzup?\","+
+            "\"item_type\": \"open_question\","+
+        "]}";
         
         this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/quiz/*"));
     }
-    **/
     
     /**
     @Test

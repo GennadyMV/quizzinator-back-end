@@ -8,6 +8,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Entity
 public class QuizAnswer extends AbstractPersistable<Long> {
     @NotBlank
+    private String user;
+    
+    @NotBlank
     private String ip;
     
     @URL
@@ -15,6 +18,14 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     
     @NotBlank
     private String answer;
+    
+    public String getUser() {
+        return user;
+    }
+    
+    public void setUser(String user) {
+        this.user = user;
+    }
     
     public String getIp() {
         return ip;
