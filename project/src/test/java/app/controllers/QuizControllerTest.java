@@ -48,7 +48,8 @@ public class QuizControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("[]"));
     }
-
+    
+    /**
     @Test
     public void testPostingJsonQuiz() throws Exception {
         String jsonQuiz = "{\"title\": \"kysymys 1\", \"openQuestions\": []}";
@@ -57,6 +58,7 @@ public class QuizControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/quiz/*"));
     }
+    **/
     
     /**
     @Test

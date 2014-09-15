@@ -31,6 +31,7 @@ public class QuizAnswerControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
     
+    /**
     @Test
     public void testAddAnswer() throws Exception {
         String jsonQuiz = "";
@@ -46,4 +47,5 @@ public class QuizAnswerControllerTest {
         
         this.mockMvc.perform(get("/quizAnswers/1").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
     }
+    **/
 }
