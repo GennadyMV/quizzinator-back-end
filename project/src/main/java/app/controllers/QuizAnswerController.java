@@ -28,6 +28,11 @@ public class QuizAnswerController {
         Long answerId = quizAnswerRepository.save(quizAnswer).getId();
         quizRepository.findOne(quizId).getQuizAnswers().add(quizAnswer);
         
-        return "redirect:/quizAnswers/" + quizId + "/" + answerId;
+        return "redirect:/quizAnswers/" + answerId;
+    }
+    
+    @RequestMapping(value = "/{answerId}", method = RequestMethod.GET, produces = "application/json")
+    public QuizAnswer getAnswer(@PathVariable Long answerId) {
+        return quizAnswerRepository.findOne(answerId);
     }
 }

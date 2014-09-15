@@ -1,7 +1,6 @@
 package app.domain;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.jpa.domain.AbstractPersistable;
