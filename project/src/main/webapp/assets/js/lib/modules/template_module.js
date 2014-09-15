@@ -2,8 +2,13 @@ var TEMPLATE = (function(){
 	var _public = {};
 
 	var templates = {
-		quiz_body: '<div class="panel-heading"><h3 class="panel-title">{{title}}</h3></div><div class="panel-body">{{{body}}}<div class="form-group"><button class="btn btn-primary submit-quiz">Send</button></div></div>',
-		open_question: '<div class="form-group quiz-item" data-type="open_question" data-itemId="{{id}}"><label>{{question}}</label><textarea class="form-control"></textarea></div>'
+		loading: 'Loading the quiz...',
+		quiz_body: '<div class="panel-heading"><h3 class="panel-title">{{title}}</h3></div><div class="panel-body"><form>{{{body}}}<div class="form-group"><button class="btn btn-primary submit-quiz" data-targetQuiz="{{id}}"><span class="glyphicon glyphicon-ok"></span> Send</button></form></div></div>',
+		open_question: '<div class="form-group quiz-item" data-type="open_question" data-itemId="{{id}}"><label>{{question}}</label><textarea class="form-control open-question-value" required></textarea></div>'
+	}
+
+	_public.render_loading = function(){
+		return templates.loading;
 	}
 
 	_public.render_quiz = function(data){
@@ -15,7 +20,7 @@ var TEMPLATE = (function(){
 			quiz_body += item_template(item);
 		});
 
-		return quiz_template({ title: data.title, body: quiz_body });
+		return quiz_template({ id: data.id, title: data.title, body: quiz_body });
 	}
 
 	return _public;

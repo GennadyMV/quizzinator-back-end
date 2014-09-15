@@ -12,6 +12,7 @@ var API = (function(){
 				});
 
 				var quiz = {
+					id: data.id,
 					title: data.title,
 					items: items.sort(function(a, b){ return a.itemOrder - b.itemOrder; })
 				}

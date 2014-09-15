@@ -1,57 +1,31 @@
 <div class="page-header page-header-button">
 	<h1>Create a quiz</h1>
-	<div class="btn-group pull-right btn-header">
-	  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="add-item">
-	    <i class="fa fa-plus"></i> Add an item
-	  </button>
-	  <ul class="dropdown-menu" role="menu">
-	    <li><a style="cursor: pointer" data-toggle="modal" data-target="#open-question-modal" id="add-open-question">Open question</a></li>
-	  </ul>
-	</div>
+	<button class="btn btn-primary pull-right btn-header" ng-click="save_quiz()" id="save-quiz"><i class="fa fa-check"></i> Save</button>
 </div>
 
 <div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
 
-<!-- Form -->
-<form name="createQuiz">
-	<div class="form-group">
-		<label>Title</label>
-		<input type="text" id="new-quiz-title" name="title" class="form-control" ng-model="quiz.title" required>
+<div class="row">
+	<div class="col-md-8">
+		<!-- Form -->
+		<div class="form-group">
+			<label>Title</label>
+			<input type="text" placeholder="Title" id="new-quiz-title" name="title" class="form-control" ng-model="quiz.title">
+		</div>
+
+		<ul class="media-list" ui-sortable="{'handle': '.quiz-item-title', 'opacity': '0.5', 'cursor': 'move'}" ng-model="quiz.items" id="quiz-item-list">
+			<li ng-repeat="item in quiz.items" class="media quiz-item" ng-include="get_item_template(item)"></li>
+		</ul>
 	</div>
 
-	<ul class="media-list" id="quiz-item-list">
-		<li ng-repeat="item in quiz.items" class="media quiz-item" handle="quiz-item-list" ng-model="item.item_order" sortable>
-			<div class="form-group">
-				<label>{{item.question}}</label>
-				<textarea class="form-control" disabled></textarea>
+	<div class="col-md-4">
+		<div class="form-group">
+			<label>Quiz items</label>
+			<div class="btn-group-vertical" style="display: block">
+				<button class="btn btn-default" ng-click="add_open_question()">Open question</button>
+				<button class="btn btn-default" ng-click="add_text_container()">Text container</button>
+				<button class="btn btn-default" ng-click="add_multiple_choice_question()">Multiple choice question</button>
 			</div>
-		</li>
-	</ul>
-
-	<button class="btn btn-primary" ng-click="save_quiz()" ng-disabled="createQuiz.$invalid" id="save-quiz"><i class="fa fa-check"></i> Save</button>
-</form>
-
-<!-- Open question modal -->
-<div class="modal fade" id="open-question-modal" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title">Create an open question</h4>
-      </div>
-      <form name="createOpenQuestion">
-	      <div class="modal-body">
-	        <div class="form-group">
-	        	<label>Title</label>
-	        	<input type="text" id="new-open-question-question" ng-model="new_item.open_question.question" class="form-control" required>
-	        </div>
-	      </div>
-	      
-	      <div class="modal-footer">
-	      	<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-	        <button type="submit" class="btn btn-primary" id="create-open-question" ng-click="add_open_question()" ng-disabled="createOpenQuestion.$invalid"><i class="fa fa-check"></i> Save</button>
-	      </div>
-  	</form>
-    </div>
-  </div>
+		</div>
+	</div>
 </div>

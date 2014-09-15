@@ -1,5 +1,0 @@
-language: java
-
-before_install: cd project
-
-install: mvn clean test
