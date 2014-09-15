@@ -37,7 +37,7 @@ public class QuizController {
     
     @RequestMapping(value = "/quiz", method = RequestMethod.POST, consumes = "application/json")
     public String newQuiz(@RequestBody Quiz quiz) {
-        openQuestionRepo.save(quiz.getOpenQuestions());
+        //openQuestionRepo.save(quiz.getOpenQuestions());
         Long id = quizRepo.save(quiz).getId();
         
         return "redirect:/quiz/" + id;
