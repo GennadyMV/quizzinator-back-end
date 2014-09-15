@@ -3,6 +3,8 @@ package app.controllers;
 import app.domain.QuizAnswer;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
+import java.util.ArrayList;
+import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +26,21 @@ public class QuizAnswerController {
     
     @Transactional
     @RequestMapping(value = "/{quizId}", method = RequestMethod.POST, consumes = "application/json")
-    public String newAnswer(@PathVariable Long quizId, @Valid @RequestBody QuizAnswer quizAnswer) {
+    public List<QuizAnswer> newAnswer(@PathVariable Long quizId, @Valid @RequestBody QuizAnswer quizAnswer) {
+        
         Long answerId = quizAnswerRepository.save(quizAnswer).getId();
         quizRepository.findOne(quizId).getQuizAnswers().add(quizAnswer);
         
-        return "redirect:/quizAnswers/" + answerId;
+        List<QuizAnswer> quizAnswers = new ArrayList<QuizAnswer>();
+        quizAnswers.add(quizRepository.findOne(quizId).getQuizAnswers().get(0));
+        quizAnswers.add(quizRepository.findOne(quizId).getQuizAnswers().get(1));
+        
+        return quizAnswers;
     }
     
     @RequestMapping(value = "/{answerId}", method = RequestMethod.GET, produces = "application/json")
     public QuizAnswer getAnswer(@PathVariable Long answerId) {
+        
         return quizAnswerRepository.findOne(answerId);
     }
 }
