@@ -54,8 +54,11 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 	}
 
 	$scope.save_quiz = function(){
+		var quiz = $scope.quiz;
+		quiz.items = JSON.stringify(quiz.items);
+
 		QuizAPI.create_quiz({
-			quiz: $scope.quiz,
+			quiz: quiz,
 			done: function(){
 				$scope.quiz = {
 					title: '',
