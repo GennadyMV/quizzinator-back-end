@@ -2,7 +2,6 @@ package app.controllers;
 
 
 import app.Application;
-import app.domain.OpenQuestion;
 import app.domain.Quiz;
 import app.repositories.QuizRepository;
 import java.util.ArrayList;
