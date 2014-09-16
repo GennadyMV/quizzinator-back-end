@@ -6,6 +6,8 @@ import app.domain.Quiz;
 import app.repositories.QuizRepository;
 import java.util.List;
 import org.hibernate.Hibernate;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,29 +51,16 @@ public class QuizControllerTest {
                 .andExpect(content().string("[]"));
     }
     
-    /**
     @Test
-    public void testPostingJsonQuiz() throws Exception {
-        String jsonQuiz = "{\"title\": \"kysymys 1\", \"items\": [{" + 
-            "\"question\": \"wazzup?\","+
-            "\"item_type\": \"open_question\","+
-        "]}";
-        
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrlPattern("/quiz/*"));
-    }
-    
-    /**
-    @Test
-    public void addingToDatabase() throws Exception {
-        String jsonQuiz = "{\"title\": \"testquiz 1\", \"openQuestions\": []}";
+    public void testAddingQuiz() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
+                + "{}]\"}";
         
         this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
         List<Quiz> quizes = quizRepository.findAll();
         for (int i = 0; i < quizes.size(); i++) {
-            if (quizes.get(i).getTitle().equals("testquiz 1")) {
+            if (quizes.get(i).getTitle().equals("testquiz1")) {
                 return;
             }
         }
@@ -79,39 +68,37 @@ public class QuizControllerTest {
         throw new AssertionError();
     }
     
-    
     @Test
-    public void correctOpenQuestionsAdded() throws Exception {
-        String jsonQuiz = "{\"title\": \"testquiz 2\","
-                    + "\"openQuestions\": ["
-                        + "{\"question\": \"testquestion 1\", \"itemOrder\": 0},"
-                        + "{\"question\": \"testquestion 2\", \"itemOrder\": 1}"
-                    + "]}";
+    public void testCorrectOpenQuestionsAdded() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
+                + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
+                + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"006\\\"}"
+            + "]\"}";
         
         this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
         List<Quiz> quizes = quizRepository.findAll();
-        List<OpenQuestion> openQuestions = quizes.get(quizes.size()-1).getOpenQuestions();
+        JSONArray items = new JSONArray(quizes.get(quizes.size()-1).getItems());
         
-        Assert.assertEquals("testquestion 1", openQuestions.get(0).getQuestion());
-        Assert.assertEquals("testquestion 2", openQuestions.get(1).getQuestion());
+        Assert.assertEquals("testquestion1", items.getJSONObject(0).getString("question"));
+        Assert.assertEquals("open_question", items.getJSONObject(0).getString("item_type"));
+        Assert.assertEquals("testquestion2", items.getJSONObject(1).getString("question"));
+        Assert.assertEquals("open_question", items.getJSONObject(1).getString("item_type"));
     }
     
     @Test
-    public void correctNumberOfOpenQuestionsAdded() throws Exception {
-        String jsonQuiz = "{\"title\": \"testquiz 3\","
-                    + "\"openQuestions\": ["
-                        + "{\"question\": \"testquestion 3\", \"itemOrder\": 0},"
-                        + "{\"question\": \"testquestion 4\", \"itemOrder\": 1},"
-                        + "{\"question\": \"testquestion 5\", \"itemOrder\": 2}"
-                    + "]}";
+    public void testCorrectNumberOfOpenQuestionsAdded() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz3\",\"items\":\"["
+                + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\"},"
+                + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\"},"
+                + "{\\\"question\\\":\\\"testquestion3\\\",\\\"item_type\\\":\\\"open_question\\\"}"
+                + "]\"}";
         
         this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
         List<Quiz> quizes = quizRepository.findAll();
-        List<OpenQuestion> openQuestions = quizes.get(quizes.size()-1).getOpenQuestions();
+        JSONArray items = new JSONArray(quizes.get(quizes.size()-1).getItems());
         
-        Assert.assertEquals(3, openQuestions.size());
+        Assert.assertEquals(3, items.length());
     }
-    * */
 }

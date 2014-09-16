@@ -18,7 +18,7 @@ public class Quiz extends AbstractPersistable<Long> {
     private String items;
     
     @OneToMany
-    private List<QuizAnswer> answers;
+    private List<QuizAnswer> quizAnswers;
     
     public String getTitle() {
         return title;
@@ -37,10 +37,10 @@ public class Quiz extends AbstractPersistable<Long> {
     }
     
     public List<QuizAnswer> getQuizAnswers() {
-        return answers;
+        return quizAnswers;
     }
     
-    public void setQuizAnswers(List<QuizAnswer> answers) {
-        this.answers = answers;
+    public void setQuizAnswers(List<QuizAnswer> quizAnswers) {
+        this.quizAnswers = quizAnswers;
     }
 }
