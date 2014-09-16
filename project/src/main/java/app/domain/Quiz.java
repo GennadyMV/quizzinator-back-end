@@ -10,6 +10,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 public class Quiz extends AbstractPersistable<Long> {
+    @OneToMany(mappedBy = "quiz")
+    private List<PeerReview> peerReviews;
+    
     @NotNull
     private String title;
     
@@ -17,8 +20,8 @@ public class Quiz extends AbstractPersistable<Long> {
     @Column(columnDefinition = "CLOB") @Lob
     private String items;
     
-    @OneToMany
-    private List<QuizAnswer> quizAnswers;
+    @OneToMany(mappedBy = "quiz")
+    private List<QuizAnswer> answers;
     
     public String getTitle() {
         return title;
@@ -37,10 +40,10 @@ public class Quiz extends AbstractPersistable<Long> {
     }
     
     public List<QuizAnswer> getQuizAnswers() {
-        return quizAnswers;
+        return answers;
     }
     
     public void setQuizAnswers(List<QuizAnswer> quizAnswers) {
-        this.quizAnswers = quizAnswers;
+        this.answers = quizAnswers;
     }
 }
