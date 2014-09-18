@@ -1,11 +1,8 @@
 package app.controllers;
 
 import app.domain.PeerReview;
-import app.domain.Quiz;
-import app.domain.QuizAnswer;
 import app.repositories.PeerReviewRepository;
-import app.repositories.QuizAnswerRepository;
-import app.repositories.QuizRepository;
+import app.services.QuizService;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +19,7 @@ public class PeerReviewController {
     private PeerReviewRepository reviewRepo;
     
     @Autowired
-    private QuizRepository quizRepo;
-    
-    @Autowired
-    private QuizAnswerRepository answerRepo;
+    private QuizService quizService;
     
     @ResponseBody
     @RequestMapping(value = "/review", method = RequestMethod.GET, produces="application/json")
@@ -33,19 +27,18 @@ public class PeerReviewController {
         return reviewRepo.findAll();
     }
     
+    @ResponseBody
+    @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.GET, produces="application/json")
+    public List<PeerReview> getAnswerReviews(@PathVariable("quizId") Long quizId, @PathVariable("answerId") Long answerId) {
+        return quizService.getReviewsForAnAnswer(answerId, quizId);
+    }
+    
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.POST, consumes = "application/json")
     public String newReview(
             @Valid @RequestBody PeerReview review,
             @PathVariable("quizId") Long quizId,
             @PathVariable("answerId") Long answerId) {
-        
-        QuizAnswer qa = answerRepo.findOne(answerId);
-        Quiz q = quizRepo.findOne(quizId);
-        if (qa == null || q == null || qa.getQuiz() == null || qa.getQuiz().getId().equals(quizId)) {
-            throw new IllegalArgumentException();
-        }
-        
-        PeerReview r = reviewRepo.save(review);
+        PeerReview r = quizService.saveNewReview(review, answerId, quizId);
         
         return "redirect:/quiz/" + r.getId();
     }

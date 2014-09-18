@@ -1,5 +1,6 @@
 package app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Entity
 public class PeerReview  extends AbstractPersistable<Long> {
     @ManyToOne
+    @JsonIgnore
     private QuizAnswer quizAnswer;
     private String reviewer;
     private String review;

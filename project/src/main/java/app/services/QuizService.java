@@ -1,7 +1,9 @@
 package app.services;
 
+import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
+import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import java.util.List;
@@ -17,15 +19,16 @@ public class QuizService {
     
     @Autowired
     private QuizRepository quizRepo;
-//    @Autowired
-//    private PeerReviewRepository reviewRepo;
+    
+    @Autowired
+    private PeerReviewRepository reviewRepo;
     
     public List<QuizAnswer> sumbitAnswer(QuizAnswer answer, Long quizId) {
         Quiz q = quizRepo.findOne(quizId);
         answer.setQuiz(q);
         answer = answerRepo.save(answer);
         
-        if (true || q.isReviewable()) {
+        if (q.isReviewable()) {
             return getAnswersForReview(q, answer.getUser());
         } else {
             return null;
@@ -39,5 +42,35 @@ public class QuizService {
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, String user, int answerCount) {
         Pageable pageable = new PageRequest(0, answerCount);
         return answerRepo.findByQuizAndUserNot(quiz, user, pageable);
+    }
+    
+    public List<PeerReview> getReviewsForAnAnswer(Long answerId, Long quizId) {
+        if (!isValidAnswerQuizCombination(answerId, quizId)) 
+            throw new IllegalArgumentException("bad answerId, quizId combination!");
+        
+        QuizAnswer qa = answerRepo.findOne(answerId);
+        return reviewRepo.findByQuizAnswer(qa);
+    }
+    
+    public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
+        if (!isValidAnswerQuizCombination(answerId, quizId)) 
+            throw new IllegalArgumentException("bad answerId, quizId combination!");
+        
+        QuizAnswer qa = answerRepo.findOne(answerId);
+        review.setQuizAnswer(qa);
+        PeerReview newReview = reviewRepo.save(review);
+        
+        return newReview;
+    }
+    
+    private boolean isValidAnswerQuizCombination(Long answerId, Long quizId) {
+        QuizAnswer qa = answerRepo.findOne(answerId);
+        Quiz q = quizRepo.findOne(quizId);
+        
+        if (qa == null || q == null || qa.getQuiz() == null || !qa.getQuiz().getId().equals(quizId)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

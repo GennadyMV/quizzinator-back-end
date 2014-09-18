@@ -21,7 +21,7 @@ public class Quiz extends AbstractPersistable<Long> {
     private List<QuizAnswer> quizAnswers;
     
     @NotNull
-    private boolean reviewable;
+    private boolean reviewable = true;
     
     public String getTitle() {
         return title;
