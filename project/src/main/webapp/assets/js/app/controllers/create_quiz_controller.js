@@ -8,10 +8,28 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 		templates = {
 			'open_question': '/assets/js/app/views/widgets/open_question.html',
 			'text_container': '/assets/js/app/views/widgets/text_container.html',
-			'multiple_choice_question': '/assets/js/app/views/widgets/multiple_choice_question.html'
+			'multiple_choice_question': '/assets/js/app/views/widgets/multiple_choice_question.html',
+			'checkbox_question': '/assets/js/app/views/widgets/checkbox_question.html'
 		}
 
 		return templates[item.item_type];
+	}
+
+	$scope.add_checkbox_question = function(){
+		$scope.quiz.items.push({
+			question: '',
+			item_type: 'checkbox_question',
+			checkboxes: [],
+			new_checkbox: {}
+		});
+	}
+
+	$scope.add_checkbox = function(item){
+		item.checkboxes.push({
+			title: item.new_checkbox.title
+		});
+
+		item.new_checkbox = {};
 	}
 
 	$scope.add_open_question = function(){
@@ -51,6 +69,10 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 
 	$scope.remove_option = function(item, index){
 		item.options.splice(index, 1);
+	}
+
+	$scope.remove_checkbox = function(item, index){
+		item.checkboxes.splice(index, 1);
 	}
 
 	$scope.save_quiz = function(){

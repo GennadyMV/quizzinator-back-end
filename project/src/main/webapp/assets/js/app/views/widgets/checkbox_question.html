@@ -1,0 +1,31 @@
+<h4 class="quiz-item-title">
+	<i class="fa fa-arrows"></i> Checkbox question
+	<button class="btn btn-sm btn-danger pull-right" ng-click="remove_item($index)"><i class="fa fa-times"></i></button>
+</h4>
+
+<div class="form-group">
+	<label>Question</label>
+	<input type="text" class="form-control" placeholder="Question" ng-model="item.question">
+</div>
+
+<div class="form-group">
+	<label>Checkboxes</label>
+	<ul class="media-list" ui-sortable="{'opacity': '0.5', 'cursor': 'move'}" ng-model="item.checkboxes">
+		<li class="media checkbox" ng-repeat="checkbox in item.checkboxes">
+			<button class="btn btn-xs btn-danger pull-left" ng-click="remove_checkbox(item, $index)"><i class="fa fa-times"></i></button>
+			<label style="cursor: move">
+				<input type="checkbox" disabled>
+				{{checkbox.title}}
+			</label>
+		</li>
+	</ul>
+</div>
+
+<form class="form-inline" style="margin-bottom: 15px">
+	<div class="form-group">
+		<input type="text" style="width: 400px" class="form-control" placeholder="Title" ng-model="item.new_checkbox.title"></input>
+	</div>
+	<div class="form-group">
+		<button class="btn btn-success" ng-click="add_checkbox(item)"><i class="fa fa-plus"></i> Add checkbox</button>
+	</div>
+</form>
