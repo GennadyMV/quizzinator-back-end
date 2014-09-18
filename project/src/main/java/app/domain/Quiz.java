@@ -20,6 +20,9 @@ public class Quiz extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "quiz")
     private List<QuizAnswer> quizAnswers;
     
+    @NotNull
+    private boolean reviewable;
+    
     public String getTitle() {
         return title;
     }
@@ -42,5 +45,13 @@ public class Quiz extends AbstractPersistable<Long> {
     
     public void setQuizAnswers(List<QuizAnswer> quizAnswers) {
         this.quizAnswers = quizAnswers;
+    }
+
+    public boolean isReviewable() {
+        return reviewable;
+    }
+
+    public void setReviewable(boolean reviewable) {
+        this.reviewable = reviewable;
     }
 }

@@ -1,5 +1,6 @@
 package app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -13,9 +14,11 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Table(name = "answers")
 public class QuizAnswer extends AbstractPersistable<Long> {
     @ManyToOne
+    @JsonIgnore
     private Quiz quiz;
     
     @OneToMany(mappedBy = "quizAnswer")
+    @JsonIgnore
     private List<PeerReview> peerReviews;
     
     @NotBlank
