@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping(value = "/quiz")
+@RequestMapping(value = "quiz")
 public class QuizController {
     @Autowired
     private QuizRepository quizRepo;
     
     @ResponseBody
-    @RequestMapping(produces="application/json")
+    @RequestMapping(method = RequestMethod.GET, produces="application/json")
     public List<Quiz> getQuizzes() {
         return quizRepo.findAll();
     }
