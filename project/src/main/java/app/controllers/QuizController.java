@@ -27,10 +27,9 @@ public class QuizController {
     
     @ResponseBody
     @RequestMapping(value = "/{id}", produces="application/json")
-    public Quiz getQuiz(@PathVariable(value = "id") Long id, HttpServletResponse response) {
+    public Quiz getQuiz(@PathVariable(value = "id") Long id) {
         Quiz quiz = quizRepo.findOne(id);
         
-        response.setHeader("Access-Control-Allow-Origin", "*");
         return quiz;
     }
     
