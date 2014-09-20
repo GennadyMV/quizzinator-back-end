@@ -17,6 +17,15 @@
             <version>1.1.5.RELEASE</version>
             <relativePath/> <!-- lookup parent from repository -->
 	</parent>
+        
+        <!-- for swagger ui -->
+        <!--repositories>
+            <repository>
+                <id>oss-jfrog-artifactory</id>
+                <name>oss-jfrog-artifactory-releases</name>
+                <url>https://oss.jfrog.org/artifactory/oss-release-local</url>
+            </repository>
+        </repositories-->
 
         <dependencies>
             <!--spring-->
@@ -95,6 +104,21 @@
                     </exclusion>		
                 </exclusions>
             </dependency>
+            
+            <!-- swagger api doc generation -->
+            <dependency>
+                <groupId>com.mangofactory</groupId>
+                <artifactId>swagger-springmvc</artifactId>
+                <version>0.8.8</version>
+            </dependency>
+            
+            <!-- nice ui for swagger -->
+            <!--dependency>
+                <groupId>org.ajar</groupId>
+                <artifactId>swagger-spring-mvc-ui</artifactId>
+                <version>0.2</version>
+                <scope>compile</scope>
+            </dependency-->
         </dependencies>
 
 	<properties>
