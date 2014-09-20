@@ -1,4 +1,4 @@
-QuizApp.directive('summernote', function(){
+QuizApp.directive('summernote', ['$sce', function($sce){
 	return {
 		scope: {
 			content: '=ngModel'
@@ -9,6 +9,7 @@ QuizApp.directive('summernote', function(){
 				onkeyup: function(){
 					scope.$apply(function(){
 						scope.content = $(elem).code();
+						console.log(scope.content);
 					});
 				}
 			});
@@ -19,4 +20,4 @@ QuizApp.directive('summernote', function(){
 			});
 		}
 	}
-});
+}]);

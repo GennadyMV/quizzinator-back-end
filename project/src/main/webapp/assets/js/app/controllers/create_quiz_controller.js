@@ -1,6 +1,7 @@
-QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope, QuizAPI){
+QuizApp.controller('CreateQuizController', ['$scope', '$sce', 'QuizAPI', function($scope, $sce, QuizAPI){
 	$scope.quiz = {
 		title: '',
+        reviewable: false,
 		items: []
 	}
 
@@ -84,6 +85,7 @@ QuizApp.controller('CreateQuizController', ['$scope', 'QuizAPI', function($scope
 			done: function(){
 				$scope.quiz = {
 					title: '',
+                    reviewable: false,
 					items: []
 				}
 				
