@@ -1,6 +1,7 @@
 package app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
+@JsonIgnoreProperties(value = "new")
 public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private String title;

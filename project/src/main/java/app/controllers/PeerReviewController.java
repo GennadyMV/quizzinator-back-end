@@ -46,7 +46,7 @@ public class PeerReviewController {
             @Valid @RequestBody PeerReview review,
             @PathVariable("quizId") Long quizId,
             @PathVariable("answerId") Long answerId) {
-        PeerReview r = quizService.saveNewReview(review, answerId, quizId);
+        quizService.saveNewReview(review, answerId, quizId);
         return "";
     }
 }

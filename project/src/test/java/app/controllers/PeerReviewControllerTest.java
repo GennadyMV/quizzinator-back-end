@@ -1,22 +1,13 @@
 package app.controllers;
 
 import app.Application;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-
-import app.repositories.QuizAnswerRepository;
-import app.repositories.QuizRepository;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -56,5 +47,31 @@ public class PeerReviewControllerTest {
         
         this.mockMvc.perform(post("/quiz/1/answer/99/review"))
             .andExpect(status().is4xxClientError());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void addingPeerReviewWorks() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", 1L);
+        
+        TestHelper.addAReview(mockMvc, 1L, 1L, "user2", "good answer!");
+        
+        MockHttpServletResponse response = this.mockMvc.perform(get("/quiz/1/answer/1/review"))
+            .andExpect(status().isOk())
+            .andReturn().getResponse();
+        
+        String content = response.getContentAsString();
+        
+        //System.out.println(content);
+        
+        assertTrue(content.contains("\"id\":1"));
+        assertTrue(content.contains("\"reviewer\":\"user2\""));
+        assertTrue(content.contains("\"review\":\"good answer!\""));
+    }
+    
+    @Test
+    public void iFail() throws Exception {
+        assertTrue(false);
     }
 }

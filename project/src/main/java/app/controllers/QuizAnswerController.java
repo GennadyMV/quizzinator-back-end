@@ -33,6 +33,7 @@ public class QuizAnswerController {
     @RequestMapping(value = "/quiz/{quizId}/answer", method = RequestMethod.POST, consumes = "application/json")
     public List<QuizAnswer> newAnswer(@PathVariable Long quizId, @Valid @RequestBody QuizAnswer quizAnswer, HttpServletRequest request) {
         quizAnswer.setIp(request.getRemoteAddr());
+        System.out.println(request.getRemoteAddr());
         List<QuizAnswer> answersToReview = quizService.sumbitAnswer(quizAnswer, quizId);
         
         return answersToReview;

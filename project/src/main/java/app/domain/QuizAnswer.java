@@ -1,6 +1,7 @@
 package app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -12,6 +13,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @Table(name = "answers")
+@JsonIgnoreProperties(value = "new")
 public class QuizAnswer extends AbstractPersistable<Long> {
     @ManyToOne
     @JsonIgnore
@@ -60,7 +62,7 @@ public class QuizAnswer extends AbstractPersistable<Long> {
         return ip;
     }
     
-    @JsonIgnore
+    //@JsonIgnore
     public void setIp(String ip) {
         this.ip = ip;
     }
