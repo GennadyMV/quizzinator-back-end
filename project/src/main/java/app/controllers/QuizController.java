@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -30,8 +31,8 @@ public class QuizController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/{id}", produces="application/json")
-    public Quiz getQuiz(@PathVariable(value = "id") Long id, @CookieValue("quiz_username") String user) {
+    @RequestMapping(value = "/{id}", produces="application/json", method = RequestMethod.GET)
+    public Quiz getQuiz(@PathVariable(value = "id") Long id, @RequestParam(value = "username", required = false) String user) {
         return quizService.getQuizForUser(id, user);
     }
     

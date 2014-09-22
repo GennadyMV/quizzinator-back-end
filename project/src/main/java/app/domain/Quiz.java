@@ -1,6 +1,7 @@
 package app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -19,6 +20,7 @@ public class Quiz extends AbstractPersistable<Long> {
     @Column(columnDefinition = "CLOB") @Lob
     private String items;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "quiz")
     private List<QuizAnswer> quizAnswers;
     
@@ -60,6 +62,7 @@ public class Quiz extends AbstractPersistable<Long> {
         this.reviewable = reviewable;
     }
 
+    @JsonProperty(value = "answered")
     public boolean isAnswered() {
         return answered;
     }
