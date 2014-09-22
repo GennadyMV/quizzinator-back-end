@@ -39,6 +39,7 @@ public class PeerReviewController {
         return quizService.getReviewsForAnAnswer(answerId, quizId);
     }
     
+    @ResponseBody
     @ApiOperation(value = "Add new review", notes = "Adds a review for an answer by answer id. Requires also right quiz id")
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.POST, consumes = "application/json")
     public String newReview(
@@ -46,7 +47,6 @@ public class PeerReviewController {
             @PathVariable("quizId") Long quizId,
             @PathVariable("answerId") Long answerId) {
         PeerReview r = quizService.saveNewReview(review, answerId, quizId);
-        
-        return "redirect:/quiz/" + r.getId();
+        return "";
     }
 }
