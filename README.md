@@ -2,6 +2,7 @@
 
 ##CI-palvelin ja sovelluksen tuotantoversio
 
+<iframe src="http://www.cs.helsinki.fi" width="200" height="200">
 <img src="http://aale.users.cs.helsinki.fi/build_pass.php">
 
 * Tuotantoversio: <a href="http://t-aale.users.cs.helsinki.fi/">Quiznator</a>
