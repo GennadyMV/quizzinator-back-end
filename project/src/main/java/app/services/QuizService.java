@@ -73,4 +73,16 @@ public class QuizService {
             return true;
         }
     }
+
+    public Quiz getQuizForUser(Long id, String user) {
+        Quiz q = quizRepo.findOne(id);
+        
+        if (answerRepo.findByQuizAndUser(q, user).isEmpty()) {
+            q.setAnswered(false);
+        } else {
+            q.setAnswered(true);
+        }
+            
+        return q;
+    }
 }

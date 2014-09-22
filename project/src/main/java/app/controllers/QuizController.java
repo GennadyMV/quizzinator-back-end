@@ -2,11 +2,12 @@ package app.controllers;
 
 import app.domain.Quiz;
 import app.repositories.QuizRepository;
+import app.services.QuizService;
 import java.util.List;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,9 @@ public class QuizController {
     @Autowired
     private QuizRepository quizRepo;
     
+    @Autowired
+    private QuizService quizService;
+    
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, produces="application/json")
     public List<Quiz> getQuizzes() {
@@ -27,10 +31,8 @@ public class QuizController {
     
     @ResponseBody
     @RequestMapping(value = "/{id}", produces="application/json")
-    public Quiz getQuiz(@PathVariable(value = "id") Long id) {
-        Quiz quiz = quizRepo.findOne(id);
-        
-        return quiz;
+    public Quiz getQuiz(@PathVariable(value = "id") Long id, @CookieValue("quiz_username") String user) {
+        return quizService.getQuizForUser(id, user);
     }
     
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")

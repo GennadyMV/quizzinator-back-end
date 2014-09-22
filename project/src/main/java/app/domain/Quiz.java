@@ -1,10 +1,12 @@
 package app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Column;
 import javax.persistence.Lob;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
@@ -21,7 +23,10 @@ public class Quiz extends AbstractPersistable<Long> {
     private List<QuizAnswer> quizAnswers;
     
     @NotNull
-    private boolean reviewable = true;
+    private boolean reviewable;
+    
+    @Transient
+    private boolean answered;
     
     public String getTitle() {
         return title;
@@ -53,5 +58,14 @@ public class Quiz extends AbstractPersistable<Long> {
 
     public void setReviewable(boolean reviewable) {
         this.reviewable = reviewable;
+    }
+
+    public boolean isAnswered() {
+        return answered;
+    }
+
+    @JsonIgnore
+    public void setAnswered(boolean answered) {
+        this.answered = answered;
     }
 }

@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Long> {
     public List<QuizAnswer> findByQuizAndUserNot(Quiz quiz, String user, Pageable pageable);
     public List<QuizAnswer> findByQuiz(Quiz quiz);
+    public List<QuizAnswer> findByQuizAndUser(Quiz q, String user);
 }
