@@ -63,15 +63,9 @@ public class PeerReviewControllerTest {
         
         String content = response.getContentAsString();
         
-        //System.out.println(content);
         
         assertTrue(content.contains("\"id\":1"));
         assertTrue(content.contains("\"reviewer\":\"user2\""));
         assertTrue(content.contains("\"review\":\"good answer!\""));
-    }
-    
-    @Test
-    public void iFail() throws Exception {
-        assertTrue(false);
     }
 }
