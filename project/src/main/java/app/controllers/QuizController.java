@@ -31,6 +31,7 @@ public class QuizController {
         Quiz quiz = quizRepo.findOne(id);
         
         response.setHeader("Access-Control-Allow-Origin", "*");
+        
         return quiz;
     }
     
