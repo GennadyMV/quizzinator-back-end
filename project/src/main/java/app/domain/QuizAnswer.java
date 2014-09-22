@@ -24,7 +24,6 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     @NotBlank
     private String user;
     
-    @NotBlank
     private String ip;
     
     @URL
@@ -61,6 +60,7 @@ public class QuizAnswer extends AbstractPersistable<Long> {
         return ip;
     }
     
+    @JsonIgnore
     public void setIp(String ip) {
         this.ip = ip;
     }
