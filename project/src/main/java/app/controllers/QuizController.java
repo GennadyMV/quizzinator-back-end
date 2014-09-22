@@ -30,11 +30,6 @@ public class QuizController {
     public Quiz getQuiz(@PathVariable(value = "id") Long id) {
         Quiz quiz = quizRepo.findOne(id);
         
-<<<<<<< HEAD
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        
-=======
->>>>>>> cd6ceead5aff5d9cf328efe170668d6ff8e12b3e
         return quiz;
     }
     
