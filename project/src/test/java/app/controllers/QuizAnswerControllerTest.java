@@ -60,7 +60,7 @@ public class QuizAnswerControllerTest {
     
     @Test
     public void testAddAnswer() throws Exception {
-        String jsonQuiz = "{\"user\": \"matti\", \"ip\": \"0.0.0.0\","
+        String jsonQuiz = "{\"user\": \"matti\", \"ip\": \"127.0.0.1\","
                          + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
         
         this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
@@ -68,7 +68,7 @@ public class QuizAnswerControllerTest {
         QuizAnswer quizAnswer = quizAnswerRepository.findAll().get((int)quizAnswerRepository.count() - 1);
         
         Assert.assertEquals("matti", quizAnswer.getUser());
-        Assert.assertEquals("0.0.0.0", quizAnswer.getIp());
+        Assert.assertEquals("127.0.0.1", quizAnswer.getIp());
         Assert.assertEquals("http://www.joku.com/", quizAnswer.getUrl());
         Assert.assertEquals("vastaus", quizAnswer.getAnswer());
     }
