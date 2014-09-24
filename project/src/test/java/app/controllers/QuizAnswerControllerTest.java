@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -32,6 +33,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = Application.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class QuizAnswerControllerTest {
     @Autowired
     private QuizAnswerRepository quizAnswerRepository;
@@ -59,6 +61,7 @@ public class QuizAnswerControllerTest {
     }
     
     @Test
+    @DirtiesContext
     public void testAddAnswer() throws Exception {
         String jsonQuiz = "{\"user\": \"matti\", \"ip\": \"127.0.0.1\","
                          + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
@@ -90,6 +93,7 @@ public class QuizAnswerControllerTest {
     **/
     
     @Test
+    @DirtiesContext
     public void testCorrectNumberOfAnswers() throws Exception {
         String jsonQuiz = "{\"user\": \"ulla\", \"ip\": \"0.0.0.0\","
                          + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
@@ -103,6 +107,7 @@ public class QuizAnswerControllerTest {
     }
     
     @Test
+    @DirtiesContext
     public void testGetAnswer() throws Exception {
         MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quiz.getId() +
                             "/answer/" + (quizAnswerRepository.count() - 1))
