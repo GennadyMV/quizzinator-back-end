@@ -16,6 +16,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -52,23 +55,22 @@ public class QuizAnswerControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         
         
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
-                + "{}]\"}";
+        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"[{}]\"}";
         
         this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
-        this.quiz = quizRepository.findAll().get((int)quizRepository.count() - 1);
+        this.quiz = quizRepository.findAll().get(0); //new PageRequest(0, 1, Sort.Direction.DESC, "id")).getContent().get(0);
     }
     
     @Test
     @DirtiesContext
     public void testAddAnswer() throws Exception {
-        String jsonQuiz = "{\"user\": \"matti\", \"ip\": \"127.0.0.1\","
+        String jsonQuiz = "{\"user\": \"matti\","
                          + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
         
         this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
-        QuizAnswer quizAnswer = quizAnswerRepository.findAll().get((int)quizAnswerRepository.count() - 1);
+        QuizAnswer quizAnswer = quizAnswerRepository.findAll(new PageRequest(0, 1, Sort.Direction.DESC, "id")).getContent().get(0);
         
         Assert.assertEquals("matti", quizAnswer.getUser());
         Assert.assertEquals("127.0.0.1", quizAnswer.getIp());
@@ -95,29 +97,35 @@ public class QuizAnswerControllerTest {
     @Test
     @DirtiesContext
     public void testCorrectNumberOfAnswers() throws Exception {
-        String jsonQuiz = "{\"user\": \"ulla\", \"ip\": \"0.0.0.0\","
+        String jsonAnswer = "{\"user\": \"ulla\","
                          + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
         
         for (int i = 0; i < 4; i++) {
-            this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+            this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
         }
         
-        //One is added in the previous test.
-        Assert.assertEquals(5, quizAnswerRepository.count());
+        assertEquals(4, quizAnswerRepository.count());
     }
     
     @Test
     @DirtiesContext
     public void testGetAnswer() throws Exception {
+        String jsonQuiz = "{\"user\": \"matti\","
+                         + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
+        
+        this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        
+        Long answerId = quizAnswerRepository.findByQuiz(quiz).get(0).getId();
+        
         MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quiz.getId() +
-                            "/answer/" + (quizAnswerRepository.count() - 1))
+                            "/answer/" + answerId)
                             .contentType(MediaType.APPLICATION_JSON))
                             .andReturn();
         
         Gson gson = new Gson();
         QuizAnswer answer = gson.fromJson(mvcAnswer.getResponse().getContentAsString(), QuizAnswer.class);
         
-        QuizAnswer quizAnswer = quizAnswerRepository.findAll().get((int)quizAnswerRepository.count() - 1);
+        QuizAnswer quizAnswer = quizAnswerRepository.findAll(new PageRequest(0, 1, Sort.Direction.DESC, "id")).getContent().get(0);
 
         Assert.assertEquals(answer.getUser(), quizAnswer.getUser());
         Assert.assertEquals(answer.getIp(), quizAnswer.getIp());
