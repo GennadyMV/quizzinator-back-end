@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -52,6 +53,7 @@ public class QuizControllerTest {
     }
     
     @Test
+    @DirtiesContext
     public void testAddingQuiz() throws Exception {
         String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
                 + "{}]\"}";
@@ -69,6 +71,7 @@ public class QuizControllerTest {
     }
     
     @Test
+    @DirtiesContext
     public void testCorrectOpenQuestionsAdded() throws Exception {
         String jsonQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
                 + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
@@ -87,6 +90,7 @@ public class QuizControllerTest {
     }
     
     @Test
+    @DirtiesContext
     public void testCorrectNumberOfOpenQuestionsAdded() throws Exception {
         String jsonQuiz = "{\"title\":\"testquiz3\",\"items\":\"["
                 + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\"},"
