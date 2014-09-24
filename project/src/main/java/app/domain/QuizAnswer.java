@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -19,7 +20,7 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     @JsonIgnore
     private Quiz quiz;
     
-    @OneToMany(mappedBy = "quizAnswer")
+    @OneToMany(mappedBy = "quizAnswer", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<PeerReview> peerReviews;
     

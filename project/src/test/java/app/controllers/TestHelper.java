@@ -3,10 +3,11 @@ package app.controllers;
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class TestHelper {
-    public static void addQuizWithOneQuestion(MockMvc mockMvc, String quizTitle, String question, boolean reviewable) throws Exception {
+    public static Long addQuizWithOneQuestion(MockMvc mockMvc, String quizTitle, String question, boolean reviewable) throws Exception {
         String jsonQuiz = 
                 "{\"title\":\"" + quizTitle + "\"," + 
                 "\"reviewable\":" + Boolean.toString(reviewable) + "," + 
@@ -15,7 +16,10 @@ public class TestHelper {
         
         String url = "/quiz";
         
-        mockMvc.perform(post(url).content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        String redirectUrl = mockMvc.perform(
+                post(url).content(jsonQuiz).contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getRedirectedUrl();
+        return Long.parseLong(redirectUrl.split("/")[2]);
     }
     
     public static void addAnAnswer(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {

@@ -35,7 +35,7 @@ public class PeerReviewController {
     @ApiOperation(value = "Get reviews of an answer", notes = "Get reviews of an answer by answer id. Requires also right quiz id")
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.GET, produces="application/json")
-    public List<PeerReview> getAnswerReviews(@PathVariable("quizId") Long quizId, @PathVariable("answerId") Long answerId) {
+    public List<PeerReview> getAnswerReviews(@PathVariable Long quizId, @PathVariable Long answerId) {
         return quizService.getReviewsForAnAnswer(answerId, quizId);
     }
     
@@ -44,8 +44,8 @@ public class PeerReviewController {
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.POST, consumes = "application/json")
     public String newReview(
             @Valid @RequestBody PeerReview review,
-            @PathVariable("quizId") Long quizId,
-            @PathVariable("answerId") Long answerId) {
+            @PathVariable Long quizId,
+            @PathVariable Long answerId) {
         quizService.saveNewReview(review, answerId, quizId);
         return "";
     }

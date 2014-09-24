@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -41,12 +42,14 @@ public class QuizService {
     
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, String user, int answerCount) {
         Pageable pageable = new PageRequest(0, answerCount);
-        return answerRepo.findByQuizAndUserNot(quiz, user, pageable);
+        List<QuizAnswer> qas = answerRepo.findByQuizAndUserNotOrderedByReviewCount(quiz, user, pageable);
+        
+        return qas;
     }
     
     public List<PeerReview> getReviewsForAnAnswer(Long answerId, Long quizId) {
         if (!isValidAnswerQuizCombination(answerId, quizId)) 
-            throw new IllegalArgumentException("bad answerId, quizId combination!");
+            throw new IllegalArgumentException("bad answerId, quizId combination! getReviewsForAnAnswer");
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         return reviewRepo.findByQuizAnswer(qa);
@@ -54,7 +57,7 @@ public class QuizService {
     
     public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
         if (!isValidAnswerQuizCombination(answerId, quizId)) 
-            throw new IllegalArgumentException("bad answerId, quizId combination!");
+            throw new IllegalArgumentException("bad answerId, quizId combination! saveNewReview");
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         review.setQuizAnswer(qa);

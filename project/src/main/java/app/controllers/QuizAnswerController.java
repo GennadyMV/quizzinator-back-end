@@ -1,9 +1,11 @@
 package app.controllers;
 
+import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,15 +17,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class QuizAnswerController {
     @Autowired
-    private QuizAnswerRepository quizAnswerRepository;
+    private QuizAnswerRepository answerRepo;
     
     @Autowired
-    private QuizRepository quizRepository;
+    private QuizRepository quizRepo;
     
     @Autowired
     private QuizService quizService;
@@ -31,32 +34,34 @@ public class QuizAnswerController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer", method = RequestMethod.POST, consumes = "application/json")
-    public List<QuizAnswer> newAnswer(@PathVariable Long quizId, @Valid @RequestBody QuizAnswer quizAnswer, HttpServletRequest request) {
-        quizAnswer.setIp(request.getRemoteAddr());
-        System.out.println(request.getRemoteAddr());
-        List<QuizAnswer> answersToReview = quizService.sumbitAnswer(quizAnswer, quizId);
+    public List<QuizAnswer> newAnswer(
+            @PathVariable Long quizId, 
+            @Valid @RequestBody QuizAnswer quizAnswer, 
+            @RequestParam(value = "noreview", required = false) Boolean noreview,
+            HttpServletRequest request) {
         
-        return answersToReview;
+        quizAnswer.setIp(request.getRemoteAddr());
+        return quizService.sumbitAnswer(quizAnswer, quizId);
     }
     
     @Transactional
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}", method = RequestMethod.GET, produces = "application/json")
     public QuizAnswer getAnswer(@PathVariable Long answerId) {
-        return quizAnswerRepository.findOne(answerId);
+        return answerRepo.findOne(answerId);
     }
     
     @Transactional
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer", method = RequestMethod.GET, produces = "application/json")
     public List<QuizAnswer> getAnswers(@PathVariable Long quizId) {
-        return quizAnswerRepository.findByQuiz(quizRepository.findOne(quizId));
+        return answerRepo.findByQuiz(quizRepo.findOne(quizId));
     }
     
     @Transactional
     @ResponseBody
     @RequestMapping(value = "/answer", method = RequestMethod.GET, produces = "application/json")
-    public List<QuizAnswer> getAllAnswers(@PathVariable Long quizId) {
-        return quizAnswerRepository.findAll();
+    public List<QuizAnswer> getAllAnswers() {
+        return answerRepo.findAll();
     }
 }
