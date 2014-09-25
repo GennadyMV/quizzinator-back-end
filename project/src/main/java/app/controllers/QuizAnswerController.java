@@ -37,7 +37,6 @@ public class QuizAnswerController {
     public List<QuizAnswer> newAnswer(
             @PathVariable Long quizId, 
             @Valid @RequestBody QuizAnswer quizAnswer, 
-            @RequestParam(value = "noreview", required = false) Boolean noreview,
             HttpServletRequest request) {
         
         quizAnswer.setIp(request.getRemoteAddr());
