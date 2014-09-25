@@ -26,17 +26,20 @@ public class QuizController {
     
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, produces="application/json")
+    @Transactional
     public List<Quiz> getQuizzes() {
         return quizRepo.findAll();
     }
     
     @ResponseBody
     @RequestMapping(value = "/{id}", produces="application/json", method = RequestMethod.GET)
+    @Transactional
     public Quiz getQuiz(@PathVariable(value = "id") Long id, @RequestParam(value = "username", required = false) String user) {
         return quizService.getQuizForUser(id, user);
     }
     
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+    @Transactional
     public String newQuiz(@Valid @RequestBody Quiz quiz) {
         Long id = quizRepo.save(quiz).getId();
         
