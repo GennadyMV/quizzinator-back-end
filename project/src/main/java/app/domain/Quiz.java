@@ -19,7 +19,9 @@ public class Quiz extends AbstractPersistable<Long> {
     private String title;
     
     @NotNull
-    @Column(columnDefinition = "CLOB") @Lob
+    @Column
+        //(columnDefinition = "CLOB")
+    @Lob
     private String items;
     
     @JsonIgnore
