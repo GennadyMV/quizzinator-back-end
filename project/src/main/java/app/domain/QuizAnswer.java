@@ -3,6 +3,7 @@ package app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -25,6 +26,7 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     private List<PeerReview> peerReviews;
     
     @NotBlank
+    @Column(name = "answer_user")
     private String user;
     
     private String ip;

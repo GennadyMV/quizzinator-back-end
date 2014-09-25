@@ -127,9 +127,9 @@ public class QuizAnswerControllerTest {
         
         QuizAnswer quizAnswer = quizAnswerRepository.findAll(new PageRequest(0, 1, Sort.Direction.DESC, "id")).getContent().get(0);
 
-        Assert.assertEquals(answer.getUser(), quizAnswer.getUser());
-        Assert.assertEquals(answer.getIp(), quizAnswer.getIp());
-        Assert.assertEquals(answer.getUrl(), quizAnswer.getUrl());
-        Assert.assertEquals(answer.getAnswer(), quizAnswer.getAnswer());
+        assertEquals(answer.getUser(), quizAnswer.getUser());
+        assertEquals(answer.getIp(), quizAnswer.getIp());
+        assertEquals(answer.getUrl(), quizAnswer.getUrl());
+        assertEquals(answer.getAnswer(), quizAnswer.getAnswer());
     }
 }

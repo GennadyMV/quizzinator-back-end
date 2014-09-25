@@ -49,7 +49,7 @@ public class QuizService {
     
     public List<PeerReview> getReviewsForAnAnswer(Long answerId, Long quizId) {
         if (!isValidAnswerQuizCombination(answerId, quizId)) 
-            throw new IllegalArgumentException("bad answerId, quizId combination! getReviewsForAnAnswer");
+            throw new IllegalArgumentException("bad answerId, quizId combination!");
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         return reviewRepo.findByQuizAnswer(qa);
@@ -57,7 +57,7 @@ public class QuizService {
     
     public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
         if (!isValidAnswerQuizCombination(answerId, quizId)) 
-            throw new IllegalArgumentException("bad answerId, quizId combination! saveNewReview");
+            throw new IllegalArgumentException("bad answerId, quizId combination!");
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         review.setQuizAnswer(qa);
