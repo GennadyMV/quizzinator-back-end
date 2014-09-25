@@ -77,12 +77,9 @@ QuizApp.controller('CreateQuizController', ['$scope', '$sce', 'QuizAPI', functio
 	}
 
 	$scope.save_quiz = function(){
-		var quiz = $scope.quiz;
-		quiz.items = JSON.stringify(quiz.items);
-
 		QuizAPI.create_quiz({
-			quiz: quiz,
-			done: function(){
+			quiz: $scope.quiz,
+			success: function(){
 				$scope.quiz = {
 					title: '',
                     reviewable: false,
@@ -93,16 +90,12 @@ QuizApp.controller('CreateQuizController', ['$scope', '$sce', 'QuizAPI', functio
 					content: 'The quiz has been saved!',
 					type: 'success'
 				};
-
-				$scope.$apply();
 			},
-			fail: function(){
+			error: function(){
 				$scope.message = {
 					content: 'Error saving the quiz!',
 					type: 'danger'
 				};
-
-				$scope.$apply();
 			}
 		});
 	}

@@ -1,4 +1,4 @@
-QuizApp.service('QuizAPI', function(){
+QuizApp.service('QuizAPI', ['$http', function($http){
 	var _public = {};
 
 	_public.get_quizes = function(options){
@@ -9,19 +9,23 @@ QuizApp.service('QuizAPI', function(){
 	}
 
 	_public.create_quiz = function(options){
-		$.ajax({
-			type: 'POST',
+		options.quiz.items = angular.toJson(options.quiz.items);
+
+		$http({
+			method: 'POST',
 			url: '/quiz',
-			contentType: 'application/json',
-			data: JSON.stringify(options.quiz)
+			headers: {
+		       "Content-Type": "application/json"
+		    },
+			data: angular.toJson(options.quiz)
 		})
-		.done(function(){
-			options.done();
+		.success(function(){
+			options.success();
 		})
-		.fail(function(){
-			options.fail();
+		.error(function(){
+			options.error();
 		});
 	}
 
 	return _public;
-});
+}]);
