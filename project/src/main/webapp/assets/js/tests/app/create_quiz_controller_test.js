@@ -6,7 +6,7 @@ describe('CreateQuizController', function(){
   	var QuizAPIMock = (function(){
   		return {
   			create_quiz: function(options){
-  				options.done();
+  				options.success();
   			}
   		}
   	})();
@@ -67,7 +67,7 @@ describe('CreateQuizController', function(){
       expect(scope.quiz.items[0].options[0].title).toBe('Pick me!');
     });
 
-    it('should be able to remove an option from a multiple_choice_question', function(){
+    it('should be able to remove an option from a multiple choice question', function(){
       scope.add_multiple_choice_question();
       scope.quiz.items[0].new_option = {
         title: 'Pick me!'
@@ -80,6 +80,32 @@ describe('CreateQuizController', function(){
       scope.remove_option(scope.quiz.items[0], 0);
 
       expect(scope.quiz.items[0].options.length).toBe(0);      
+    });
+
+    it('should be able to add a checkbox question', function(){
+      scope.add_checkbox_question();
+      scope.quiz.items[0].question = 'Choose one or more';
+
+      expect(scope.quiz.items.length).toBe(1);
+      expect(scope.quiz.items[0].question).toBe('Choose one or more');
+    });
+
+    it('should be able to add checkboxes to a checkbox question and remove checkboxes from it', function(){
+      scope.add_checkbox_question();
+      scope.quiz.items[0].question = 'Choose one or more';
+      scope.quiz.items[0].new_checkbox = {
+        title: 'Choose this'
+      };
+
+      expect(scope.quiz.items[0].checkboxes.length).toBe(0);
+
+      scope.add_checkbox(scope.quiz.items[0]);
+
+      expect(scope.quiz.items[0].checkboxes.length).toBe(1);
+
+      scope.remove_checkbox(scope.quiz.items[0], 0);
+
+      expect(scope.quiz.items[0].checkboxes.length).toBe(0);
     });
 
     it('should be able to remove an item', function(){
