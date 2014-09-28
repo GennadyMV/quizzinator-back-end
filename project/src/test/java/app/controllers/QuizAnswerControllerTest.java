@@ -55,7 +55,7 @@ public class QuizAnswerControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         
         
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"[{}]\"}";
+        String jsonQuiz = "{\"title\":\"testquiz1\",\"reviewable\":\"true\",\"items\":\"[{}]\"}";
         
         this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
@@ -78,21 +78,29 @@ public class QuizAnswerControllerTest {
         Assert.assertEquals("vastaus", quizAnswer.getAnswer());
     }
     
-    /**
     @Test
+    @DirtiesContext
     public void testPostAnswerReturnsTwoAnswers() throws Exception {
         String jsonQuiz = "{\"user\": \"eero\", \"ip\": \"0.0.0.0\","
                          + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
+                             .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
+        jsonQuiz = "{\"user\": \"masa\", \"ip\": \"0.0.0.0\","
+                         + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
+                             .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        
+        jsonQuiz = "{\"user\": \"kalevi\", \"ip\": \"0.0.0.0\","
+                         + "\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
         MvcResult mvcAnswer = this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
                              .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON)).andReturn();
         
         Gson gson = new Gson();
-        List<QuizAnswer> answers = gson.fromJson(mvcAnswer.getResponse().getContentAsString(), List.class);
-        
+        List<QuizAnswer> answers = new Gson().fromJson(mvcAnswer.getResponse().getContentAsString(), List.class);
+   
         assertEquals(2, answers.size());
     }
-    **/
     
     @Test
     @DirtiesContext
