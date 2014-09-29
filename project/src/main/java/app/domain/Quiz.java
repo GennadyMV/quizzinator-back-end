@@ -23,7 +23,7 @@ public class Quiz extends AbstractPersistable<Long> {
     @Column
         //(columnDefinition = "CLOB")
     @Lob
-    private JsonObject items;
+    private Object items;
     
     @JsonIgnore
     @OneToMany(mappedBy = "quiz")
@@ -48,11 +48,11 @@ public class Quiz extends AbstractPersistable<Long> {
         this.title = title;
     }
     
-    public JsonObject getItems() {
+    public Object getItems() {
         return items;
     }
     
-    public void setItems(JsonObject items) {
+    public void setItems(Object items) {
         this.items = items;
     }
     
