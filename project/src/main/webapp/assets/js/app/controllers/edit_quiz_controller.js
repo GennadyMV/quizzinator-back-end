@@ -8,12 +8,11 @@ QuizApp.controller('EditQuizController', ['$scope', '$routeParams', 'QuizAPI', f
 
 		}
 	});
-        $scope.edit_quiz = function(){
+    
+    $scope.edit_quiz = function(){
 		QuizAPI.edit_quiz({
 			quiz: $scope.$parent.quiz,
 			success: function(){
-				
-				
 				$scope.message = {
 					content: 'The quiz has been edited!',
 					type: 'success'

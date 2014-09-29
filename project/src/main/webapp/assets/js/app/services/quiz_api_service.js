@@ -31,17 +31,21 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 	}
 
 	_public.edit_quiz = function(options){
-		options.quiz.items = angular.fromJson = (options.quiz.items);
 		options.quiz.items = angular.toJson(options.quiz.items);
-		console.log(options.quiz.items);
+
+		var id = options.quiz.id;
+		var quiz = {
+			title: options.quiz.title,
+			items: options.quiz.items
+		}
 
 		$http({
 			method: 'POST',
-			url: 'quiz/' + options.quiz.id,
+			url: 'quiz/' + id,
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: angular.toJson(options.quiz)
+			data: angular.toJson(quiz)
 		})
 		.success(function(){
 			options.success();
