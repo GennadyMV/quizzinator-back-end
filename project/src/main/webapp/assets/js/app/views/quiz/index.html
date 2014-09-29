@@ -15,10 +15,7 @@
 			</p>
 			<div class="form-group">
 				<label>Share</label>
-				<textarea class="form-control" rows="3">
-<div ng-controller="QuizController" ng-init="init({ 'id': 1 })" quiz>
-	<div ng-include="view"></div>
-</div></textarea>
+				<div ng-model="quiz.id" share-quiz></div>
 			</div>
 		</div>
 	</li>
