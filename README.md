@@ -19,6 +19,7 @@
 * Sprint backlogs:
   * <a href="https://docs.google.com/spreadsheet/ccc?key=0AjyisrLSDJEqdG5VelUtVTF2eFAyZjJsVkZaYzFiQ1E&usp=sharing">Sprint 1</a>
   * <a href="https://docs.google.com/spreadsheets/d/1cEoZrLJkv0cI50pS1OM6vQReJWMhg9mdchAknaR8skk/edit?usp=sharing">Sprint  2</a>
+  * <a href="https://docs.google.com/spreadsheets/d/1Xot8hRt5YE8zuefBnMY5mBqg8NW_S08eirnrJYMIfL8/edit?usp=sharing">Sprint 3</a>
 
 ##Definition of Done
 <a href="https://docs.google.com/document/d/1SwcFxa7qVOEfSLvijWc41dPDn3b5w8IVEJnMN5KYqR0/edit?usp=sharing">Definition of Done
