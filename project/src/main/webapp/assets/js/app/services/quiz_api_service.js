@@ -31,7 +31,9 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 	}
 
 	_public.edit_quiz = function(options){
+		options.quiz.items = angular.fromJson = (options.quiz.items);
 		options.quiz.items = angular.toJson(options.quiz.items);
+		console.log(options.quiz.items);
 
 		$http({
 			method: 'POST',

@@ -3,6 +3,7 @@ package app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.JsonObject;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -19,10 +20,8 @@ public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private String title;
     
-    @NotNull
     @Transient
     @Column(length = 4000)
-        //(columnDefinition = "CLOB")
     @Lob
     private String items;
     
@@ -36,7 +35,9 @@ public class Quiz extends AbstractPersistable<Long> {
     @Transient
     private boolean answered;
     
+    private String placeholderAnswers;
     
+    private Boolean isOpen;
     
     public String getTitle() {
         return title;
@@ -84,5 +85,21 @@ public class Quiz extends AbstractPersistable<Long> {
     @JsonIgnore
     public void setAnswered(boolean answered) {
         this.answered = answered;
+    }
+    
+    public void setPlaceholderAnswers(String placeholderAnswers) {
+        this.placeholderAnswers = placeholderAnswers;
+    }
+    
+    public String getPlaceholderAnswers() {
+        return placeholderAnswers;
+    }
+    
+    public void setIsOpen(Boolean isOpen) {
+        this.isOpen = isOpen;
+    }
+    
+    public Boolean getIsOpen() {
+        return isOpen;
     }
 }

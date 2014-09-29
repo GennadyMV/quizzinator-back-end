@@ -1,8 +1,10 @@
 package app.controllers;
 
 import app.domain.Quiz;
+import app.domain.QuizAnswer;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
+import com.google.gson.Gson;
 import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -42,6 +44,22 @@ public class QuizController {
     @Transactional
     public String newQuiz(@Valid @RequestBody Quiz quiz) {
         Long id = quizRepo.save(quiz).getId();
+        
+        return "redirect:/quiz/" + id;
+    }
+    
+    @Transactional
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
+    public String editQuiz(@Valid @RequestBody Quiz newQuiz, @PathVariable Long id) {
+        Quiz quiz = quizRepo.findOne(id);
+        
+        quiz.setTitle(newQuiz.getTitle());
+        quiz.setItems(newQuiz.getItems());
+        quiz.setQuizAnswers(newQuiz.getQuizAnswers());
+        quiz.setReviewable(newQuiz.isReviewable());
+        quiz.setAnswered(newQuiz.isAnswered());
+        quiz.setPlaceholderAnswers(newQuiz.getPlaceholderAnswers());
+        quiz.setIsOpen(newQuiz.getIsOpen());
         
         return "redirect:/quiz/" + id;
     }

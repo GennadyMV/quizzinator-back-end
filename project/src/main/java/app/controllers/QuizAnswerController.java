@@ -45,21 +45,24 @@ public class QuizAnswerController {
     
     @Transactional
     @ResponseBody
-    @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}",
+            method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public QuizAnswer getAnswer(@PathVariable Long answerId) {
         return answerRepo.findOne(answerId);
     }
     
     @Transactional
     @ResponseBody
-    @RequestMapping(value = "/quiz/{quizId}/answer", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/quiz/{quizId}/answer", method = RequestMethod.GET,
+            produces = "application/json; charset=UTF-8")
     public List<QuizAnswer> getAnswers(@PathVariable Long quizId) {
         return answerRepo.findByQuiz(quizRepo.findOne(quizId));
     }
     
     @Transactional
     @ResponseBody
-    @RequestMapping(value = "/answer", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/answer", method = RequestMethod.GET,
+            produces = "application/json; charset=UTF-8")
     public List<QuizAnswer> getAllAnswers() {
         return answerRepo.findAll();
     }
