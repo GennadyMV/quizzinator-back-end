@@ -22,7 +22,6 @@ public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     @Column
         //(columnDefinition = "CLOB")
-    @Lob
     private Object items;
     
     @JsonIgnore
