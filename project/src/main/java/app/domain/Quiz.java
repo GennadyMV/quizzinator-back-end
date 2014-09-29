@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeJava;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
@@ -19,7 +20,8 @@ public class Quiz extends AbstractPersistable<Long> {
     private String title;
     
     @NotNull
-    @Column
+    @Transient
+    @Column(length = 4000)
         //(columnDefinition = "CLOB")
     @Lob
     private String items;
@@ -34,6 +36,8 @@ public class Quiz extends AbstractPersistable<Long> {
     @Transient
     private boolean answered;
     
+    
+    
     public String getTitle() {
         return title;
     }
@@ -42,10 +46,16 @@ public class Quiz extends AbstractPersistable<Long> {
         this.title = title;
     }
     
+    @JsonProperty("items")
+    public String getItemsJSON() {
+        return unescapeJava(items);
+    }
+    
     public String getItems() {
         return items;
     }
     
+    @JsonProperty("items")
     public void setItems(String items) {
         this.items = items;
     }
