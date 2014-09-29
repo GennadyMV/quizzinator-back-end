@@ -3,3 +3,7 @@
   <li class="active"><a href="#/quiz/{{quiz_id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
   <li><a href="#/quiz/{{quiz_id}}/share"><i class="fa fa-share"></i> Share</a></li>
 </ul>
+
+<div class="form-group" ng-repeat="item in quiz.items">
+	<div ng-include="get_item_template(item)"></div>
+</div>
