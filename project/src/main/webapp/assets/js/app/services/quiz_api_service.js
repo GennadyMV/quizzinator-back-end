@@ -21,9 +21,10 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 			url: 'quiz/' + options.id
 		})
 		.success(function(quiz){
-			quiz = angular.fromJson(quiz);
+		
 			quiz.items = angular.fromJson(quiz.items)
-			options.success(angular.fromJson(quiz));
+			console.log(quiz);
+			options.success(quiz);
 		})
 		.error(function(){
 			options.error();
@@ -33,19 +34,13 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 	_public.edit_quiz = function(options){
 		options.quiz.items = angular.toJson(options.quiz.items);
 
-		var id = options.quiz.id;
-		var quiz = {
-			title: options.quiz.title,
-			items: options.quiz.items
-		}
-
 		$http({
 			method: 'POST',
-			url: 'quiz/' + id,
+			url: 'quiz/' + options.quiz.id,
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: angular.toJson(quiz)
+			data: angular.toJson(options.quiz)
 		})
 		.success(function(){
 			options.success();
@@ -57,6 +52,8 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 
 	_public.create_quiz = function(options){
 		options.quiz.items = angular.toJson(options.quiz.items);
+
+		console.log(angular.toJson(options.quiz))
 
 		$http({
 			method: 'POST',
