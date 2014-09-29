@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeJava;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
@@ -46,11 +45,11 @@ public class Quiz extends AbstractPersistable<Long> {
     }
     
     public String getItems() {
-        return unescapeJava(items);
+        return items;
     }
     
     public void setItems(String items) {
-        this.items = unescapeJava(items);
+        this.items = items;
     }
     
     public List<QuizAnswer> getQuizAnswers() {
