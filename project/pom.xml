@@ -188,14 +188,8 @@
                     <jsTestSrcDir>src/main/webapp/assets/js/tests</jsTestSrcDir>
                     <!--jasmineTargetDir>src/main/webapp/assets/js/tests</jasmineTargetDir-->
                     <sourceIncludes>
-                      <include>vendor/jquery.min.js</include>
-                      <include>vendor/jquery-ui.min.js</include>
-                      <include>vendor/angular.min.js</include>
-                      <include>vendor/angular-route.js</include>
+                      <include>quiznator.min.js</include>
                       <include>vendor/angular-mock.js</include>
-                      <include>vendor/*.js</include>
-                      <include>app/app.js</include>
-                      <include>app/controllers/*.js</include>
                     </sourceIncludes>
                   </configuration>
                 </plugin>

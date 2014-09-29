@@ -1,6 +1,12 @@
-<div ng-controller="CreateQuizController">
+<div ng-controller="EditQuizController">
+	<ul class="nav nav-tabs" role="tablist">
+	  <li class="active"><a href="#/quiz/{{$parent.quiz.id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
+	  <li><a href="#/quiz/{{$parent.quiz.id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
+	  <li><a href="#/quiz/{{$parent.quiz.id}}/share"><i class="fa fa-share"></i> Share</a></li>
+	</ul>
+
 	<div class="page-header page-header-button">
-		<h1>Create a quiz</h1>
+		<h1>Edit quiz</h1>
 		<button class="btn btn-primary pull-right btn-header" ng-click="save_quiz()" id="save-quiz"><i class="fa fa-check"></i> Save</button>
 	</div>
 
