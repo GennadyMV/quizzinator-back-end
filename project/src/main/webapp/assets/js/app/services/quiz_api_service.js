@@ -21,9 +21,7 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 			url: 'quiz/' + options.id
 		})
 		.success(function(quiz){
-		
-			quiz.items = angular.fromJson(quiz.items)
-			console.log(quiz);
+			quiz.items = angular.fromJson(quiz.items);
 			options.success(quiz);
 		})
 		.error(function(){
@@ -32,7 +30,8 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 	}
 
 	_public.edit_quiz = function(options){
-		options.quiz.items = angular.toJson(options.quiz.items);
+		var quiz = jQuery.extend({}, options.quiz);
+		quiz.items = angular.toJson(options.quiz.items);
 
 		$http({
 			method: 'POST',
@@ -40,7 +39,7 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: angular.toJson(options.quiz)
+			data: angular.toJson(quiz)
 		})
 		.success(function(){
 			options.success();
@@ -51,9 +50,8 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 	}
 
 	_public.create_quiz = function(options){
-		options.quiz.items = angular.toJson(options.quiz.items);
-
-		console.log(angular.toJson(options.quiz))
+		var quiz = jQuery.extend({}, options.quiz);
+		quiz.items = angular.toJson(options.quiz.items);
 
 		$http({
 			method: 'POST',
@@ -61,7 +59,7 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 			headers: {
 		       'Content-Type': 'application/json'
 		    },
-			data: angular.toJson(options.quiz)
+			data: angular.toJson(quiz)
 		})
 		.success(function(){
 			options.success();
