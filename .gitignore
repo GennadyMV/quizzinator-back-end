@@ -1,3 +1,4 @@
+project/src/main/webapp/assets/node_modules/
 target/
 .swp.*
 **/*.swp

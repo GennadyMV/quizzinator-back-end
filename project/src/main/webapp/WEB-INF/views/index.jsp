@@ -6,42 +6,16 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Quiznator</title>
 
-        <!-- BOOTSTRAP -->
+        <!-- Bootstrap -->
         <link href="<c:url value="/assets/js/vendor/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet"/>
+        <script src="<c:url value="/assets/js/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
 
         <!-- Font awesome -->
         <link href="<c:url value="/assets/js/vendor/font-awesome/css/font-awesome.min.css"/>" rel="stylesheet"/>
 
-        <!-- Summernote -->
-        <link href="<c:url value="/assets/js/vendor/summernote/dist/summernote.css"/>" rel="stylesheet"/>
-        <link href="<c:url value="/assets/js/vendor/angular-texteditor.css"/>" rel="stylesheet"/>
-
-        <!-- Additional CSS files -->
-        <link href="<c:url value="/assets/css/site.css"/>" rel="stylesheet"/>
-
-        <!-- jQuery -->
-        <script src="<c:url value="/assets/js/vendor/jquery.min.js"/>"></script>
-        <script src="<c:url value="/assets/js/vendor/jquery-ui.min.js"/>"></script>
-
-        <!-- Angular files -->
-        <script src="<c:url value="/assets/js/vendor/angular.min.js"/>"></script>
-        <script src="<c:url value="/assets/js/vendor/angular-route.js"/>"></script>
-        <script src="<c:url value="/assets/js/vendor/angular-texteditor-satinize.js"/>"></script>
-        <script src="<c:url value="/assets/js/vendor/angular-texteditor.js"/>"></script>
-
-        <!-- Summernote -->
-        <script src="<c:url value="/assets/js/vendor/summernote/dist/summernote.min.js"/>"></script>
-
-        <!-- Application files -->
-        <script src="<c:url value="/assets/js/app/app.js"/>"></script>
-        <script src="<c:url value="/assets/js/app/services/quiz_api_service.js"/>"></script>
-        <script src="<c:url value="/assets/js/app/controllers/quiz_list_controller.js"/>"></script>
-        <script src="<c:url value="/assets/js/app/controllers/create_quiz_controller.js"/>"></script>
-        <script src="<c:url value="/assets/js/app/directives/sortable.js"/>"></script>
-        <script src="<c:url value="/assets/js/app/directives/summernote.js"/>"></script>
-
-        <!-- Bootstrap -->
-        <script src="<c:url value="/assets/js/vendor/bootstrap/js/bootstrap.min.js"/>"></script>
+        <!-- Site -->
+        <link href="<c:url value="/assets/css/site.min.css"/>" rel="stylesheet"/>
+        <script src="<c:url value="/assets/js/quiznator.min.js"/>"></script>
     </head>
 
     <body ng-app="QuizApp">
