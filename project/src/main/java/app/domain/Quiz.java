@@ -34,7 +34,8 @@ public class Quiz extends AbstractPersistable<Long> {
     @Transient
     private boolean answered;
     
-    private List<QuizAnswer> placeholderAnswers;
+    @Lob
+    private String placeholderAnswers;
     
     private Boolean isOpen;
     
