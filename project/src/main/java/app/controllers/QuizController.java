@@ -45,4 +45,13 @@ public class QuizController {
         
         return "redirect:/quiz/" + id;
     }
+    
+    @Transactional
+    @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
+    public String editQuiz(@Valid @RequestBody Quiz newQuiz, @PathVariable Long id) {
+        Quiz quiz = quizRepo.findOne(id);
+        quiz = newQuiz;
+        
+        return "redirect:/quiz/" + id;
+    }
 }

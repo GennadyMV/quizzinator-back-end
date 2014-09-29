@@ -34,6 +34,10 @@ public class Quiz extends AbstractPersistable<Long> {
     @Transient
     private boolean answered;
     
+    private List<QuizAnswer> placeholderAnswers;
+    
+    private Boolean isOpen;
+    
     public String getTitle() {
         return title;
     }
@@ -74,5 +78,21 @@ public class Quiz extends AbstractPersistable<Long> {
     @JsonIgnore
     public void setAnswered(boolean answered) {
         this.answered = answered;
+    }
+    
+    public void setPlaceholderAnswers(List<QuizAnswer> placeholderAnswers) {
+        this.placeholderAnswers = placeholderAnswers;
+    }
+    
+    public List<QuizAnswer> getPlaceholderAnswers() {
+        return placeholderAnswers;
+    }
+    
+    public void setIsOpen(Boolean isOpen) {
+        this.isOpen = isOpen;
+    }
+    
+    public Boolean getIsOpen() {
+        return isOpen;
     }
 }
