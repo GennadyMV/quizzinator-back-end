@@ -6,6 +6,7 @@ import app.domain.QuizAnswer;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
+import com.google.gson.Gson;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +38,14 @@ public class QuizService {
     }
     
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, String user) {
-        return getAnswersForReview(quiz, user, 2);
+        int answerCount = 2;
+        
+        if (quiz.getQuizAnswers().size() >= answerCount) {
+            return getAnswersForReview(quiz, user, answerCount);
+        } else {
+            Gson gson = new Gson();
+            return gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
+        }
     }
     
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, String user, int answerCount) {
