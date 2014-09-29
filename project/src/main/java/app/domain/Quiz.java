@@ -81,11 +81,11 @@ public class Quiz extends AbstractPersistable<Long> {
         this.answered = answered;
     }
     
-    public void setPlaceholderAnswers(List<QuizAnswer> placeholderAnswers) {
+    public void setPlaceholderAnswers(String placeholderAnswers) {
         this.placeholderAnswers = placeholderAnswers;
     }
     
-    public List<QuizAnswer> getPlaceholderAnswers() {
+    public String getPlaceholderAnswers() {
         return placeholderAnswers;
     }
     
