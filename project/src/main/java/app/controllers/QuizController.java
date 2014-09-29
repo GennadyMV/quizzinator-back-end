@@ -52,14 +52,21 @@ public class QuizController {
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
     public String editQuiz(@Valid @RequestBody Quiz newQuiz, @PathVariable Long id) {
         Quiz quiz = quizRepo.findOne(id);
+        quiz = newQuiz;
         
-        quiz.setTitle(newQuiz.getTitle());
-        quiz.setItems(newQuiz.getItems());
-        quiz.setQuizAnswers(newQuiz.getQuizAnswers());
-        quiz.setReviewable(newQuiz.isReviewable());
-        quiz.setAnswered(newQuiz.isAnswered());
-        quiz.setPlaceholderAnswers(newQuiz.getPlaceholderAnswers());
-        quiz.setIsOpen(newQuiz.getIsOpen());
+        return "redirect:/quiz/" + id;
+    }
+    
+    @RequestMapping(value = "/{id}/placeholder", method = RequestMethod.POST, consumes = "application/json")
+    public String addPlaceholderAnswer(@Valid @RequestBody QuizAnswer quizAnswer,
+                                       @PathVariable Long id) {
+        
+        Quiz quiz = quizRepo.findOne(id);
+        Gson gson = new Gson();
+        
+        List<QuizAnswer> placeholderAnswers = gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
+        placeholderAnswers.add(quizAnswer);
+        quiz.setPlaceholderAnswers(gson.toJson(placeholderAnswers));
         
         return "redirect:/quiz/" + id;
     }
