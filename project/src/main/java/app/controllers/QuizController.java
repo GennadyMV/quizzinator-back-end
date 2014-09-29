@@ -39,18 +39,12 @@ public class QuizController {
     public Quiz getQuiz(@PathVariable(value = "id") Long id, @RequestParam(value = "username", required = false) String user) {
         Quiz q = quizService.getQuizForUser(id, user);
         
-        System.out.println("SENDING QUIZ: " + q.getId());
-        System.out.println("   ITEMS: " + q.getItems());
-        
         return q;
     }
     
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     @Transactional
     public String newQuiz(@Valid @RequestBody Quiz quiz) {
-        System.out.println("GOT QUIZ NEW: " + quiz.getId());
-        System.out.println("   ITEMS: " + quiz.getItems());
-        
         Long id = quizRepo.save(quiz).getId();
         
         return "redirect:/quiz/" + id;
@@ -59,9 +53,6 @@ public class QuizController {
     @Transactional
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
     public String editQuiz(@Valid @RequestBody Quiz newQuiz, @PathVariable Long id) {
-        System.out.println("GOT QUIZ EDIT: " + newQuiz.getId());
-        System.out.println("   ITEMS: " + newQuiz.getItems());
-        
         quizRepo.save(newQuiz);
         
         return "redirect:/quiz/" + newQuiz.getId();
