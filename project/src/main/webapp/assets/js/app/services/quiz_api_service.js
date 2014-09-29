@@ -21,9 +21,10 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 			url: 'quiz/' + options.id
 		})
 		.success(function(quiz){
-			quiz = angular.fromJson(quiz);
+		
 			quiz.items = angular.fromJson(quiz.items)
-			options.success(angular.fromJson(quiz));
+			console.log(quiz);
+			options.success(quiz);
 		})
 		.error(function(){
 			options.error();
@@ -51,6 +52,8 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 
 	_public.create_quiz = function(options){
 		options.quiz.items = angular.toJson(options.quiz.items);
+
+		console.log(angular.toJson(options.quiz))
 
 		$http({
 			method: 'POST',
