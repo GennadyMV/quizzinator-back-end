@@ -50,7 +50,14 @@ public class QuizController {
     @RequestMapping(value = "/{id}", method = RequestMethod.POST, consumes = "application/json")
     public String editQuiz(@Valid @RequestBody Quiz newQuiz, @PathVariable Long id) {
         Quiz quiz = quizRepo.findOne(id);
-        quiz = newQuiz;
+        
+        quiz.setTitle(newQuiz.getTitle());
+        quiz.setItems(newQuiz.getItems());
+        quiz.setQuizAnswers(newQuiz.getQuizAnswers());
+        quiz.setReviewable(newQuiz.isReviewable());
+        quiz.setAnswered(newQuiz.isAnswered());
+        quiz.setPlaceholderAnswers(newQuiz.getPlaceholderAnswers());
+        quiz.setIsOpen(newQuiz.getIsOpen());
         
         return "redirect:/quiz/" + id;
     }
