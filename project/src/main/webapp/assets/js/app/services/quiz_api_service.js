@@ -69,5 +69,25 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 		});
 	}
 
+	_public.set_defaul_answer = function(options) {
+		var quiz = jQuery.extend({}, options.quiz);
+		quiz.items = angular.toJson(options.quiz.items);
+
+		$http({
+			method: 'POST',
+			url: 'quiz/' + options.quiz.id,
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			data: angular.toJson(quiz)
+		})
+		.success(function(){
+			options.success();
+		})
+		.error(function(){
+			options.error();
+		});
+	}
+
 	return _public;
 }]);

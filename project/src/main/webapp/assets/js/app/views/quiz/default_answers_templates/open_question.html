@@ -1,3 +1,3 @@
 <label class="open-question-question">{{item.question}}</label>
 <p class="text-muted" ng-show="item.max_length && item.value.length > 0">{{item.max_length - item.value.length}} characters remaining</p>
-<textarea rows="5" class="text-field open-question-value" ng-model="item.value" maxlength="{{item.max_length}}"></textarea>
+<textarea rows="5" class="form-control" ng-model="item.value" maxlength="{{item.max_length}}"></textarea>
