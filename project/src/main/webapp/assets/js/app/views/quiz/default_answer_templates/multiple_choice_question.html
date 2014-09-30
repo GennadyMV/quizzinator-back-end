@@ -1,0 +1,4 @@
+<label class="multiple-choice-question-question">{{item.question}}</label>
+<div class="radio" ng-repeat="option in item.options">
+	<label><input type="radio" ng-model="item.value" value="{{option.title}}">{{option.title}}</label>
+</div>

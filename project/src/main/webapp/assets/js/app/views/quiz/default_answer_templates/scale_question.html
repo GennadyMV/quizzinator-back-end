@@ -1,0 +1,19 @@
+<label>{{item.title}}</label>
+
+<div class="scale-grid scale-header">
+	<div class="grid-item text-muted" style="width: 25%">{{item.min.title}}</div>
+	<div class="grid-item" ng-repeat="iterator in item.scale" style="width: {{65 / item.scale.length}}%">{{iterator}}</div>
+	<div class="grid-item text-muted" style="width: 10%">{{item.max.title}}</div>
+</div>
+
+<div class="scale-grid scale-question-list" ng-repeat="question in item.questions">
+	<div ng-show="$index % 15 == 0 && $index != 0" class="scale-reminder">
+		<div class="grid-item text-muted" style="width: 25%">{{item.min.title}}</div>
+		<div class="grid-item" ng-repeat="iterator in item.scale" style="width: {{65 / item.scale.length}}%">{{iterator}}</div>
+		<div class="grid-item text-muted" style="width: 10%">{{item.max.title}}</div>
+	</div>
+
+	<div class="grid-item" style="width: 25%">{{$index + 1}}. {{question.question}}</div>
+	<div class="grid-item" ng-repeat="iterator in item.scale" style="width: {{65 / item.scale.length}}%"><label><input type="radio" ng-model="question.value" value="{{iterator}}"> {{iterator}}</label></div>
+	<div class="grid-item" style="width: 10%"></div>
+</div>
