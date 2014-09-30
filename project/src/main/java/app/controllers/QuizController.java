@@ -4,7 +4,6 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
-import com.google.gson.Gson;
 import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -58,16 +57,12 @@ public class QuizController {
         return "redirect:/quiz/" + newQuiz.getId();
     }
     
+    @Transactional
     @RequestMapping(value = "/{id}/placeholder", method = RequestMethod.POST, consumes = "application/json")
-    public String addPlaceholderAnswer(@Valid @RequestBody QuizAnswer quizAnswer,
+    public String newPlaceholderAnswer(@Valid @RequestBody QuizAnswer quizAnswer,
                                        @PathVariable Long id) {
         
-        Quiz quiz = quizRepo.findOne(id);
-        Gson gson = new Gson();
-        
-        List<QuizAnswer> placeholderAnswers = gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
-        placeholderAnswers.add(quizAnswer);
-        quiz.setPlaceholderAnswers(gson.toJson(placeholderAnswers));
+        quizService.addPlaceholderAnswer(quizAnswer, id);
         
         return "redirect:/quiz/" + id;
     }

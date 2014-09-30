@@ -4,11 +4,11 @@ package app.controllers;
 import app.Application;
 import app.domain.Quiz;
 import app.repositories.QuizRepository;
+import com.google.gson.Gson;
 import java.util.List;
-import org.hibernate.Hibernate;
 import org.json.JSONArray;
-import org.json.JSONObject;
-import org.junit.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -83,10 +82,10 @@ public class QuizControllerTest {
         List<Quiz> quizes = quizRepository.findAll();
         JSONArray items = new JSONArray(quizes.get(quizes.size()-1).getItems());
         
-        Assert.assertEquals("testquestion1", items.getJSONObject(0).getString("question"));
-        Assert.assertEquals("open_question", items.getJSONObject(0).getString("item_type"));
-        Assert.assertEquals("testquestion2", items.getJSONObject(1).getString("question"));
-        Assert.assertEquals("open_question", items.getJSONObject(1).getString("item_type"));
+        assertEquals("testquestion1", items.getJSONObject(0).getString("question"));
+        assertEquals("open_question", items.getJSONObject(0).getString("item_type"));
+        assertEquals("testquestion2", items.getJSONObject(1).getString("question"));
+        assertEquals("open_question", items.getJSONObject(1).getString("item_type"));
     }
     
     @Test
@@ -103,6 +102,44 @@ public class QuizControllerTest {
         List<Quiz> quizes = quizRepository.findAll();
         JSONArray items = new JSONArray(quizes.get(quizes.size()-1).getItems());
         
-        Assert.assertEquals(3, items.length());
+        assertEquals(3, items.length());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testCorrectPlaceholderAnswerAdded() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
+                + "{}]\"}";
+        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+
+        String jsonAnswer = "{\"user\": \"matti\",\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        
+        Gson gson = new Gson();
+        JSONArray placeholderAnswers = new JSONArray(quizRepository.findOne(1L).getPlaceholderAnswers());
+        
+        assertTrue(placeholderAnswers.getJSONObject(0).getString("user").equals("matti"));
+        assertTrue(placeholderAnswers.getJSONObject(0).getString("url").equals("http://www.joku.com/"));
+        assertTrue(placeholderAnswers.getJSONObject(0).getString("answer").equals("vastaus"));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testMultiplePlaceholderAnswersAdded() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
+                + "{}]\"}";
+        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+
+        String jsonAnswer = "{\"user\": \"eero\", \"ip\": \"0.0.0.0\",\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        jsonAnswer = "{\"user\": \"esko\", \"ip\": \"0.0.0.0\",\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        jsonAnswer = "{\"user\": \"anita\", \"ip\": \"0.0.0.0\",\"url\": \"http://www.joku.com/\", \"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        
+        Gson gson = new Gson();
+        JSONArray placeholderAnswers = new JSONArray(quizRepository.findOne(1L).getPlaceholderAnswers());
+        
+        assertEquals(3, placeholderAnswers.length());
     }
 }
