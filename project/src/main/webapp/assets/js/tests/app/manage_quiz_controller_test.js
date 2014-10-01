@@ -73,6 +73,22 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items[0].options.length).toBe(0);      
   });
 
+  it('should be able to add scale questions', function(){
+    scope.widgets[5].creator();
+
+    expect(scope.quiz.items.length).toBe(1);
+    expect(scope.quiz.items[0].item_type).toBe('scale_question');
+  });
+
+  it('should be able to add code sample', function(){
+    scope.widgets[2].creator();
+    scope.quiz.items[0].code = 'int luku = 4;';
+
+    expect(scope.quiz.items.length).toBe(1);
+    expect(scope.quiz.items[0].item_type).toBe('code_sample');
+    expect(scope.quiz.items[0].code).toContain('int luku');
+  });
+
   it('should be able to add a checkbox question', function(){
     scope.widgets[3].creator();
     scope.quiz.items[0].question = 'Choose one or more';
