@@ -2,17 +2,19 @@ QuizApp.controller('CreateQuizController', ['$scope', '$location', 'QuizAPI', fu
 	$scope.save_quiz = function(){
 		QuizAPI.create_quiz({
 			quiz: $scope.$parent.quiz,
-			success: function(){
+			success: function(quiz){
 				$scope.$parent.quiz = {
 					title: '',
                     reviewable: false,
 					items: []
-				}
+				};
 				
 				$scope.message = {
 					content: 'The quiz has been saved!',
 					type: 'success'
 				};
+
+				$location.path('quiz/' + quiz.id + '/edit');
 			},
 			error: function(){
 				$scope.message = {

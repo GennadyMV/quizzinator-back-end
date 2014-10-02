@@ -7,11 +7,11 @@ import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import com.google.gson.Gson;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -95,5 +95,18 @@ public class QuizService {
         }
             
         return q;
+    }
+    
+    public void addPlaceholderAnswer(QuizAnswer quizAnswer, Long quizId) {
+        Quiz quiz = quizRepo.findOne(quizId);
+        Gson gson = new Gson();
+        
+        List<QuizAnswer> placeholderAnswers = gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
+        if (placeholderAnswers == null) {
+            placeholderAnswers = new ArrayList<QuizAnswer>();
+        }
+        
+        placeholderAnswers.add(quizAnswer);
+        quiz.setPlaceholderAnswers(gson.toJson(placeholderAnswers));
     }
 }

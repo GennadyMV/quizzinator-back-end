@@ -19,6 +19,25 @@
 	}
 }
 
+.review-list{
+	margin-bottom: 0px !important;
+
+	li{
+		h4{
+			margin-top: 0px;
+		}
+		&:first-child{
+			border-top: 0px none !important;
+		}
+
+		&:last-child{
+			border-bottom: 0px none !important;
+		}
+		border-left: 0px none;
+		border-right: 0px none;
+	}
+}
+
 .page-header-button{
 
 	.btn-header{
@@ -31,3 +50,31 @@
 		display: inline-block;
 	}
 }
+
+.scale-header{
+		padding: 10px;
+	}
+
+.scale-question-list{
+	overflow: hidden;
+	border-bottom: 1px solid darken(white, 10%);
+	padding: 10px;
+
+	&:last-child{
+		border-bottom: 0px none;
+	}
+}
+
+.scale-reminder{
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.scale-grid{
+	overflow: hidden;
+
+	.grid-item{
+		float: left;
+	}
+}
+
