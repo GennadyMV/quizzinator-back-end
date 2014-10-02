@@ -5,6 +5,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Quiznator</title>
+        <!-- Site -->
+        <link href="<c:url value="/assets/css/site.min.css"/>" rel="stylesheet"/>
+        <script src="<c:url value="/assets/js/quiznator.min.js"/>"></script>
 
         <!-- Bootstrap -->
         <link href="<c:url value="/assets/js/vendor/bootstrap/css/bootstrap.min.css"/>" rel="stylesheet"/>
@@ -12,10 +15,6 @@
 
         <!-- Font awesome -->
         <link href="<c:url value="/assets/js/vendor/font-awesome/css/font-awesome.min.css"/>" rel="stylesheet"/>
-
-        <!-- Site -->
-        <link href="<c:url value="/assets/css/site.min.css"/>" rel="stylesheet"/>
-        <script src="<c:url value="/assets/js/quiznator.min.js"/>"></script>
     </head>
 
     <body ng-app="QuizApp">

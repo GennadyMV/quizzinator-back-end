@@ -8,12 +8,11 @@ QuizApp.controller('QuizDefaultAnswersController', ['$scope', '$routeParams', 'A
 			console.log($scope.quiz);
 		},
 		error: function(){
-
 		}
 	});
 
 	$scope.get_item_template = function(item){
-		return '/assets/js/app/views/quiz/default_answers_templates/' + item.item_type + '.html';
+		return '/assets/js/app/views/quiz/answers/' + item.item_type + '.html';
 	}
 
 

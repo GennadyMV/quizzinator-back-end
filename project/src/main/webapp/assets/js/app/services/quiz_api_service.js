@@ -61,15 +61,28 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 		    },
 			data: angular.toJson(quiz)
 		})
-		.success(function(){
-			options.success();
+		.success(function(data, status, headers, config){
+			options.success(data);
 		})
 		.error(function(){
 			options.error();
 		});
 	}
 
-	_public.set_defaul_answer = function(options) {
+	_public.get_reviews = function(options){
+		$http({
+			method: 'GET',
+			url: 'reviews/' + options.user_hash
+		})
+		.success(function(reviews){
+			options.success(reviews);
+		})
+		.error(function(){
+			options.error();
+		});
+	}
+
+	_public.create_defaul_answer = function(options) {
 		var quiz = jQuery.extend({}, options.quiz);
 		quiz.items = angular.toJson(options.quiz.items);
 
