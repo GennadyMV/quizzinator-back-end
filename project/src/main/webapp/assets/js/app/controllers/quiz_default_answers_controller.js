@@ -14,7 +14,7 @@ QuizApp.controller('QuizDefaultAnswersController', ['$scope', '$routeParams', 'A
 		return '/assets/js/app/views/quiz/answers/' + item.item_type + '.html';
 	}
 
-	$scope.send_default_answer = function() {
+	$scope.create_default_answer = function() {
 		QuizAPI.send_default_answer({
 			answers: AnswerFormatter.output($scope.quiz),
 			success: function(){
