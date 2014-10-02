@@ -1,4 +1,4 @@
-QuizApp.service('QuizAPI', ['$http', function($http){
+QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function($http){
 	var _public = {};
 
 	_public.get_quizes = function(options){
@@ -70,12 +70,9 @@ QuizApp.service('QuizAPI', ['$http', function($http){
 	}
 
 	_public.set_defaul_answer = function(options) {
-		var quiz = jQuery.extend({}, options.quiz);
-		quiz.items = angular.toJson(options.quiz.items);
-
 		$http({
 			method: 'POST',
-			url: 'quiz/' + options.quiz.id,
+			url: 'quiz/' + options.quiz.id + '/placeholder',
 			headers: {
 				'Content-Type': 'application/json'
 			},
