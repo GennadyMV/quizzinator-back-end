@@ -1,0 +1,23 @@
+<div class="page-header">
+	<h1>My peer reviews</h1>
+</div>
+
+<div class="panel-group" id="reviews">
+  <div class="panel panel-primary" ng-repeat="quiz in quizes">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-target="#quiz-{{$index}}" style="cursor: pointer"  data-parent="#reviews">
+          <span class="badge" style="margin-right: 10px">{{quiz.reviews.length}}</span>{{quiz.title}}
+        </a>
+      </h4>
+    </div>
+    <div id="quiz-{{$index}}" class="panel-collapse collapse">
+	    <ul class="list-group review-list">
+		    <li class="list-group-item" ng-repeat="review in quiz.reviews">
+		    	<h4><i class="fa fa-user text-muted"></i> {{review.reviewer}}</h4>
+		    	{{review.review}}
+		    </li>
+		</ul>
+    </div>
+  </div>
+</div>
