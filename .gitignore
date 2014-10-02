@@ -1,9 +1,10 @@
-project/src/main/webapp/assets/node_modules/
+src/main/webapp/assets/node_modules/
 target/
 .swp.*
 **/*.swp
 *~
-/project/nbactions.xml
-/project/nb-configuration.xml
+/nbactions.xml
+/nb-configuration.xml
 **/glassfish-web.xml
-project/src/main/webapp/assets/js/tests/TEST-jasmine.xml
+/src/main/webapp/assets/js/tests/TEST-jasmine.xml
+npm-debug.log
