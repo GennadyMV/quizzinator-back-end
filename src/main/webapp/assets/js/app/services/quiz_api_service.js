@@ -83,14 +83,13 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function($http){
 	}
 
 
-	_public.create_defaul_answer = function(options) {
+	_public.create_default_answer = function(options) {
 		$http({
 			method: 'POST',
-			url: 'quiz/' + options.quiz.id + '/placeholder',
+			url: 'quiz/' + options.id + '/placeholder',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			data: angular.toJson(quiz)
 		})
 		.success(function(){
 			options.success();
