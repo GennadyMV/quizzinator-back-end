@@ -6,7 +6,7 @@ describe('CreateQuizController', function(){
 	var QuizAPIMock = (function(){
 		return {
 			create_quiz: function(options){
-				options.success();
+				options.success({ id: 1 });
 			}
 		}
 	})();

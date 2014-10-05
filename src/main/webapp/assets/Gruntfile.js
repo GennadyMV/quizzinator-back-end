@@ -21,10 +21,10 @@ module.exports = function(grunt) {
         }
       }
     },
-   /* watch: {
+    watch: {
       files: ['js/app.js', 'js/services/*.js', 'js/directives/*.js', 'js/controllers/*.js', 'css/quiz.less'],
       tasks: ['uglify', 'less', 'cssmin']
-    },*/
+    },
     cssmin: {
     combine: {
       files: {
@@ -40,6 +40,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
   // Default task(s).
-  grunt.registerTask('default', ['uglify', 'less', 'cssmin']);
+  grunt.registerTask('default', ['uglify', 'less', 'cssmin', 'watch']);
 
 };
