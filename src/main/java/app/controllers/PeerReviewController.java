@@ -54,7 +54,7 @@ public class PeerReviewController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/reviews/{hash}", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/reviews/{hash}", method = RequestMethod.GET, produces = "application/json")
     @Transactional
     public List<PeerReview> userPeerReviews(
             @Valid @RequestBody PeerReview review,
