@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.domain.QuizAnswer;
+import app.domain.ReviewResponseModel;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
@@ -30,7 +31,7 @@ public class QuizAnswerController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer", method = RequestMethod.POST, consumes = "application/json")
-    public List<QuizAnswer> newAnswer(
+    public ReviewResponseModel newAnswer(
             @PathVariable Long quizId, 
             @Valid @RequestBody QuizAnswer quizAnswer, 
             HttpServletRequest request) {

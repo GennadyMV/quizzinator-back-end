@@ -12,7 +12,10 @@ public class PeerReview  extends AbstractPersistable<Long> {
     @ManyToOne
     @JsonIgnore
     private QuizAnswer quizAnswer;
-    private String reviewer;
+    
+    @ManyToOne
+    private User reviewer;
+    
     private String review;
 
     public QuizAnswer getQuizAnswer() {
@@ -23,11 +26,11 @@ public class PeerReview  extends AbstractPersistable<Long> {
         this.quizAnswer = quizAnswer;
     }
 
-    public String getReviewer() {
+    public User getReviewer() {
         return reviewer;
     }
 
-    public void setReviewer(String reviewer) {
+    public void setReviewer(User reviewer) {
         this.reviewer = reviewer;
     }
 

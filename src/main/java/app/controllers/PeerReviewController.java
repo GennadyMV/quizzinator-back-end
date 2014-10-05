@@ -52,4 +52,14 @@ public class PeerReviewController {
         quizService.saveNewReview(review, answerId, quizId);
         return "";
     }
+    
+    @ResponseBody
+    @RequestMapping(value = "/reviews/{hash}", method = RequestMethod.POST, consumes = "application/json")
+    @Transactional
+    public List<PeerReview> userPeerReviews(
+            @Valid @RequestBody PeerReview review,
+            @PathVariable String hash) {
+        
+        return quizService.getReviewsByUserHash(hash);
+    }
 }

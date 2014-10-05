@@ -18,6 +18,7 @@ public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private String title;
     
+    //should be lob, but for H2 length is required
     @Column(length = 4000)
     @Lob
     private String items;

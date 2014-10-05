@@ -2,6 +2,7 @@ package app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.jpa.domain.AbstractPersistable;
@@ -26,19 +28,29 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     @JsonIgnore
     private List<PeerReview> peerReviews;
     
-    @NotBlank
-    @Column(name = "answer_user")
-    private String user;
+    @JsonIgnore
+    @ManyToOne
+    private User user;
     
+    @Transient
+    private String username;
+    
+    @JsonIgnore
     private String ip;
     
     @URL
+    @JsonIgnore
     private String url;
     
     @NotBlank
+    //should be lob, but for H2 length is required
+    @Column(length = 4000)
     @Lob
     private String answer;
 
+    @JsonIgnore
+    private Integer reviewCount;
+    
     public Quiz getQuiz() {
         return quiz;
     }
@@ -54,12 +66,12 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     public void setPeerReviews(List<PeerReview> peerReviews) {
         this.peerReviews = peerReviews;
     }
-    
-    public String getUser() {
+
+    public User getUser() {
         return user;
     }
-    
-    public void setUser(String user) {
+
+    public void setUser(User user) {
         this.user = user;
     }
     
@@ -67,7 +79,6 @@ public class QuizAnswer extends AbstractPersistable<Long> {
         return ip;
     }
     
-    //@JsonIgnore
     public void setIp(String ip) {
         this.ip = ip;
     }
@@ -86,5 +97,27 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     
     public void setItems(String answer) {
         this.answer = answer;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    @JsonProperty("user")
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    
+    @JsonProperty("user")
+    public String getUsernameForJSON() {
+        return this.user.getName();
+    }
+
+    public Integer getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(Integer reviewCount) {
+        this.reviewCount = reviewCount;
     }
 }
