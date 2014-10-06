@@ -40,6 +40,7 @@ public class QuizService {
         String username = answer.getUsername();
         
         List<User> users = userRepo.findByName(username);
+        
         if (users.isEmpty()) {
             u = new User();
             u.setName(username);

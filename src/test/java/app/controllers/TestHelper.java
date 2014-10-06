@@ -39,7 +39,7 @@ public class TestHelper {
                 "{\"reviewer\":\"" + reviewer + "\"," +
                 "\"review\":\"" + review + "\"}";
         
-        String url = "/quiz/" + quizId + "/answer/" + answerId + "/review";
+        String url = "/quiz/" + quizId + "/answer/"+ answerId +"/review";
         
         mockMvc.perform(post(url).content(jsonReview).contentType(MediaType.APPLICATION_JSON));
     }

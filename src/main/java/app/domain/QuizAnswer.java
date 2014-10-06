@@ -104,12 +104,12 @@ public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInter
         return username;
     }
 
-    @JsonProperty("user")
+    @JsonProperty("username")
     public void setUsername(String username) {
         this.username = username;
     }
     
-    @JsonProperty("user")
+    @JsonProperty("username")
     public String getUsernameForJSON() {
         return this.user.getName();
     }

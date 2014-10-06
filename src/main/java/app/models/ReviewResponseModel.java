@@ -9,17 +9,17 @@ import java.util.List;
 //TODO: edit the api to make more sense and get rid of this
 public class ReviewResponseModel {
     @JsonProperty("answers")
-    private List<AnswerInterface> answerForReview;
+    private List<AnswerInterface> answers;
     
     //returned hash should be answer rather than specific
     private String userhash;
 
     public List<AnswerInterface> getAnswerForReview() {
-        return answerForReview;
+        return answers;
     }
 
     public void setAnswerForReview(List<AnswerInterface> answerForReview) {
-        this.answerForReview = answerForReview;
+        this.answers = answerForReview;
     }
 
     public String getUserhash() {

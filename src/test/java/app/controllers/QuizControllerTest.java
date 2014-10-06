@@ -6,6 +6,7 @@ import app.repositories.QuizRepository;
 import com.google.gson.Gson;
 import java.util.List;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -144,7 +145,9 @@ public class QuizControllerTest {
         this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection());
         
-        assertTrue(quizRepository.findOne(1L).getPlaceholderAnswers().get(0).getAnswerData().equals("vastaus"));
+        JSONObject json = new JSONObject(quizRepository.findOne(1L).getPlaceholderAnswers().get(0).getAnswerData());
+        String answer = json.getString("answer");
+        assertTrue(answer.equals("vastaus"));
     }
 
     @Test
