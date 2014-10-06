@@ -1,8 +1,11 @@
 package app.services;
 
+import app.repositories.UserRepository;
 import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
+import app.domain.ReviewResponseModel;
+import app.domain.User;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
@@ -25,19 +28,42 @@ public class QuizService {
     @Autowired
     private PeerReviewRepository reviewRepo;
     
-    public List<QuizAnswer> sumbitAnswer(QuizAnswer answer, Long quizId) {
+    @Autowired
+    private UserRepository userRepo;
+    
+    public ReviewResponseModel sumbitAnswer(QuizAnswer answer, Long quizId) {
+        User u;
+        String username = answer.getUsername();
+        System.out.println("submitAnswer called with username: " + username);
+        
+        List<User> users = userRepo.findByName(username);
+        if (users.isEmpty()) {
+            u = new User();
+            u.setName(username);
+            userRepo.save(u);
+        } else {
+            u = users.get(0);
+        }
+        
+        answer.setUser(u);
+        
         Quiz q = quizRepo.findOne(quizId);
         answer.setQuiz(q);
-        answer = answerRepo.save(answer);
+        answerRepo.save(answer);
+        
+        ReviewResponseModel model = null;
         
         if (q.isReviewable()) {
-            return getAnswersForReview(q, answer.getUser());
-        } else {
-            return null;
+            model = new ReviewResponseModel();
+            model.setAnswerForReview(getAnswersForReview(q, u));
+            
+            model.setUserhash(u.getHash());
         }
+        
+        return model;
     }
     
-    public List<QuizAnswer> getAnswersForReview(Quiz quiz, String user) {
+    public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user) {
         int answerCount = 2;
         
         if (quiz.getQuizAnswers().size() >= answerCount) {
@@ -48,7 +74,7 @@ public class QuizService {
         }
     }
     
-    public List<QuizAnswer> getAnswersForReview(Quiz quiz, String user, int answerCount) {
+    public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user, int answerCount) {
         Pageable pageable = new PageRequest(0, answerCount);
         List<QuizAnswer> qas = answerRepo.findByQuizAndUserNotOrderedByReviewCount(quiz, user, pageable);
         
@@ -69,6 +95,9 @@ public class QuizService {
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         review.setQuizAnswer(qa);
+        
+//        User u = review.getReviewer();
+        
         PeerReview newReview = reviewRepo.save(review);
         
         return newReview;
@@ -85,10 +114,11 @@ public class QuizService {
         }
     }
 
-    public Quiz getQuizForUser(Long id, String user) {
+    public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
+        User u = userRepo.findOne(username);
         
-        if (answerRepo.findByQuizAndUser(q, user).isEmpty()) {
+        if (answerRepo.findByQuizAndUser(q, u).isEmpty()) {
             q.setAnswered(false);
         } else {
             q.setAnswered(true);
@@ -108,5 +138,13 @@ public class QuizService {
         
         placeholderAnswers.add(quizAnswer);
         quiz.setPlaceholderAnswers(gson.toJson(placeholderAnswers));
+    }
+
+    public List<PeerReview> getReviewsByUserHash(String hash) {
+        User u = userRepo.findOne(hash);
+        
+        List<QuizAnswer> answers = answerRepo.findByUser(u);
+        
+        return reviewRepo.findByQuizAnswerIn(answers);
     }
 }

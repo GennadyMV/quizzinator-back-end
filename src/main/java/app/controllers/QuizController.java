@@ -35,8 +35,13 @@ public class QuizController {
     @ResponseBody
     @RequestMapping(value = "/{id}", produces="application/json", method = RequestMethod.GET)
     @Transactional
-    public Quiz getQuiz(@PathVariable(value = "id") Long id, @RequestParam(value = "username", required = false) String user) {
-        Quiz q = quizService.getQuizForUser(id, user);
+    public Quiz getQuiz(@PathVariable(value = "id") Long id, @RequestParam(value = "username", required = false) String username) {
+        Quiz q;
+        if (username == null) {
+            q = quizRepo.findOne(id);
+        } else {
+            q = quizService.getQuizForUsername(id, username);
+        }
         
         return q;
     }
@@ -59,9 +64,7 @@ public class QuizController {
     
     @Transactional
     @RequestMapping(value = "/{id}/placeholder", method = RequestMethod.POST, consumes = "application/json")
-    public String newPlaceholderAnswer(@Valid @RequestBody QuizAnswer quizAnswer,
-                                       @PathVariable Long id) {
-        
+    public String newPlaceholderAnswer(@Valid @RequestBody QuizAnswer quizAnswer, @PathVariable Long id) {
         quizService.addPlaceholderAnswer(quizAnswer, id);
         
         return "redirect:/quiz/" + id;

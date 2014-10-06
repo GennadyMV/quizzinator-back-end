@@ -15,8 +15,9 @@ QuizApp.controller('QuizDefaultAnswersController', ['$scope', '$routeParams', 'A
 	}
 
 	$scope.create_default_answer = function() {
-		QuizAPI.send_default_answer({
+		QuizAPI.create_default_answer({
 			answers: AnswerFormatter.output($scope.quiz),
+			id: $routeParams.quizId,
 			success: function(){
 				$scope.message = {
 					content: 'Default answers have been submitted.',
