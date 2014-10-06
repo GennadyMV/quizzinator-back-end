@@ -1,18 +1,18 @@
 <div ng-controller="QuizDefaultAnswersController">
-<ul class="nav nav-tabs" role="tablist">
-  <li><a href="#/quiz/{{quiz_id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
-  <li class="active"><a href="#/quiz/{{quiz_id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
-  <li><a href="#/quiz/{{quiz_id}}/share"><i class="fa fa-share"></i> Share</a></li>
-</ul>
+    <ul class="nav nav-tabs" role="tablist">
+        <li><a href="#/quiz/{{quiz_id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
+        <li class="active"><a href="#/quiz/{{quiz_id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
+        <li><a href="#/quiz/{{quiz_id}}/share"><i class="fa fa-share"></i> Share</a></li>
+    </ul>
 
-<div class="page-header page-header-button">
-    <h1>Add default answer</h1>
-    <button class="btn btn-primary pull-right btn-header" ng-click="create_default_answer()" id="create-default-answer"><i class="fa fa-check"></i> Save</button>
-</div>
-    
-<div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
+    <div class="page-header page-header-button">
+        <h1>Add default answer</h1>
+        <button class="btn btn-primary pull-right btn-header" ng-click="create_default_answer()" id="create-default-answer"><i class="fa fa-check"></i> Save</button>
+    </div>
 
-<div class="form-group" ng-repeat="item in quiz.items">
-	<div ng-include="get_item_template(item)"></div>
-</div>
+    <div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
+
+    <div class="form-group" ng-repeat="item in quiz.items">
+        <div ng-include="get_item_template(item)"></div>
+    </div>
 </div>
