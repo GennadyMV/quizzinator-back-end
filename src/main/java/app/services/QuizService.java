@@ -127,17 +127,19 @@ public class QuizService {
         return q;
     }
     
-    public void addPlaceholderAnswer(QuizAnswer quizAnswer, Long quizId) {
+    public void addPlaceholderAnswer(String quizAnswer, Long quizId) {
         Quiz quiz = quizRepo.findOne(quizId);
-        Gson gson = new Gson();
-        
-        List<QuizAnswer> placeholderAnswers = gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
-        if (placeholderAnswers == null) {
-            placeholderAnswers = new ArrayList<QuizAnswer>();
-        }
-        
-        placeholderAnswers.add(quizAnswer);
-        quiz.setPlaceholderAnswers(gson.toJson(placeholderAnswers));
+//        Gson gson = new Gson();
+//        
+//        List<String> placeholderAnswers = gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
+//        if (placeholderAnswers == null) {
+//            placeholderAnswers = new ArrayList<QuizAnswer>();
+//        }
+//        
+//        placeholderAnswers.add(quizAnswer);
+//        quiz.setPlaceholderAnswers(gson.toJson(placeholderAnswers));
+        quiz.setPlaceholderAnswers(quizAnswer);
+        quizRepo.save(quiz);
     }
 
     public List<PeerReview> getReviewsByUserHash(String hash) {

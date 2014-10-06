@@ -64,7 +64,7 @@ public class QuizController {
     
     @Transactional
     @RequestMapping(value = "/{id}/placeholder", method = RequestMethod.POST, consumes = "application/json")
-    public String newPlaceholderAnswer(@Valid @RequestBody QuizAnswer quizAnswer, @PathVariable Long id) {
+    public String newPlaceholderAnswer(@RequestBody String quizAnswer, @PathVariable Long id) {
         quizService.addPlaceholderAnswer(quizAnswer, id);
         
         return "redirect:/quiz/" + id;

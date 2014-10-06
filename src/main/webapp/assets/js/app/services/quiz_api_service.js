@@ -57,8 +57,8 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function($http){
 			method: 'POST',
 			url: '/quiz',
 			headers: {
-		       'Content-Type': 'application/json'
-		    },
+                            'Content-Type': 'application/json'
+                        },
 			data: angular.toJson(quiz)
 		})
 		.success(function(data, status, headers, config){
@@ -90,7 +90,7 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function($http){
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			answers: angular.toJson(options.answers)
+			data: angular.toJson(options.answers)
 		})
 		.success(function(){
 			options.success();

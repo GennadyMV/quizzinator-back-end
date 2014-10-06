@@ -41,5 +41,8 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['uglify', 'less', 'cssmin', 'watch']);
+  
+  // build without watch. easier with netbeans
+  grunt.registerTask('build', ['uglify', 'less', 'cssmin']);
 
 };
