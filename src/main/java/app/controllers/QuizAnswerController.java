@@ -1,7 +1,7 @@
 package app.controllers;
 
 import app.domain.QuizAnswer;
-import app.domain.ReviewResponseModel;
+import app.models.ReviewResponseModel;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import app.services.QuizService;

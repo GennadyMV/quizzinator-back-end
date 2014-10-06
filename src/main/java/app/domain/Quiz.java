@@ -27,13 +27,15 @@ public class Quiz extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "quiz")
     private List<QuizAnswer> quizAnswers;
     
+    @JsonIgnore
+    @OneToMany(mappedBy = "quiz")
+    private List<PlaceholderAnswer> placeholderAnswers;
+    
     @NotNull
     private boolean reviewable;
     
     @Transient
     private boolean answered;
-    
-    private String placeholderAnswers;
     
     private Boolean isOpen;
     
@@ -79,19 +81,19 @@ public class Quiz extends AbstractPersistable<Long> {
         this.answered = answered;
     }
     
-    public void setPlaceholderAnswers(String placeholderAnswers) {
-        this.placeholderAnswers = placeholderAnswers;
-    }
-    
-    public String getPlaceholderAnswers() {
-        return placeholderAnswers;
-    }
-    
     public void setIsOpen(Boolean isOpen) {
         this.isOpen = isOpen;
     }
     
     public Boolean getIsOpen() {
         return isOpen;
+    }
+
+    public List<PlaceholderAnswer> getPlaceholderAnswers() {
+        return placeholderAnswers;
+    }
+
+    public void setPlaceholderAnswers(List<PlaceholderAnswer> placeholderAnswers) {
+        this.placeholderAnswers = placeholderAnswers;
     }
 }

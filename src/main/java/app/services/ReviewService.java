@@ -3,7 +3,7 @@ package app.services;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.domain.User;
-import app.domain.UsersReviewModel;
+import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
