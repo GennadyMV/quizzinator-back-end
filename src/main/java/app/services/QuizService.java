@@ -34,7 +34,6 @@ public class QuizService {
     public ReviewResponseModel sumbitAnswer(QuizAnswer answer, Long quizId) {
         User u;
         String username = answer.getUsername();
-        System.out.println("submitAnswer called with username: " + username);
         
         List<User> users = userRepo.findByName(username);
         if (users.isEmpty()) {
@@ -129,15 +128,7 @@ public class QuizService {
     
     public void addPlaceholderAnswer(String quizAnswer, Long quizId) {
         Quiz quiz = quizRepo.findOne(quizId);
-//        Gson gson = new Gson();
-//        
-//        List<String> placeholderAnswers = gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
-//        if (placeholderAnswers == null) {
-//            placeholderAnswers = new ArrayList<QuizAnswer>();
-//        }
-//        
-//        placeholderAnswers.add(quizAnswer);
-//        quiz.setPlaceholderAnswers(gson.toJson(placeholderAnswers));
+        
         quiz.setPlaceholderAnswers(quizAnswer);
         quizRepo.save(quiz);
     }

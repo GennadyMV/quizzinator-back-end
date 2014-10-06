@@ -1,8 +1,10 @@
 package app.controllers;
 
 import app.domain.PeerReview;
+import app.domain.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.services.QuizService;
+import app.services.ReviewService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -24,6 +26,9 @@ public class PeerReviewController {
     
     @Autowired
     private QuizService quizService;
+    
+    @Autowired
+    private ReviewService reviewService;
     
     @ApiOperation(value = "Get reviews", notes = "Get all reviews")
     @ResponseBody
@@ -56,10 +61,7 @@ public class PeerReviewController {
     @ResponseBody
     @RequestMapping(value = "/reviews/{hash}", method = RequestMethod.GET, produces = "application/json")
     @Transactional
-    public List<PeerReview> userPeerReviews(
-            @Valid @RequestBody PeerReview review,
-            @PathVariable String hash) {
-        
-        return quizService.getReviewsByUserHash(hash);
+    public List<UsersReviewModel> userPeerReviews(@PathVariable String hash) {
+        return reviewService.getUserReviews(hash);
     }
 }
