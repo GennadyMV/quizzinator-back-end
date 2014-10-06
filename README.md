@@ -8,7 +8,6 @@
 * CI-pavelin: <a href="http://ohtu.jamo.io/job/kaint-ohtu/">Jenkins</a>
 * Plugin: 
  * Repo: <a href="https://github.com/kaint-ohtu/quiz-lib">quiz-lib</a>
- * Tuotantoversio: 
 
 ##Backlogs
 
