@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Entity
 @Table(name = "answers")
 @JsonIgnoreProperties(value = "new")
-public class QuizAnswer extends AbstractPersistable<Long> {
+public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInterface {
     @ManyToOne
     @JsonIgnore
     private Quiz quiz;
@@ -91,6 +91,7 @@ public class QuizAnswer extends AbstractPersistable<Long> {
         this.url = url;
     }
     
+    @Override
     public String getAnswer() {
         return answer;
     }
@@ -119,5 +120,11 @@ public class QuizAnswer extends AbstractPersistable<Long> {
 
     public void setReviewCount(Integer reviewCount) {
         this.reviewCount = reviewCount;
+    }
+
+    @Override
+    @JsonIgnore
+    public Long getQuizId() {
+        return this.quiz.getId();
     }
 }

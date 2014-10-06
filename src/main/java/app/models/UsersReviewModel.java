@@ -1,5 +1,7 @@
-package app.domain;
+package app.models;
 
+import app.domain.PeerReview;
+import app.domain.QuizAnswer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
