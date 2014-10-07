@@ -1,16 +1,17 @@
 package app.services;
 
+import app.domain.AnswerInterface;
 import app.repositories.UserRepository;
 import app.domain.PeerReview;
+import app.domain.PlaceholderAnswer;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
-import app.domain.ReviewResponseModel;
+import app.models.ReviewResponseModel;
 import app.domain.User;
 import app.repositories.PeerReviewRepository;
+import app.repositories.PlaceholderAnswerRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
-import com.google.gson.Gson;
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Component;
 public class QuizService {
     @Autowired
     private QuizAnswerRepository answerRepo;
+    
+    @Autowired
+    private PlaceholderAnswerRepository placeholderAnswerRepo;
     
     @Autowired
     private QuizRepository quizRepo;
@@ -36,6 +40,7 @@ public class QuizService {
         String username = answer.getUsername();
         
         List<User> users = userRepo.findByName(username);
+        
         if (users.isEmpty()) {
             u = new User();
             u.setName(username);
@@ -54,7 +59,7 @@ public class QuizService {
         
         if (q.isReviewable()) {
             model = new ReviewResponseModel();
-            model.setAnswerForReview(getAnswersForReview(q, u));
+            model.setAnswerForReview((List<AnswerInterface>) getAnswersForReview(q, u));
             
             model.setUserhash(u.getHash());
         }
@@ -62,14 +67,14 @@ public class QuizService {
         return model;
     }
     
-    public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user) {
+    public List<? extends AnswerInterface> getAnswersForReview(Quiz quiz, User user) {
         int answerCount = 2;
         
         if (quiz.getQuizAnswers().size() >= answerCount) {
             return getAnswersForReview(quiz, user, answerCount);
         } else {
-            Gson gson = new Gson();
-            return gson.fromJson(quiz.getPlaceholderAnswers(), List.class);
+            //return placeholder answers
+            return placeholderAnswerRepo.findByQuiz(quiz);
         }
     }
     
@@ -117,7 +122,7 @@ public class QuizService {
         Quiz q = quizRepo.findOne(id);
         User u = userRepo.findOne(username);
         
-        if (answerRepo.findByQuizAndUser(q, u).isEmpty()) {
+        if (u==null || answerRepo.findByQuizAndUser(q, u).isEmpty()) {
             q.setAnswered(false);
         } else {
             q.setAnswered(true);
@@ -129,8 +134,12 @@ public class QuizService {
     public void addPlaceholderAnswer(String quizAnswer, Long quizId) {
         Quiz quiz = quizRepo.findOne(quizId);
         
-        quiz.setPlaceholderAnswers(quizAnswer);
-        quizRepo.save(quiz);
+        PlaceholderAnswer answer = new PlaceholderAnswer();
+        answer.setAnswerData(quizAnswer);
+        answer.setQuiz(quiz);
+        
+        placeholderAnswerRepo.save(answer);
+        //quizRepo.save(quiz);
     }
 
     public List<PeerReview> getReviewsByUserHash(String hash) {

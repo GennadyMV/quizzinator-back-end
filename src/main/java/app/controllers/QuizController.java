@@ -1,7 +1,6 @@
 package app.controllers;
 
 import app.domain.Quiz;
-import app.domain.QuizAnswer;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
 import java.util.List;

@@ -78,7 +78,8 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 	function basic_output_formatter(item){
 		return {
 			question: item.question,
-			value: item.value
+			value: item.value,
+			item_type: item.item_type
 		}
 	}
 
@@ -97,8 +98,6 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 
 			format['question'] = item['title'];
 			format['value'] = item['questions'];
-
-			console.log(format)
 
 			return format;
 
@@ -145,8 +144,6 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 		if (!quiz) return [];
 
 		quiz.items.forEach(function(item){
-			console.log(item.item_type);
-			
 			if(typeof output_formatters[item.item_type] === 'function'){
 				answers.push(output_formatters[item.item_type](item));
 			}

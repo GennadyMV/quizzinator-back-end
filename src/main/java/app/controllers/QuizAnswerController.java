@@ -1,7 +1,7 @@
 package app.controllers;
 
 import app.domain.QuizAnswer;
-import app.domain.ReviewResponseModel;
+import app.models.ReviewResponseModel;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
@@ -44,7 +44,7 @@ public class QuizAnswerController {
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}",
             method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
-    public QuizAnswer getAnswer(@PathVariable Long answerId) {
+    public QuizAnswer getAnswer(@PathVariable Long quizId, @PathVariable Long answerId) {
         return answerRepo.findOne(answerId);
     }
     
