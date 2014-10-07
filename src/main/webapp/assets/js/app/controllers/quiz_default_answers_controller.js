@@ -11,7 +11,7 @@ QuizApp.controller('QuizDefaultAnswersController', ['$scope', '$routeParams', 'A
 	});
 
 	$scope.get_item_template = function(item){
-		return '/assets/js/app/views/quiz/answers/' + item.item_type + '.html';
+		return '/assets/js/app/views/quiz/default_answers/' + item.item_type + '.html';
 	}
 
 	$scope.create_default_answer = function() {

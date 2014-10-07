@@ -75,6 +75,11 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function($http){
 			url: 'reviews/' + options.user_hash
 		})
 		.success(function(reviews){
+			reviews.forEach(function(review){
+				review.yourAnswer.answer = angular.fromJson(review.yourAnswer.answer);
+				console.log(review.yourAnswer.answer.length);
+			});
+
 			options.success(reviews);
 		})
 		.error(function(){

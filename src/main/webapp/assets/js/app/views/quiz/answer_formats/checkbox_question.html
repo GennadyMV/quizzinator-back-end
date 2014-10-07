@@ -1,0 +1,4 @@
+<label>{{answer.question}}</label>
+<span ng-repeat="check in answer.value">
+	{{check}}<span ng-show="$index != answer.value.length - 1">, </span>
+</span>

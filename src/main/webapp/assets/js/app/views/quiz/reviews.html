@@ -13,6 +13,9 @@
     </div>
     <div id="quiz-{{$index}}" class="panel-collapse collapse">
 	    <ul class="list-group review-list">
+        <li class="list-group-item">
+            <div class="form-group question-answer" ng-include="get_answer_template(answer)" ng-repeat="answer in quiz.yourAnswer.answer"></div>
+        </li>
 		    <li class="list-group-item" ng-repeat="review in quiz.reviews">
 		    	<h4><i class="fa fa-user text-muted"></i> {{review.reviewer}}</h4>
 		    	{{review.review}}
