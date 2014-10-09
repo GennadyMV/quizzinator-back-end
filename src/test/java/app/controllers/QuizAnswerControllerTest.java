@@ -88,12 +88,6 @@ public class QuizAnswerControllerTest {
         MvcResult mvcAnswer = this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
                              .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON)).andReturn();
         
-        Gson gson = new Gson();
-        
-//        System.out.println("|||||||||||||||||||||||||||||||||||");
-//        System.out.println(mvcAnswer.getResponse().getContentAsString());
-//        System.out.println("|||||||||||||||||||||||||||||||||||");
-        
         JSONObject obj = new JSONObject(mvcAnswer.getResponse().getContentAsString());
    
         assertEquals(2, new JSONArray(obj.getString("answers")).length());

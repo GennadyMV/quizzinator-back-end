@@ -5,8 +5,10 @@
  */
 package app.services;
 
+import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
+import app.domain.QuizPointModel;
 import app.domain.User;
 import app.domain.UserPointModel;
 import app.repositories.PeerReviewRepository;
@@ -40,27 +42,33 @@ public class PointService {
     public UserPointModel getPointsForUser(String id) {
         User user = userRepo.findOne(id);
         
-        UserPointModel userPoint = new UserPointModel(user,
-                                        answerRepo.findByUser(user).size(),
-                                        reviewRepo.findByReviewer(user).size());
-        
-        return userPoint;
+        return new UserPointModel(user.getName(),
+                                answerRepo.findByUser(user).size(),
+                                reviewRepo.findByReviewer(user).size());
         
     }
     
-    public List<UserPointModel> getPointsForQuiz(Long id) {
-        List<UserPointModel> userPoints = new ArrayList<UserPointModel>();
-        
+    public QuizPointModel getPointsForQuiz(Long id) {
         Quiz quiz = quizRepo.findOne(id);
+        List<String> answerers = new ArrayList<String>();
+        List<String> reviewers = new ArrayList<String>();
+        
         List<QuizAnswer> quizAnswers = quiz.getQuizAnswers();
         for (int i = 0; i < quizAnswers.size(); i++) {
-            QuizAnswer quizAnswer = quizAnswers.get(i);
-            User user = quizAnswer.getUser();
+            QuizAnswer answer = quizAnswers.get(i);
             
-            UserPointModel userPoint = new UserPointModel(user, 1,
-               reviewRepo.findByQuizAnswerAndReviewer(quizAnswer, user).size());
+            if (!answerers.contains(answer.getUser())) {
+                answerers.add(answer.getUser().getName());
+            }
+            
+            List<PeerReview> reviews = answer.getPeerReviews();
+            for (int j = 0; j < reviews.size(); j++) {
+                if (!reviewers.contains(reviews.get(j).getReviewer())) {
+                    reviewers.add(reviews.get(j).getReviewer().getName());
+                }
+            }
         }
         
-        return userPoints;
+        return new QuizPointModel(quiz, answerers, reviewers);
     }
 }

@@ -10,5 +10,4 @@ public interface PeerReviewRepository extends JpaRepository<PeerReview, Long> {
     public List<PeerReview> findByQuizAnswer(QuizAnswer answer);
     public List<PeerReview> findByQuizAnswerIn(List<QuizAnswer> answers);
     public List<PeerReview> findByReviewer(User reviewer);
-    public List<PeerReview> findByQuizAnswerAndReviewer(QuizAnswer quizAnswer, User reviewer);
 }
