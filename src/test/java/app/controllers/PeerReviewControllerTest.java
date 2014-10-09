@@ -1,12 +1,7 @@
 package app.controllers;
 
 import app.Application;
-import app.domain.PeerReview;
 import app.repositories.PeerReviewRepository;
-import com.google.gson.Gson;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
