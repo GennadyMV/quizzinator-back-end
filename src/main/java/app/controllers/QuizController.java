@@ -1,9 +1,12 @@
 package app.controllers;
 
 import app.domain.Quiz;
+import app.domain.QuizAnswer;
+import app.models.ReviewResponseModel;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +65,20 @@ public class QuizController {
     }
     
     @Transactional
-    @RequestMapping(value = "/{id}/placeholder", method = RequestMethod.POST, consumes = "application/json")
-    public String newPlaceholderAnswer(@RequestBody String quizAnswer, @PathVariable Long id) {
-        quizService.addPlaceholderAnswer(quizAnswer, id);
+    @RequestMapping(value = "/{quizId}/placeholder", method = RequestMethod.POST, consumes = "application/json")
+    public String newPlaceholderAnswer(
+            @PathVariable Long quizId, 
+            @RequestBody String quizAnswer, 
+            HttpServletRequest request) {
         
-        return "redirect:/quiz/" + id;
+        quizService.addPlaceHolderAnswer(quizAnswer, quizId);
+        return "redirect:/quiz/" + quizId;
+    }
+    
+    @Transactional
+    @ResponseBody
+    @RequestMapping(value = "/{quizId}/placeholder", method = RequestMethod.GET, produces = "application/json")
+    public List<QuizAnswer> getPlaceholderAnswers(@PathVariable Long quizId) {
+        return quizService.getPlaceholderAnswers(quizId);
     }
 }

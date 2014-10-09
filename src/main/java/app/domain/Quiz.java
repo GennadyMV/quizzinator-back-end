@@ -28,10 +28,6 @@ public class Quiz extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "quiz")
     private List<QuizAnswer> quizAnswers;
     
-    @JsonIgnore
-    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
-    private List<PlaceholderAnswer> placeholderAnswers;
-    
     @NotNull
     private boolean reviewable;
     
@@ -88,13 +84,5 @@ public class Quiz extends AbstractPersistable<Long> {
     
     public Boolean getIsOpen() {
         return isOpen;
-    }
-
-    public List<PlaceholderAnswer> getPlaceholderAnswers() {
-        return placeholderAnswers;
-    }
-
-    public void setPlaceholderAnswers(List<PlaceholderAnswer> placeholderAnswers) {
-        this.placeholderAnswers = placeholderAnswers;
     }
 }

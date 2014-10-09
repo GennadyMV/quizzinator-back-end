@@ -19,7 +19,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Entity
 @Table(name = "answers")
 @JsonIgnoreProperties(value = "new")
-public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInterface {
+public class QuizAnswer extends AbstractPersistable<Long> {
     @ManyToOne
     @JsonIgnore
     private Quiz quiz;
@@ -29,7 +29,7 @@ public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInter
     private List<PeerReview> peerReviews;
     
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
     
     @Transient
@@ -49,8 +49,13 @@ public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInter
     private String answer;
 
     @JsonIgnore
-    private Integer reviewCount;
+    @Column(nullable = false)
+    private Integer reviewCount = 0;
     
+    @JsonIgnore
+    @Column(nullable = false)
+    private Boolean placeholder = false;
+
     public Quiz getQuiz() {
         return quiz;
     }
@@ -91,12 +96,11 @@ public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInter
         this.url = url;
     }
     
-    @Override
     public String getAnswer() {
         return answer;
     }
     
-    public void setItems(String answer) {
+    public void setAnswer(String answer) {
         this.answer = answer;
     }
 
@@ -104,13 +108,14 @@ public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInter
         return username;
     }
 
-    @JsonProperty("username")
+    @JsonProperty("user")
     public void setUsername(String username) {
         this.username = username;
     }
     
-    @JsonProperty("username")
+    @JsonProperty("user")
     public String getUsernameForJSON() {
+        if (this.user == null) return null;
         return this.user.getName();
     }
 
@@ -122,9 +127,11 @@ public class QuizAnswer extends AbstractPersistable<Long> implements AnswerInter
         this.reviewCount = reviewCount;
     }
 
-    @Override
-    @JsonIgnore
-    public Long getQuizId() {
-        return this.quiz.getId();
+    public Boolean getPlaceholder() {
+        return placeholder;
+    }
+
+    public void setPlaceholder(Boolean placeholder) {
+        this.placeholder = placeholder;
     }
 }

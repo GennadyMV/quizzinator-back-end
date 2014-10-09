@@ -2,6 +2,8 @@ package app.controllers;
 
 import app.Application;
 import app.domain.Quiz;
+import app.domain.QuizAnswer;
+import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import com.google.gson.Gson;
 import java.util.List;
@@ -32,9 +34,11 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 @ContextConfiguration(classes = Application.class)
 public class QuizControllerTest {
-
     @Autowired
     private QuizRepository quizRepository;
+
+    @Autowired
+    private QuizAnswerRepository answerRepository;
 
     @Autowired
     private WebApplicationContext wac;
@@ -145,7 +149,9 @@ public class QuizControllerTest {
         this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection());
         
-        JSONObject json = new JSONObject(quizRepository.findOne(1L).getPlaceholderAnswers().get(0).getAnswerData());
+        Quiz q = quizRepository.findOne(1L);
+        List<QuizAnswer> answers = answerRepository.findByQuizAndPlaceholderIsTrue(q);
+        JSONObject json = new JSONObject(answers.get(0).getAnswer());
         String answer = json.getString("answer");
         assertTrue(answer.equals("vastaus"));
     }
@@ -164,7 +170,9 @@ public class QuizControllerTest {
         jsonAnswer = "{\"answer\": \"vastaus\"}";
         this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
 
-        assertEquals(3, quizRepository.findOne(1L).getPlaceholderAnswers().size());
+        Quiz q = quizRepository.findOne(1L);
+        List<QuizAnswer> answers = answerRepository.findByQuizAndPlaceholderIsTrue(q);
+        assertEquals(3, answers.size());
     }
 
     @Test
