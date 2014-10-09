@@ -6,9 +6,10 @@ QuizApp.directive('highlighter', function(){
 		link: function(scope, elem, attrs){
 
 			$(elem).prepend('<div class="code-sample"><pre class="java">' + scope.code + '</pre></div>');
-			
+			$(elem).children('textarea').val(scope.code);
+
 			hljs.highlightBlock($(elem).find('.code-sample pre')[0]);
-			
+
 			$(elem).children('textarea').allowTabChar();
 			$(elem).children('textarea').on('keyup', function(e){
 				var _this = this;
@@ -20,7 +21,7 @@ QuizApp.directive('highlighter', function(){
 
 			scope.$watch('code', function(new_val, old_val){
 				$(elem).children('.code-sample').html('<pre class="java">' + scope.code + '</pre>');
-				
+
 				hljs.highlightBlock($(elem).find('.code-sample pre')[0]);
 			});
 		}
