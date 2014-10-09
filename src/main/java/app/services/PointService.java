@@ -8,9 +8,9 @@ package app.services;
 import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
-import app.domain.QuizPointModel;
+import app.models.QuizPointModel;
 import app.domain.User;
-import app.domain.UserPointModel;
+import app.models.UserPointModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
@@ -57,13 +57,13 @@ public class PointService {
         for (int i = 0; i < quizAnswers.size(); i++) {
             QuizAnswer answer = quizAnswers.get(i);
             
-            if (!answerers.contains(answer.getUser())) {
+            if (!answerers.contains(answer.getUser().getName())) {
                 answerers.add(answer.getUser().getName());
             }
             
             List<PeerReview> reviews = answer.getPeerReviews();
             for (int j = 0; j < reviews.size(); j++) {
-                if (!reviewers.contains(reviews.get(j).getReviewer())) {
+                if (!reviewers.contains(reviews.get(j).getReviewer().getName())) {
                     reviewers.add(reviews.get(j).getReviewer().getName());
                 }
             }

@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package app.domain;
+package app.models;
 
+import app.domain.Quiz;
 import java.util.List;
 
-/**
- *
- * @author albis
- */
 public class QuizPointModel {
     private final Quiz quiz;
     private final List<String> answerers;

@@ -1,4 +1,4 @@
-package app.domain;
+package app.models;
 
 public class UserPointModel {
     private final String username;

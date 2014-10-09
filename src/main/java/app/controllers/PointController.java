@@ -1,9 +1,8 @@
 package app.controllers;
 
-import app.domain.QuizPointModel;
-import app.domain.UserPointModel;
+import app.models.QuizPointModel;
+import app.models.UserPointModel;
 import app.services.PointService;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

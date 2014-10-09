@@ -1,15 +1,11 @@
 package app.controllers;
 
 import app.Application;
-import app.domain.PeerReview;
-import app.domain.QuizPointModel;
+import app.models.QuizPointModel;
 import app.domain.User;
-import app.domain.UserPointModel;
+import app.models.UserPointModel;
 import app.repositories.UserRepository;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import java.util.List;
-import org.json.JSONArray;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -77,10 +73,6 @@ public class PointControllerTest {
         MvcResult mvcResult = this.mockMvc.perform(get("/points/quiz/1")
                             .contentType(MediaType.APPLICATION_JSON))
                             .andReturn();
-        
-        System.out.println("||||||||||||||||||||||||||");
-        System.out.println(mvcResult.getResponse().getContentAsString());
-        System.out.println("||||||||||||||||||||||||||");
         
         QuizPointModel quizPoint = gson.fromJson(mvcResult.getResponse().getContentAsString(),
                                                  QuizPointModel.class);

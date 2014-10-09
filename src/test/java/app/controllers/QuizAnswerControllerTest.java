@@ -5,7 +5,6 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
-import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -49,11 +48,7 @@ public class QuizAnswerControllerTest {
         
         TestHelper.addQuizWithOneQuestion(mockMvc, "testquiz1", "testquestion1", true);
         
-//        String jsonQuiz = "{\"title\":\"testquiz1\",\"reviewable\":\"true\",\"items\":\"[{}]\"}";
-//        
-//        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
-        
-        this.quiz = quizRepository.findAll().get(0); //new PageRequest(0, 1, Sort.Direction.DESC, "id")).getContent().get(0);
+        this.quiz = quizRepository.findAll().get(0);
     }
     
     @Test
