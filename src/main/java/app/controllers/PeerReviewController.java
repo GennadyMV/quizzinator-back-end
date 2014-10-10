@@ -1,13 +1,8 @@
 package app.controllers;
 
-import app.domain.AnswerInterface;
 import app.domain.PeerReview;
-import app.domain.Quiz;
-import app.domain.User;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
-import app.repositories.QuizRepository;
-import app.repositories.UserRepository;
 import app.services.QuizService;
 import app.services.ReviewService;
 import com.wordnik.swagger.annotations.Api;
@@ -21,7 +16,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -49,7 +43,7 @@ public class PeerReviewController {
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.GET, produces="application/json")
     @Transactional
     public List<PeerReview> getAnswerReviews(@PathVariable Long quizId, @PathVariable Long answerId) {
-        return quizService.getReviewsForAnAnswer(answerId, quizId);
+        return quizService.getReviewsByAnswer(answerId, quizId);
     }
     
     @ResponseBody
@@ -60,7 +54,7 @@ public class PeerReviewController {
             @Valid @RequestBody PeerReview review,
             @PathVariable Long quizId,
             @PathVariable Long answerId) {
-        quizService.saveNewReview(review, answerId, quizId);
+        reviewService.saveNewReview(review, answerId, quizId);
         return "";
     }
     

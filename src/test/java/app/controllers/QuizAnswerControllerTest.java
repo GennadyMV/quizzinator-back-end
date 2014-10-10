@@ -5,7 +5,6 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
-import com.google.gson.Gson;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -47,18 +46,15 @@ public class QuizAnswerControllerTest {
     public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         
+        TestHelper.addQuizWithOneQuestion(mockMvc, "testquiz1", "testquestion1", true);
         
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"reviewable\":\"true\",\"items\":\"[{}]\"}";
-        
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
-        
-        this.quiz = quizRepository.findAll().get(0); //new PageRequest(0, 1, Sort.Direction.DESC, "id")).getContent().get(0);
+        this.quiz = quizRepository.findAll().get(0);
     }
     
     @Test
     @DirtiesContext
     public void testAddAnswer() throws Exception {
-        String jsonQuiz = "{\"username\": \"matti\","
+        String jsonQuiz = "{\"user\": \"matti\","
                          + "\"answer\": \"vastaus\"}";
         
         this.mockMvc.perform(post("/quiz/1/answer").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
@@ -72,28 +68,20 @@ public class QuizAnswerControllerTest {
     @Test
     @DirtiesContext
     public void testPostAnswerReturnsTwoAnswers() throws Exception {
-        String jsonQuiz = "{\"username\": \"eero\","
+        String jsonQuiz = "{\"user\": \"eero\","
                          + "\"answer\": \"vastaus\"}";
         this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
                              .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
-        jsonQuiz = "{\"username\": \"masa\","
+        jsonQuiz = "{\"user\": \"masa\","
                          + "\"answer\": \"vastaus\"}";
         this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
                              .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
         
-        jsonQuiz = "{\"username\": \"kalevi\","
+        jsonQuiz = "{\"user\": \"kalevi\","
                          + "\"answer\": \"vastaus\"}";
         MvcResult mvcAnswer = this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
                              .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON)).andReturn();
-        
-        Gson gson = new Gson();
-        
-        
-        System.out.println("|||||||||||||||||||||||||||||||||||");
-        System.out.println(mvcAnswer.getResponse().getContentAsString());
-        System.out.println("|||||||||||||||||||||||||||||||||||");
-        
         
         JSONObject obj = new JSONObject(mvcAnswer.getResponse().getContentAsString());
    
@@ -103,7 +91,7 @@ public class QuizAnswerControllerTest {
     @Test
     @DirtiesContext
     public void testCorrectNumberOfAnswers() throws Exception {
-        String jsonAnswer = "{\"username\": \"ulla\","
+        String jsonAnswer = "{\"user\": \"ulla\","
                          + "\"answer\": \"vastaus\"}";
         
         for (int i = 0; i < 4; i++) {
@@ -116,21 +104,18 @@ public class QuizAnswerControllerTest {
     @Test
     @DirtiesContext
     public void testGetAnswer() throws Exception {
-        String jsonQuiz = "{\"username\":\"matti\","
-                         + "\"answer\":\"vastaus\"}";
-        
-        this.mockMvc.perform(post("/quiz/1/answer").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus", "matti", 1L);
         
         MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/1/answer/1")
                             .contentType(MediaType.APPLICATION_JSON))
                             .andReturn();
         
-        Gson gson = new Gson();
-        QuizAnswer answer = gson.fromJson(mvcAnswer.getResponse().getContentAsString(), QuizAnswer.class);
+        String response = mvcAnswer.getResponse().getContentAsString();
         
-        QuizAnswer quizAnswer = quizAnswerRepository.findOne(1L);
+        System.out.println("heh: " + response);
         
-        assertEquals(quizAnswer.getUser().getName(), answer.getUsername());
-        assertEquals(answer.getAnswer(), quizAnswer.getAnswer());
+        assertTrue(response.contains("\"user\":\"matti\""));
+        assertTrue(response.contains("\\\"question\\\":\\\"testikysymys\\\""));
+        assertTrue(response.contains("\\\"value\\\":\\\"testivastaus\\\""));
     }
 }

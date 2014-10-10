@@ -7,7 +7,6 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Column;
-import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
@@ -27,10 +26,6 @@ public class Quiz extends AbstractPersistable<Long> {
     @JsonIgnore
     @OneToMany(mappedBy = "quiz")
     private List<QuizAnswer> quizAnswers;
-    
-    @JsonIgnore
-    @OneToMany(mappedBy = "quiz", fetch = FetchType.EAGER)
-    private List<PlaceholderAnswer> placeholderAnswers;
     
     @NotNull
     private boolean reviewable;
@@ -88,13 +83,5 @@ public class Quiz extends AbstractPersistable<Long> {
     
     public Boolean getIsOpen() {
         return isOpen;
-    }
-
-    public List<PlaceholderAnswer> getPlaceholderAnswers() {
-        return placeholderAnswers;
-    }
-
-    public void setPlaceholderAnswers(List<PlaceholderAnswer> placeholderAnswers) {
-        this.placeholderAnswers = placeholderAnswers;
     }
 }
