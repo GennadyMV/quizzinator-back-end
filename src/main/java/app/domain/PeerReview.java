@@ -2,10 +2,10 @@ package app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
@@ -18,11 +18,11 @@ public class PeerReview extends AbstractPersistable<Long> {
     @ManyToOne
     private User reviewer;
     
-    @OneToMany(mappedBy = "review")
-    @JsonIgnore
-    private List<Like> likes;
-    
     private String review;
+    
+    @Max(1)
+    @Min(-1)
+    private Integer rating;
 
     public QuizAnswer getQuizAnswer() {
         return quizAnswer;
@@ -48,11 +48,11 @@ public class PeerReview extends AbstractPersistable<Long> {
         this.review = review;
     }
 
-    public List<Like> getLikes() {
-        return likes;
+    public Integer getRating() {
+        return rating;
     }
 
-    public void setLikes(List<Like> likes) {
-        this.likes = likes;
+    public void setRating(Integer rating) {
+        this.rating = rating;
     }
 }

@@ -61,15 +61,15 @@ public class PeerReviewController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review/{reviewId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review/{reviewId}/rate", method = RequestMethod.POST)
     @Transactional
-    public void likeReview(
+    public void rateReview(
             @PathVariable Long quizId, 
             @PathVariable Long answerId, 
             @PathVariable Long reviewId, 
             @RequestParam String user, 
-            @RequestParam Integer likeValue) {
+            @RequestParam Integer rating) {
         
-        reviewService.rateReview(quizId, answerId, reviewId, user, likeValue);
+        reviewService.rateReview(quizId, answerId, reviewId, user, rating);
     }
 }

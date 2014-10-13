@@ -1,12 +1,10 @@
 package app.services;
 
-import app.domain.Like;
 import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.domain.User;
 import app.models.UsersReviewModel;
-import app.repositories.LikeRepository;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.UserRepository;
@@ -31,9 +29,6 @@ public class ReviewService {
     
     @Autowired
     private UserService userService;
-    
-    @Autowired
-    private LikeRepository likeRepo;
     
     public boolean isValidAnswerReviewCombination(Long answerId, Long reviewId) {
         QuizAnswer qa = answerRepo.findOne(answerId);
@@ -62,9 +57,6 @@ public class ReviewService {
             answersReviews.setAnswer(answer);
             answersReviews.setReviews(reviewRepo.findByQuizAnswer(answer));
             
-            Like like = likeRepo.findByQuizAnswer(answer);
-            answersReviews.setLike(like.getValue());
-            
             ret.add(answersReviews);
         }
         
@@ -86,23 +78,24 @@ public class ReviewService {
         return newReview;
     }
 
-    public void rateReview(Long quizId, Long answerId, Long reviewId, String user, Integer likeValue) {
+    public void rateReview(Long quizId, Long answerId, Long reviewId, String user, Integer rating) {
         if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) 
             throw new IllegalArgumentException("bad answerId, quizId combination!");
         
         if (!this.isValidAnswerReviewCombination(answerId, reviewId))
             throw new IllegalArgumentException("bad answerId, reviewId combination!");
         
-        if (likeValue==0)
+        
+        if (rating==0)
             throw new IllegalArgumentException("like value must be -1 or 1");
         
         User u = userRepo.findOne(user);
         PeerReview review = reviewRepo.findOne(reviewId);
         
-        Like l = new Like();
-        l.setReview(review);;
-        l.setLiker(u);
-        l.setValue(likeValue);
-        likeRepo.save(l);
+        if (!review.getQuizAnswer().getUser().equals(u))
+            throw new IllegalArgumentException("user can only rate reviews given to them");
+        
+        review.setRating(rating);
+        reviewRepo.save(review);
     }
 }
