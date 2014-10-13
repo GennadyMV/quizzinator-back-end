@@ -1,116 +1,139 @@
-QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function($http){
-	var _public = {};
+QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
+        var _public = {};
 
-	_public.get_quizes = function(options){
-		$http({
-			method: 'GET',
-			url: '/quiz'
-		})
-		.success(function(quizes){
-			quizes.forEach(function(quiz){
-				quiz.items = angular.fromJson(quiz.items);
-			});
+        _public.get_quizes = function (options) {
+            $http({
+                method: 'GET',
+                url: '/quiz'
+            })
+                    .success(function (quizes) {
+                        quizes.forEach(function (quiz) {
+                            quiz.items = angular.fromJson(quiz.items);
+                        });
 
-			options.success(quizes)
-		});
-	}
+                        options.success(quizes)
+                    });
+        }
 
-	_public.get_quiz = function(options){
-		$http({
-			method: 'GET',
-			url: 'quiz/' + options.id
-		})
-		.success(function(quiz){
-			quiz.items = angular.fromJson(quiz.items);
-			options.success(quiz);
-		})
-		.error(function(){
-			options.error();
-		});
-	}
+        _public.get_quiz = function (options) {
+            $http({
+                method: 'GET',
+                url: 'quiz/' + options.id
+            })
+                    .success(function (quiz) {
+                        quiz.items = angular.fromJson(quiz.items);
+                        options.success(quiz);
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+        }
 
-	_public.edit_quiz = function(options){
-		var quiz = jQuery.extend({}, options.quiz);
-		quiz.items = angular.toJson(options.quiz.items);
+        _public.edit_quiz = function (options) {
+            var quiz = jQuery.extend({}, options.quiz);
+            quiz.items = angular.toJson(options.quiz.items);
 
-		$http({
-			method: 'POST',
-			url: 'quiz/' + options.quiz.id,
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			data: angular.toJson(quiz)
-		})
-		.success(function(){
-			options.success();
-		})
-		.error(function(){
-			options.error();
-		});
-	}
+            $http({
+                method: 'POST',
+                url: 'quiz/' + options.quiz.id,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: angular.toJson(quiz)
+            })
+                    .success(function () {
+                        options.success();
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+        }
 
-	_public.create_quiz = function(options){
-		var quiz = jQuery.extend({}, options.quiz);
-		quiz.items = angular.toJson(options.quiz.items);
+        _public.create_quiz = function (options) {
+            var quiz = jQuery.extend({}, options.quiz);
+            quiz.items = angular.toJson(options.quiz.items);
 
-		$http({
-			method: 'POST',
-			url: '/quiz',
-			headers: {
-          'Content-Type': 'application/json'
-      },
-			data: angular.toJson(quiz)
-		})
-		.success(function(data, status, headers, config){
-			options.success(data);
-		})
-		.error(function(){
-			options.error();
-		});
-	}
+            $http({
+                method: 'POST',
+                url: '/quiz',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: angular.toJson(quiz)
+            })
+                    .success(function (data, status, headers, config) {
+                        options.success(data);
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+        }
 
-	_public.get_reviews = function(options){
-		$http({
-			method: 'GET',
-			url: 'reviews/' + options.user_hash
-		})
-		.success(function(reviews){
-			reviews.forEach(function(review){
-				review.yourAnswer.answer = angular.fromJson(review.yourAnswer.answer);
-			});
+        _public.get_reviews = function (options) {
+            $http({
+                method: 'GET',
+                url: 'reviews/' + options.user_hash
+            })
+                    .success(function (reviews) {
+                        reviews.forEach(function (review) {
+                            review.yourAnswer.answer = angular.fromJson(review.yourAnswer.answer);
+                        });
 
-			options.success(reviews);
-		})
-		.error(function(){
-			options.error();
-		});
-	}
+                        options.success(reviews);
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+        }
 
 
-	_public.create_default_answer = function(options) {
-		$http({
-			method: 'POST',
-			url: 'quiz/' + options.id + '/placeholder',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			data: angular.toJson(options.answers)
-		})
-		.success(function(){
-			options.success();
-		})
-		.error(function(){
-			options.error();
-		});
-	}
+        _public.create_default_answer = function (options) {
+            $http({
+                method: 'POST',
+                url: 'quiz/' + options.id + '/placeholder',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: angular.toJson(options.answers)
+            })
+                    .success(function () {
+                        options.success();
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+        }
 
-	_public.send_images = function() {
+        _public.clone_quiz = function (options) {
 
-	}
+            $http({
+                method: 'POST',
+                url: 'quiz/' + options.id + '/clone',
+            })
+                    .success(function (data) {
+                        options.success(data);
+                    })
+                    .error(function () {
+                        options.error();
+                    });
 
-	parse_quiz = function(items) {
-		
-	}
+        }
+        
+        _public.delete_answer = function (options) {
 
-	return _public;
-}]);
+            $http({
+                method: 'DELETE',
+                url: 'quiz/' + options.quiz_id + '/answer/' + options.review_id,
+            })
+                    .success(function () {
+                        options.success();
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+
+        }
+
+
+        return _public;
+    }]);

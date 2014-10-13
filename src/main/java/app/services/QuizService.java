@@ -46,7 +46,7 @@ public class QuizService {
         
         if (q.isReviewable()) {
             model = new ReviewResponseModel();
-            model.setAnswerForReview(getAnswersForReview(q, u));
+            model.setAnswers(getAnswersForReview(q, u));
             
             model.setUserhash(u.getHash());
         }
@@ -55,7 +55,7 @@ public class QuizService {
     }
     
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user) {
-        int answerCount = 2;
+        int answerCount = quiz.getReviewRounds()*2;
         return getAnswersForReview(quiz, user, answerCount);
     }
     
@@ -87,9 +87,9 @@ public class QuizService {
 
     public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
-        User u = userRepo.findOne(username);
+        List<User> users = userRepo.findByName(username);
         
-        if (u==null || answerRepo.findByQuizAndUser(q, u).isEmpty()) {
+        if (users.isEmpty() || answerRepo.findByQuizAndUser(q, users.get(0)).isEmpty()) {
             q.setAnswered(false);
         } else {
             q.setAnswered(true);
@@ -97,17 +97,6 @@ public class QuizService {
             
         return q;
     }
-    
-//    public void addPlaceholderAnswer(String quizAnswer, Long quizId) {
-//        Quiz quiz = quizRepo.findOne(quizId);
-//        
-//        PlaceholderAnswer answer = new PlaceholderAnswer();
-//        answer.setAnswerData(quizAnswer);
-//        answer.setQuiz(quiz);
-//        
-//        placeholderAnswerRepo.save(answer);
-//        //quizRepo.save(quiz);
-//    }
 
     public List<PeerReview> getReviewsByUserHash(String hash) {
         User u = userRepo.findOne(hash);
