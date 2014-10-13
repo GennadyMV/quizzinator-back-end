@@ -34,7 +34,7 @@ public class ReviewService {
         QuizAnswer qa = answerRepo.findOne(answerId);
         PeerReview pr = reviewRepo.findOne(reviewId);
         
-        if (qa == null || pr == null || qa.getQuiz() == null || pr.getQuizAnswer().getId().equals(answerId)) {
+        if (qa == null || pr == null || pr.getQuizAnswer() == null || !pr.getQuizAnswer().getId().equals(answerId)) {
             return false;
         } else {
             return true;

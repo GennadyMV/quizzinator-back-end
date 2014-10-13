@@ -22,7 +22,7 @@ public class PeerReview extends AbstractPersistable<Long> {
     
     @Max(1)
     @Min(-1)
-    private Integer rating;
+    private Integer rating = 0;
 
     public QuizAnswer getQuizAnswer() {
         return quizAnswer;

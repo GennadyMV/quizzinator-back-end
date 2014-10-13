@@ -67,9 +67,9 @@ public class PeerReviewController {
             @PathVariable Long quizId, 
             @PathVariable Long answerId, 
             @PathVariable Long reviewId, 
-            @RequestParam String user, 
+            @RequestParam String userhash, 
             @RequestParam Integer rating) {
         
-        reviewService.rateReview(quizId, answerId, reviewId, user, rating);
+        reviewService.rateReview(quizId, answerId, reviewId, userhash, rating);
     }
 }
