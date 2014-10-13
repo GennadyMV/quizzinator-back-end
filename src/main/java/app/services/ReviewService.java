@@ -17,8 +17,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReviewService {
     @Autowired
-    private QuizRepository quizRepo;
-    @Autowired
     private QuizService quizService;
     
     @Autowired

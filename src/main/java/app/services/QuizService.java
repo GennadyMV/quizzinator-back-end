@@ -55,7 +55,7 @@ public class QuizService {
     }
     
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user) {
-        int answerCount = 2;
+        int answerCount = quiz.getReviewRounds()*2;
         return getAnswersForReview(quiz, user, answerCount);
     }
     
