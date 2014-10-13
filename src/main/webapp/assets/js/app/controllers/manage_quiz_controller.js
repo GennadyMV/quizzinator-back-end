@@ -1,4 +1,10 @@
 QuizApp.controller('ManageQuizController', ['$scope', function($scope){
+	$scope.quiz = {
+		title: '',
+		reviewable: true,
+		items: []
+	}
+	
 	$scope.widgets = [
 		{
 			name: 'Open question',
@@ -6,7 +12,7 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 				$scope.quiz.items.push({
 					question: '',
 					item_type: 'open_question'
-				});	
+				});
 			}
 		},
 		{
@@ -64,17 +70,11 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 						value: null,
 						title: ''
 					},
-					questions: ''	
+					questions: ''
 				});
 			}
 		}
 	];
-
-	$scope.quiz = {
-		title: '',
-        reviewable: true,
-		items: []
-	}
 
 	$scope.get_item_template = function(item){
 		return '/assets/js/app/views/widgets/' + item.item_type + '.html';
