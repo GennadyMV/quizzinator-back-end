@@ -80,4 +80,18 @@ public class QuizController {
     public List<QuizAnswer> getPlaceholderAnswers(@PathVariable Long quizId) {
         return quizService.getPlaceholderAnswers(quizId);
     }
+    
+    @RequestMapping(value = "/{quizId}/clone", method = RequestMethod.POST)
+    public String cloneQuiz(@PathVariable Long quizId) {
+        Quiz newQuiz = new Quiz();
+        Quiz quiz = quizRepo.findOne(quizId);
+        
+        newQuiz.setIsOpen(quiz.getIsOpen());
+        newQuiz.setItems(quiz.getItems());
+        newQuiz.setReviewable(quiz.isReviewable());
+        newQuiz.setTitle(quiz.getTitle());
+        quizRepo.save(newQuiz);
+        
+        return "redirect:/quiz/" + quizId;
+    }
 }
