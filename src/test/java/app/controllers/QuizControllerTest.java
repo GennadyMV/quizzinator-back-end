@@ -6,6 +6,9 @@ import app.domain.QuizAnswer;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -215,5 +218,57 @@ public class QuizControllerTest {
         JSONArray items = new JSONArray(quizes.get(quizes.size() - 1).getItems());
 
         assertEquals(1, items.length());
+    }
+    
+    
+
+    @Test
+    @DirtiesContext
+    public void testAnsweredFieldIsTrueAfterAnswering() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "asnwer", "user1", quizId);
+        
+        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "?username=user1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                            .andReturn();
+        
+        JsonParser jsonParser = new JsonParser();
+        JsonElement o = jsonParser.parse(mvcAnswer.getResponse().getContentAsString());
+        Boolean answered = o.getAsJsonObject().getAsJsonPrimitive("answered").getAsBoolean();
+        
+        assertTrue(answered);
+    }
+
+    @Test
+    @DirtiesContext
+    public void testAnsweredFieldIsFalseBeforeAnswering() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        
+        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "?username=user1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                            .andReturn();
+        
+        JsonParser jsonParser = new JsonParser();
+        JsonElement o = jsonParser.parse(mvcAnswer.getResponse().getContentAsString());
+        Boolean answered = o.getAsJsonObject().getAsJsonPrimitive("answered").getAsBoolean();
+        
+        assertFalse(answered);
+    }
+
+    @Test
+    @DirtiesContext
+    public void testAnsweredFieldIsFalseAfterSomeoneElseHasAnsweredButBeforeIHaveAnswered() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "asnwer", "user2", quizId);
+        
+        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "?username=user1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                            .andReturn();
+        
+        JsonParser jsonParser = new JsonParser();
+        JsonElement o = jsonParser.parse(mvcAnswer.getResponse().getContentAsString());
+        Boolean answered = o.getAsJsonObject().getAsJsonPrimitive("answered").getAsBoolean();
+        
+        assertFalse(answered);
     }
 }
