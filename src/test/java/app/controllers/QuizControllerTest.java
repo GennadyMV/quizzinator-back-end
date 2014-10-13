@@ -59,10 +59,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testAddingQuiz() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
-                + "{}]\"}";
-
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz1();
 
         List<Quiz> quizes = quizRepository.findAll();
         for (int i = 0; i < quizes.size(); i++) {
@@ -77,12 +74,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testCorrectOpenQuestionsAdded() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
-                + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
-                + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"006\\\"}"
-                + "]\"}";
-
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz2();
 
         List<Quiz> quizes = quizRepository.findAll();
         JSONArray items = new JSONArray(quizes.get(quizes.size() - 1).getItems());
@@ -96,13 +88,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testCorrectNumberOfOpenQuestionsAdded() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz3\",\"items\":\"["
-                + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\"},"
-                + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\"},"
-                + "{\\\"question\\\":\\\"testquestion3\\\",\\\"item_type\\\":\\\"open_question\\\"}"
-                + "]\"}";
-
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz3();
 
         List<Quiz> quizes = quizRepository.findAll();
         JSONArray items = new JSONArray(quizes.get(quizes.size() - 1).getItems());
@@ -112,9 +98,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testIsOpenSetCorrectly() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"isOpen\":\"true\",\"items\":\"["
-                + "{}]\"}";
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz1();
         
         assertTrue(quizRepository.findOne(1L).getIsOpen());
     }
@@ -141,9 +125,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testCorrectPlaceholderAnswerAdded() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
-                + "{}]\"}";
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz1();
         
         String jsonAnswer = "{\"answer\": \"vastaus\"}";
         this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
@@ -159,9 +141,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testMultiplePlaceholderAnswersAdded() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
-                + "{}]\"}";
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz1();
 
         String jsonAnswer = "{\"answer\": \"vastaus\"}";
         this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
@@ -178,10 +158,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testAddingItemsToExistingQuiz() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz1\",\"items\":\"["
-                + "{}]\"}";
-
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz1();
 
         String editedQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
                 + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
@@ -198,12 +175,7 @@ public class QuizControllerTest {
     @Test
     @DirtiesContext
     public void testRemovingItemsFromExistingQuiz() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
-                + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
-                + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"006\\\"}"
-                + "]\"}";
-
-        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        postTestquiz2();
 
         String editedQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
                 + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
@@ -215,5 +187,59 @@ public class QuizControllerTest {
         JSONArray items = new JSONArray(quizes.get(quizes.size() - 1).getItems());
 
         assertEquals(1, items.length());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void numberOfQuizesIncreasedByOneAfterClone() throws Exception {
+        postTestquiz1();
+        
+        long count = quizRepository.count();
+        
+        this.mockMvc.perform(post("/quiz/"+count+"/clone").contentType(MediaType.APPLICATION_JSON));
+        
+        assertEquals(count+1, quizRepository.count());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void cloneInfoMatchesOriginal() throws Exception {
+        postTestquiz1();
+        postTestquiz3();
+        postTestquiz2();
+        
+        this.mockMvc.perform(post("/quiz/2/clone").contentType(MediaType.APPLICATION_JSON));
+        
+        Quiz quiz = quizRepository.findOne(2L);
+        Quiz cloneQuiz = quizRepository.findOne(4L);
+        
+        assertEquals(quiz.getIsOpen(), cloneQuiz.getIsOpen());
+        assertTrue(quiz.getItems().equals(cloneQuiz.getItems()));
+        assertEquals(quiz.isReviewable(), cloneQuiz.isReviewable());
+        assertTrue(quiz.getTitle().equals(cloneQuiz.getTitle()));
+    }
+    
+    private void postTestquiz1() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz1\",\"isOpen\":\"true\",\"items\":\"["
+                + "{}]\"}";
+        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+    }
+    
+    private void postTestquiz2() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
+                + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
+                + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"006\\\"}"
+                + "]\"}";
+
+        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+    }
+    
+    private void postTestquiz3() throws Exception {
+        String jsonQuiz = "{\"title\":\"testquiz3\",\"items\":\"["
+                + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\"},"
+                + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\"},"
+                + "{\\\"question\\\":\\\"testquestion3\\\",\\\"item_type\\\":\\\"open_question\\\"}]\","
+                + "\"isOpen\":\"true\",\"reviewable\":\"true\"}";
+        this.mockMvc.perform(post("/quiz").content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
     }
 }
