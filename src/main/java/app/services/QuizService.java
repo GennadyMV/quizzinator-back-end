@@ -46,7 +46,7 @@ public class QuizService {
         
         if (q.isReviewable()) {
             model = new ReviewResponseModel();
-            model.setAnswerForReview(getAnswersForReview(q, u));
+            model.setAnswers(getAnswersForReview(q, u));
             
             model.setUserhash(u.getHash());
         }
