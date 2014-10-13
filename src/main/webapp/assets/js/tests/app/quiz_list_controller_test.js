@@ -1,15 +1,20 @@
 describe('QuizListController', function () {
+    beforeEach(module('QuizApp'));
+    
     var ctrl, scope;
 
     var QuizAPIMock = (function () {
         return {
             clone_quiz: function (options) {
-                options.success([
-                    {
-                        id: 2,
-                        title: 'This is a quiz'
-                    }
-                ]);
+                options.success(
+                        {
+                            id: 2,
+                            title: 'This is a quiz'
+                        }
+                );
+            },
+            get_quizes: function(options){
+                return [];
             }
         }
     })();
@@ -22,12 +27,12 @@ describe('QuizListController', function () {
             QuizAPI: QuizAPIMock
         });
     }));
-    
+
     it('should be able to clone an existing quiz', function () {
-        var quiz =  {
-                        id: 1,
-                        title: 'This is a quiz'
-                    }
+        var quiz = {
+            id: 1,
+            title: 'This is a quiz'
+        }
         scope.clone_quiz(quiz);
         expect(scope.message.type).toBe('success');
     });
