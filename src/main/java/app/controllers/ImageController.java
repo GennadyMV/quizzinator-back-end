@@ -21,14 +21,8 @@ public class ImageController {
     private ImageRepository imageRepo;
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> getImage(@PathVariable Long id) {
-        FileObject fo = imageRepo.findOne(id);
-        
-        final HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType(fo.getMediaType()));
-        headers.setContentLength(fo.getSize());
-        
-        return new ResponseEntity<byte[]>(fo.getContent(), headers, HttpStatus.CREATED);
+    public byte[] showImage(@PathVariable Long id) {
+        return imageRepo.findOne(id).getContent();
     }
     
     @RequestMapping(method = RequestMethod.POST)
@@ -40,13 +34,13 @@ public class ImageController {
             return ""+HttpStatus.UNSUPPORTED_MEDIA_TYPE.value();
         }
         
-        FileObject fo = new FileObject();
-        fo.setName(file.getOriginalFilename());
-        fo.setMediaType(file.getContentType());
-        fo.setSize(file.getSize());
-        fo.setContent(file.getBytes());
-        imageRepo.save(fo);
+        FileObject image = new FileObject();
+        image.setName(file.getOriginalFilename());
+        image.setMediaType(file.getContentType());
+        image.setSize(file.getSize());
+        image.setContent(file.getBytes());
+        imageRepo.save(image);
         
-        return "images/" + fo.getId();
+        return "images/" + image.getId();
     }
 }
