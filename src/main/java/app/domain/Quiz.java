@@ -35,6 +35,9 @@ public class Quiz extends AbstractPersistable<Long> {
     
     private Boolean isOpen;
     
+    @Column(nullable = false)
+    private Integer reviewRounds = 1;
+    
     public String getTitle() {
         return title;
     }
@@ -83,5 +86,13 @@ public class Quiz extends AbstractPersistable<Long> {
     
     public Boolean getIsOpen() {
         return isOpen;
+    }
+
+    public Integer getReviewRounds() {
+        return reviewRounds;
+    }
+
+    public void setReviewRounds(Integer reviewRounds) {
+        this.reviewRounds = reviewRounds;
     }
 }
