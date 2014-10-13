@@ -2,7 +2,7 @@ QuizApp.controller('ReviewsController', ['$scope', '$location', '$routeParams', 
 	QuizAPI.get_reviews({
 		user_hash: $routeParams.userHash,
 		success: function(quizes){
-			$scope.username = quizes[0].yourAnswer.username;
+			$scope.username = quizes[0].yourAnswer.user;
 			$scope.quizes = quizes;
 		},
 		error: function(){
