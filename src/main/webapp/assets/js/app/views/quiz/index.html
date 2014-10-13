@@ -1,13 +1,16 @@
 <div class="page-header">
 	<h1>Quizes</h1>
 </div>
+    <div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
 
 <ul class="media-list">
 	<li class="media" ng-repeat="quiz in quizes">
 		<div class="pull-left" style="margin-right: 25px;">
-			<a href="#" class="btn btn-primary btn-sm btn-block"><i class="fa fa-flask"></i> Clone</a>
+			<button class="btn btn-primary btn-sm btn-block" ng-click="clone_quiz(quiz)" id="clone-quiz"><i class="fa fa-flask"></i> Clone</button>
 			<a href="#" class="btn btn-danger btn-sm btn-block"><i class="fa fa-times"></i> Remove</a>
 		</div>
+            
+
 		<div class="media-body">
 			<h4 class="media-heading"><a href="#/quiz/{{quiz.id}}/edit">{{quiz.title}}</a></h4>
 			<p>
