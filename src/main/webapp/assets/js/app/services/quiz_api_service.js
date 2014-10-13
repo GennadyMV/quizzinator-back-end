@@ -118,5 +118,22 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                     });
 
         }
+        
+        _public.delete_answer = function (options) {
+
+            $http({
+                method: 'DELETE',
+                url: 'quiz/' + options.quiz_id + '/answer/' + options.review_id,
+            })
+                    .success(function () {
+                        options.success();
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+
+        }
+
+
         return _public;
     }]);
