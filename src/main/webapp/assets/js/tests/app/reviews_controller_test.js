@@ -18,7 +18,7 @@ describe('ReviewsController', function(){
                 }
               ],
               yourAnswer: {
-                username: 'Kalle'
+                user: 'Kalle'
               }
             }
         ]);
