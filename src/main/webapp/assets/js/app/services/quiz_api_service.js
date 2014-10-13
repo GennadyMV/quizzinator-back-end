@@ -104,5 +104,13 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function($http){
 		});
 	}
 
+	_public.send_images = function() {
+
+	}
+
+	parse_quiz = function(items) {
+		
+	}
+
 	return _public;
 }]);

@@ -16,6 +16,9 @@
 	                    Enable peer reviews
 	                </label>
 	            </div>
+	            <div ng-show="$parent.quiz.reviewable">
+	            		Number of review rounds<input type="text" ng-model="$parent.quiz.reviewRounds">
+	            </div>
 	            <div class="checkbox">
 	                <label>
 	                    <input type="checkbox" ng-model="$parent.quiz.isOpen">
