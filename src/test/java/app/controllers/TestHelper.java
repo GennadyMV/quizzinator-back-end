@@ -6,10 +6,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class TestHelper {
-    public static Long addQuizWithOneQuestion(MockMvc mockMvc, String quizTitle, String question, boolean reviewable) throws Exception {
+    public static Long addQuizWithOneQuestion(MockMvc mockMvc, 
+            String quizTitle, 
+            String question, 
+            boolean reviewable, 
+            int reviewRounds) throws Exception {
+        
         String jsonQuiz = 
                 "{\"title\":\"" + quizTitle + "\"," + 
                 "\"reviewable\":" + Boolean.toString(reviewable) + "," + 
+                "\"reviewRounds\":" + Integer.toString(reviewRounds) + "," + 
                 "\"items\":\"[{\\\"question\\\":\\\"" + question + "\\\"," + 
                 "\\\"item_type\\\":\\\"open_question\\\"}]\"}";
         
@@ -19,6 +25,10 @@ public class TestHelper {
                 post(url).content(jsonQuiz).contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse().getRedirectedUrl();
         return Long.parseLong(redirectUrl.split("/")[2]);
+    }
+    
+    public static Long addQuizWithOneQuestion(MockMvc mockMvc, String quizTitle, String question, boolean reviewable) throws Exception {
+        return TestHelper.addQuizWithOneQuestion(mockMvc, quizTitle, question, reviewable, 1);
     }
     
     public static void addAnAnswer(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {
