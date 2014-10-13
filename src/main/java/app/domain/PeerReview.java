@@ -2,19 +2,25 @@ package app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @JsonIgnoreProperties(value = "new")
-public class PeerReview  extends AbstractPersistable<Long> {
+public class PeerReview extends AbstractPersistable<Long> {
     @ManyToOne
     @JsonIgnore
     private QuizAnswer quizAnswer;
     
     @ManyToOne
     private User reviewer;
+    
+    @OneToMany(mappedBy = "review")
+    @JsonIgnore
+    private List<Like> likes;
     
     private String review;
 
@@ -40,5 +46,13 @@ public class PeerReview  extends AbstractPersistable<Long> {
 
     public void setReview(String review) {
         this.review = review;
+    }
+
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
     }
 }

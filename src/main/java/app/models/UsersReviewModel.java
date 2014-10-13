@@ -11,6 +11,7 @@ public class UsersReviewModel {
     @JsonProperty("yourAnswer")
     private QuizAnswer answer;
     private List<PeerReview> reviews;
+    private Integer like;
 
     public Long getQuizId() {
         return quizId;
@@ -43,7 +44,12 @@ public class UsersReviewModel {
     public void setReviews(List<PeerReview> reviews) {
         this.reviews = reviews;
     }
-    
-    
-    
+
+    public Integer getLike() {
+        return like;
+    }
+
+    public void setLike(Integer like) {
+        this.like = like;
+    }
 }
