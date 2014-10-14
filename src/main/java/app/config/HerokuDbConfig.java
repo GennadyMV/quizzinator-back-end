@@ -3,15 +3,14 @@ package app.config;
 import java.net.URI;
 import java.net.URISyntaxException;
 import javax.sql.DataSource;
+import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
  @Profile("heroku")
 @Configuration
 public class HerokuDbConfig {
-
     @Bean
     public DataSource dataSource()  {    
 
@@ -19,19 +18,24 @@ public class HerokuDbConfig {
         try {
             // herokun dburl format:
             // postgres://user3123:passkja83kd8@ec2-117-21-174-214.compute-1.amazonaws.com:6212/db982398
-            String username = "username";
-            String password = "password";
-            String url = "jdbc:postgresql://localhost/dbname";
-            String dbProperty = System.getProperty("database.url");
-            if(dbProperty != null) {
-                dbUri = new URI(dbProperty);
+            String username;
+            String password;
+            String url;
+            String dbProperty = System.getenv("DATABASE_URL");
+            
+            dbUri = new URI(dbProperty);
 
-                username = dbUri.getUserInfo().split(":")[0];
-                password = dbUri.getUserInfo().split(":")[1];
-                url = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
-            }     
-
-            DataSource basicDataSource = new SimpleDriverDataSource(null, url, username, password);
+            username = dbUri.getUserInfo().split(":")[0];
+            password = dbUri.getUserInfo().split(":")[1];
+            url = "jdbc:postgresql://" + dbUri.getHost() + ':' + dbUri.getPort() + dbUri.getPath();
+            
+            
+            BasicDataSource basicDataSource = new BasicDataSource();
+            basicDataSource.setDriverClassName("org.postgresql.Driver");
+            basicDataSource.setUrl(url);
+            basicDataSource.setUsername(username);
+            basicDataSource.setPassword(password);
+            
             return basicDataSource;
         } catch (URISyntaxException e) {
             //Deal with errors here.
