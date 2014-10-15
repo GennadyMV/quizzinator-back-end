@@ -275,4 +275,30 @@ public class PeerReviewControllerTest {
         Integer expected = -1;
         assertEquals(expected, rating);
     }
+    
+    
+    @Test
+    @DirtiesContext
+    public void testUserCantRateReviewsOnOtherPeoplesAnswers() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "this is for review and a good answer", "user1", quizId);
+        String user2hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "this is for review and a good answer", "user2", quizId);
+        
+        //assume the first asnwer got anserId=1
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_troll", "thats stupid u fool trololl");
+        
+        //rate review as bad
+    //returning something else than 500 doesn't work yet
+        try {
+            mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
+                .param("userhash", user2hash)
+                .param("rating", "-1"))
+                .andExpect(status().isInternalServerError());
+            
+        } catch (Exception e) {
+            assertTrue(true);
+            return;
+        }
+        assertTrue(false);
+    }
 }

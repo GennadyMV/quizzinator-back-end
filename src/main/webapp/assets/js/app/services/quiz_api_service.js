@@ -25,7 +25,7 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
             },
-            data: $.param({ userhash: options.userhas, rating: options.rating })
+            data: $.param({ userhash: options.userhash, rating: options.rating })
           }).
           success(function(){
             options.success();

@@ -13,7 +13,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 @Component
 public class QuizService {
@@ -67,8 +70,10 @@ public class QuizService {
     }
     
     public List<PeerReview> getReviewsByAnswer(Long answerId, Long quizId) {
-        if (!isValidAnswerQuizCombination(answerId, quizId)) 
-            throw new IllegalArgumentException("bad answerId, quizId combination!");
+        if (!isValidAnswerQuizCombination(answerId, quizId)) {
+            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST);
+//            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "bad answerId, quizId combination!");
+        }
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         return reviewRepo.findByQuizAnswer(qa);

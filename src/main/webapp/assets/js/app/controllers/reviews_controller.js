@@ -26,13 +26,11 @@ QuizApp.controller('ReviewsController', ['$scope', '$location', '$routeParams', 
 
 	$scope.downvote_review = function(quiz, answer, review){
 		QuizAPI.vote_review({
-			quiz_id: quiz.id,
+			quiz_id: quiz.quizId,
 			answer_id: answer.id,
 			review_id: review.id,
-			data: {
-				userhash: $routeParams.userHash,
-				rating: -1
-			},
+			userhash: $routeParams.userHash,
+			rating: -1,
 			success: function(){},
 			error: function(){}
 		});
