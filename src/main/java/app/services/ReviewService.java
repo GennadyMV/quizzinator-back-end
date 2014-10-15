@@ -4,17 +4,18 @@ import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.domain.User;
+import app.exceptions.InvalidIdCombinationException;
+import app.exceptions.InvalidParameterException;
+import app.exceptions.UnauthorizedRateException;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.client.HttpClientErrorException;
 
 @Component
@@ -69,7 +70,7 @@ public class ReviewService {
     
     public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
         if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "bad answerId, quizId combination!");
+            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
         }
         
         QuizAnswer qa = answerRepo.findOne(answerId);
@@ -85,22 +86,22 @@ public class ReviewService {
 
     public void rateReview(Long quizId, Long answerId, Long reviewId, String user, Integer rating) {
         if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "bad answerId, quizId combination!");
+            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
         }
         
         if (!this.isValidAnswerReviewCombination(answerId, reviewId)) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "bad answerId, reviewId combination!");
+            throw new InvalidIdCombinationException("bad answerId, reviewId combination!");
         }
         
         if (rating==0) {
-            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "like value must be -1 or 1");
+            throw new InvalidParameterException("like value must be -1 or 1");
         }
         
         User u = userRepo.findOne(user);
         PeerReview review = reviewRepo.findOne(reviewId);
         
         if (!review.getQuizAnswer().getUser().equals(u)) {
-            throw new HttpClientErrorException(HttpStatus.FORBIDDEN, "user can only rate reviews given to them");
+            throw new UnauthorizedRateException();
         }
         
         review.setRating(rating);

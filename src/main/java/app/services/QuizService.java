@@ -6,6 +6,7 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.models.ReviewResponseModel;
 import app.domain.User;
+import app.exceptions.InvalidIdCombinationException;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
@@ -71,8 +72,7 @@ public class QuizService {
     
     public List<PeerReview> getReviewsByAnswer(Long answerId, Long quizId) {
         if (!isValidAnswerQuizCombination(answerId, quizId)) {
-            throw new HttpServerErrorException(HttpStatus.BAD_REQUEST);
-//            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "bad answerId, quizId combination!");
+            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
         }
         
         QuizAnswer qa = answerRepo.findOne(answerId);

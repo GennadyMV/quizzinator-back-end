@@ -287,18 +287,10 @@ public class PeerReviewControllerTest {
         //assume the first asnwer got anserId=1
         TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_troll", "thats stupid u fool trololl");
         
-        //rate review as bad
-    //returning something else than 500 doesn't work yet
-        try {
-            mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
-                .param("userhash", user2hash)
-                .param("rating", "-1"))
-                .andExpect(status().isInternalServerError());
-            
-        } catch (Exception e) {
-            assertTrue(true);
-            return;
-        }
-        assertTrue(false);
+        //rate someone elses answer's review
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
+            .param("userhash", user2hash)
+            .param("rating", "-1"))
+            .andExpect(status().isForbidden());
     }
 }
