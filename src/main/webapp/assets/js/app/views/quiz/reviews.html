@@ -22,8 +22,10 @@
 					{{review.review}}
 
 					<p style="margin-top: 15px;">
-						<button class="btn btn-success" ng-click="upvote_review(review)"><i class="fa fa-arrow-circle-up"></i> Upvote</button>
-						<button class="btn btn-danger" ng-click="downvote_review(review)"><i class="fa fa-arrow-circle-down"></i> Downvote</button>
+						<div class="btn-group">
+							<button class="btn btn-success" ng-class="{ 'active': review.rating == 1 }" ng-click="upvote_review(quiz, quiz.yourAnswer, review)"><i class="fa fa-arrow-circle-up"></i> Upvote</button>
+							<button class="btn btn-danger" ng-class="{ 'active': review.rating == -1 }" ng-click="downvote_review(quiz, quiz.yourAnswer, review)"><i class="fa fa-arrow-circle-down"></i> Downvote</button>
+						</div>
 					</p>
 		    </li>
 		</ul>

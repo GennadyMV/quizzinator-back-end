@@ -18,6 +18,23 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
         _public.remove_answer = function(options){
         }
 
+        _public.vote_review = function(options){
+          $http({
+            method: 'POST',
+            url: '/quiz/' + options.quiz_id + '/answer/' + options.answer_id + '/review/' + options.review_id + '/rate',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+            data: $.param({ userhash: options.userhas, rating: options.rating })
+          }).
+          success(function(){
+            options.success();
+          })
+          .error(function(){
+            options.error();
+          });
+        }
+
         _public.get_answers = function(options){
           $http({
             method: 'GET',

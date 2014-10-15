@@ -1,6 +1,4 @@
 QuizApp.controller('ManageQuizController', ['$scope', function($scope){
-	$('#widget-list').stickUp();
-
 	$scope.quiz = {
 		title: '',
 		reviewable: true,
@@ -82,14 +80,15 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 			creator: function(){
 				$scope.quiz.items.push({
 					item_type: 'slider_question',
-					title: '',
 					min: {
-						value: 1
+						value: 1,
+						title: ''
 					},
 					max: {
-						value: 7
+						value: 7,
+						title: ''
 					},
-					questions: ''
+					question: ''
 				});
 			}
 		}

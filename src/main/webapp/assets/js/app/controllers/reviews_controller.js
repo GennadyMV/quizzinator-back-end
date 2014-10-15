@@ -9,12 +9,33 @@ QuizApp.controller('ReviewsController', ['$scope', '$location', '$routeParams', 
 		}
 	});
 
-	$scope.upvote_review = function(review){
-
+	$scope.upvote_review = function(quiz, answer, review){
+		console.log($routeParams.userHash)
+		console.log(answer)
+		console.log(review)
+		QuizAPI.vote_review({
+			quiz_id: quiz.quizId,
+			answer_id: answer.id,
+			review_id: review.id,
+			userhash: $routeParams.userHash,
+			rating: 1,
+			success: function(){},
+			error: function(){}
+		});
 	}
 
-	$scope.downvote_review = function(review){
-		
+	$scope.downvote_review = function(quiz, answer, review){
+		QuizAPI.vote_review({
+			quiz_id: quiz.id,
+			answer_id: answer.id,
+			review_id: review.id,
+			data: {
+				userhash: $routeParams.userHash,
+				rating: -1
+			},
+			success: function(){},
+			error: function(){}
+		});
 	}
 
 	$scope.get_answer_template = function(item){
