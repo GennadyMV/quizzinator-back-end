@@ -208,4 +208,71 @@ public class PeerReviewControllerTest {
         e = jsonParser.parse(response.getContentAsString()).getAsJsonObject().get("answers");
         assertEquals(4, e.getAsJsonArray().size());
     }
+    
+    @Test
+    @DirtiesContext
+    public void testReviewRatingIsZeroIfReviewHasNotBeenRated() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        
+        //add answer
+        TestHelper.addAnAnswer(mockMvc, "question1", "this is for review", "reviewme", quizId);
+        
+        //add review
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "good job!");
+        
+        //get review
+        MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
+                .andExpect(status().isOk())
+                .andReturn().getResponse();
+        
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rating", 0);
+        Integer expected = 0;
+        assertEquals(expected, rating);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testReviewRatingIs1IfPositiveRating() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        String userhash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "this is for review and a good answer", "reviewme", quizId);
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "thats great, but use camelcase");
+        
+        //rate review as good
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
+                .param("userhash", userhash)
+                .param("rating", "1"))
+                .andExpect(status().isOk());
+        
+        
+        //get review
+        MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
+                .andReturn().getResponse();
+        
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rating", 0);
+        Integer expected = 1;
+        assertEquals(expected, rating);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testReviewRatingIsMinus1IfNegativeRating() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        String userhash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "this is for review and a good answer", "reviewme", quizId);
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_troll", "thats stupid u fool trololl");
+        
+        //rate review as bad
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
+                .param("userhash", userhash)
+                .param("rating", "-1"))
+                .andExpect(status().isOk());
+        
+        
+        //get review
+        MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
+                .andReturn().getResponse();
+        
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rating", 0);
+        Integer expected = -1;
+        assertEquals(expected, rating);
+    }
 }

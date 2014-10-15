@@ -1,7 +1,12 @@
 package app.controllers;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -43,6 +48,26 @@ public class TestHelper {
         mockMvc.perform(post(url).content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
     }
     
+    public static String addAnswerAndGetUserhash(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {
+        String jsonAnswer = 
+                "{\"answer\":\"[{"
+                + "\\\"question\\\":\\\"" + question + "\\\","
+                + "\\\"value\\\":\\\"" + answer + "\\\"}]\","
+                + "\"user\":\"" + user + "\"}";
+        
+        String url = "/quiz/" + quizId + "/answer";
+        
+        MockHttpServletResponse response;
+        response = mockMvc.perform(post(url).content(jsonAnswer).contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        
+        JsonParser jp = new JsonParser();
+        JsonElement e = jp.parse(response.getContentAsString());
+        
+        String userhash = e.getAsJsonObject().get("userhash").getAsString();
+        
+        return userhash;
+    }
+    
     public static void addAReview(MockMvc mockMvc, Long quizId, Long answerId, String reviewer, String review) throws Exception {
         String jsonReview = 
                 "{\"reviewer\":\"" + reviewer + "\"," +
@@ -51,5 +76,32 @@ public class TestHelper {
         String url = "/quiz/" + quizId + "/answer/"+ answerId +"/review";
         
         mockMvc.perform(post(url).content(jsonReview).contentType(MediaType.APPLICATION_JSON));
+    }
+    
+    public static String getStringByKeyAndIndexFromJsonArray(String json, String key, Integer i) {
+        JsonParser jp = new JsonParser();
+        JsonArray ja = jp.parse(json).getAsJsonArray();
+        JsonObject jo = ja.get(i).getAsJsonObject();
+        return jo.get(key).getAsString();
+    }
+    
+    public static Integer getIntegerByKeyAndIndexFromJsonArray(String json, String key, Integer i) {
+        JsonParser jp = new JsonParser();
+        JsonArray ja = jp.parse(json).getAsJsonArray();
+        JsonObject jo = ja.get(i).getAsJsonObject();
+        Integer val = jo.get(key).getAsInt();
+        return val;
+    }
+    
+    public static String getStringByKeyFromJson(String json, String key) {
+        JsonParser jp = new JsonParser();
+        JsonObject jo = jp.parse(json).getAsJsonObject();
+        return jo.get(key).getAsString();
+    }
+    
+    public static Integer getIntegerByKeyFromJson(String json, String key) {
+        JsonParser jp = new JsonParser();
+        JsonObject jo = jp.parse(json).getAsJsonObject();
+        return jo.get(key).getAsInt();
     }
 }

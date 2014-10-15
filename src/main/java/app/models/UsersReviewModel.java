@@ -43,7 +43,4 @@ public class UsersReviewModel {
     public void setReviews(List<PeerReview> reviews) {
         this.reviews = reviews;
     }
-    
-    
-    
 }

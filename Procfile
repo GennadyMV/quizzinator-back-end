@@ -1,1 +1,1 @@
-web: java -Dspring.profiles.active=heroku $JAVA_OPTS -jar target/kaint-ohtu-*.war --server.port $PORT
+web: java $JAVA_OPTS -Dspring.profiles.active=heroku -Dserver.port=$PORT -jar target/*.war
