@@ -1,0 +1,24 @@
+<ul class="nav nav-tabs" role="tablist">
+    <li><a href="#/quiz/{{quiz_id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
+    <li><a href="#/quiz/{{quiz_id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
+    <li><a href="#/quiz/{{quiz_id}}/share"><i class="fa fa-share"></i> Share</a></li>
+    <li class="active"><a href="#/quiz/{{quiz_id}}/answers"><i class="fa fa-user"></i> Answers</a></li>
+</ul>
+
+<div class="page-header">
+  <h1>Answers</h1>
+</div>
+
+<div class="form-group">
+  <input type="text" placeholder="Filter answers" ng-model="answer_filter" class="form-control">
+</div>
+
+<div class="media-list">
+  <div class="media" ng-repeat="quiz_answer in answers | filter: answer_filter">
+    <button class="btn btn-sm btn-danger pull-left"><i class="fa fa-times"></i></button>
+    <div class="media-body">
+      <h4 class="media-heading"><i class="fa fa-user text-muted"></i> {{quiz_answer.user}}</h4>
+      <div class="form-group question-answer" ng-repeat="answer in quiz_answer.answer" ng-include="get_answer_template(answer)"></div>
+    </div>
+  </div>
+</div>

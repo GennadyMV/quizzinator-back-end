@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     uglify: {
       build: {
-        src: ['js/vendor/dependencies/jquery.min.js', 'js/vendor/dependencies/jquery-ui.min.js' ,'js/vendor/dependencies/angular.min.js','js/vendor/dependencies/*.js', 'js/app/app.js', 'js/app/services/*.js', 'js/app/directives/*.js', 'js/app/controllers/*.js'],
+        src: ['js/vendor/dependencies/jquery.min.js', 'js/vendor/dependencies/jquery-ui.min.js' ,'js/vendor/dependencies/angular.min.js','js/vendor/dependencies/*.js', 'js/app/app.js', 'js/app/services/*.js', 'js/app/directives/*.js', 'js/app/controllers/*.js', 'js/ui/application.js'],
         dest: 'js/quiznator.min.js'
       }
     },
@@ -41,7 +41,7 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['uglify', 'less', 'cssmin', 'watch']);
-  
+
   // build without watch. easier with netbeans
   grunt.registerTask('build', ['uglify', 'less', 'cssmin']);
 

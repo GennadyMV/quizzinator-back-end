@@ -1,0 +1,27 @@
+<h4 class="quiz-item-title">
+  <i class="fa fa-arrows"></i> Slider question
+  <button class="btn btn-sm btn-danger pull-right" ng-click="remove_item($index)"><i class="fa fa-times"></i></button>
+</h4>
+
+<div class="form-group">
+  <label>Title</label>
+  <input type="text" class="form-control" ng-model="item.title" placeholder="Title">
+</div>
+
+<div class="form-group">
+  <div class="row">
+    <div class="col-md-6">
+      <label>Min</label>
+      <input type="text" class="form-control" placeholder="Value" ng-model="item.min.value">
+    </div>
+    <div class="col-md-6">
+      <label>Max</label>
+      <input type="text" class="form-control" placeholder="Value" ng-model="item.max.value">
+    </div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label>Questions</label>
+  <textarea class="form-control" rows="8" placeholder="Put each question on a separate line" ng-model="item.questions"></textarea>
+</div>

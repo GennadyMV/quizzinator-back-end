@@ -1,10 +1,13 @@
 QuizApp.controller('ManageQuizController', ['$scope', function($scope){
+	$('#widget-list').stickUp();
+
 	$scope.quiz = {
 		title: '',
 		reviewable: true,
+		reviewRounds: 1,
 		items: []
 	}
-	
+
 	$scope.widgets = [
 		{
 			name: 'Open question',
@@ -63,12 +66,28 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 					item_type: 'scale_question',
 					title: '',
 					min: {
-						value: null,
+						value: 1,
 						title: ''
 					},
 					max: {
-						value: null,
+						value: 7,
 						title: ''
+					},
+					questions: ''
+				});
+			}
+		},
+		{
+			name: 'Slider question',
+			creator: function(){
+				$scope.quiz.items.push({
+					item_type: 'slider_question',
+					title: '',
+					min: {
+						value: 1
+					},
+					max: {
+						value: 7
 					},
 					questions: ''
 				});

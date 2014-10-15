@@ -9,6 +9,14 @@ QuizApp.controller('ReviewsController', ['$scope', '$location', '$routeParams', 
 		}
 	});
 
+	$scope.upvote_review = function(review){
+
+	}
+
+	$scope.downvote_review = function(review){
+		
+	}
+
 	$scope.get_answer_template = function(item){
 		return '/assets/js/app/views/quiz/answer_formats/' + item.item_type + '.html';
 	}

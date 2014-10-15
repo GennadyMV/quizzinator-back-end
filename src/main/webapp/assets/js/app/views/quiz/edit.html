@@ -3,6 +3,7 @@
         <li class="active"><a href="#/quiz/{{$parent.quiz.id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
         <li><a href="#/quiz/{{$parent.quiz.id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
         <li><a href="#/quiz/{{$parent.quiz.id}}/share"><i class="fa fa-share"></i> Share</a></li>
+        <li><a href="#/quiz/{{$parent.quiz.id}}/answers"><i class="fa fa-user"></i> Answers</a></li>
     </ul>
 
     <div class="page-header page-header-button">
@@ -22,8 +23,9 @@
                         Enable peer reviews
                     </label>
                 </div>
-                <div ng-show="$parent.quiz.reviewable">
-                        Number of review rounds<input type="text" ng-model="$parent.quiz.reviewRounds">
+                <div class="form-group" ng-show="$parent.quiz.reviewable">
+                    <label>Number of review rounds</label>
+                    <input type="text" class="form-control" ng-model="$parent.quiz.reviewRounds">
                 </div>
                 <div class="checkbox">
                     <label>

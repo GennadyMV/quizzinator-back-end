@@ -18,7 +18,13 @@
         </li>
 		    <li class="list-group-item" ng-repeat="review in quiz.reviews">
 		    	<h4><i class="fa fa-user text-muted"></i> {{review.reviewer}}</h4>
-		    	{{review.review}}
+
+					{{review.review}}
+
+					<p style="margin-top: 15px;">
+						<button class="btn btn-success" ng-click="upvote_review(review)"><i class="fa fa-arrow-circle-up"></i> Upvote</button>
+						<button class="btn btn-danger" ng-click="downvote_review(review)"><i class="fa fa-arrow-circle-down"></i> Downvote</button>
+					</p>
 		    </li>
 		</ul>
     </div>

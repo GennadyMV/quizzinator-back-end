@@ -1,5 +1,5 @@
 QuizApp.controller('EditQuizController', ['$scope', '$routeParams', 'QuizAPI', function($scope, $routeParams, QuizAPI){
-	QuizAPI.get_quiz({ 
+	QuizAPI.get_quiz({
 		id: $routeParams.quizId,
 		success: function(quiz){
 			$scope.$parent.quiz = quiz;
@@ -8,7 +8,7 @@ QuizApp.controller('EditQuizController', ['$scope', '$routeParams', 'QuizAPI', f
 
 		}
 	});
-    
+
     $scope.edit_quiz = function(){
 		QuizAPI.edit_quiz({
 			quiz: $scope.$parent.quiz,

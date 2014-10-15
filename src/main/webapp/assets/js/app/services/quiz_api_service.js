@@ -15,6 +15,26 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                     });
         }
 
+        _public.remove_answer = function(options){
+        }
+
+        _public.get_answers = function(options){
+          $http({
+            method: 'GET',
+            url: '/quiz/' + options.quiz_id + '/answer'
+          })
+          .success(function(answers){
+            answers.forEach(function (answer) {
+                answer.answer = angular.fromJson(answer.answer);
+            });
+
+            options.success(answers);
+          })
+          .error(function(){
+            options.error();
+          })
+        }
+
         _public.get_quiz = function (options) {
             $http({
                 method: 'GET',
@@ -118,7 +138,7 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                     });
 
         }
-        
+
         _public.delete_answer = function (options) {
 
             $http({

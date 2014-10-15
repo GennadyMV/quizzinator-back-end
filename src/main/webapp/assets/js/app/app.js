@@ -22,6 +22,10 @@ QuizApp.config(['$routeProvider', function($routeProvider){
 		templateUrl: '/assets/js/app/views/quiz/share.html',
 		controller: 'ShareQuizController'
 	})
+	.when('/quiz/:quizId/answers', {
+		templateUrl: 'assets/js/app/views/quiz/quiz_answers.html',
+		controller: 'QuizAnswersController'
+	})
 	.when('/user/:userHash', {
 		templateUrl: '/assets/js/app/views/quiz/reviews.html',
 		controller: 'ReviewsController'
@@ -30,4 +34,3 @@ QuizApp.config(['$routeProvider', function($routeProvider){
 		redirectTo: '/quiz/new'
 	});
 }]);
-

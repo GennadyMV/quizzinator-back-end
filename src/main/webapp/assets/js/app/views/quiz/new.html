@@ -16,8 +16,9 @@
 	                    Enable peer reviews
 	                </label>
 	            </div>
-	            <div ng-show="$parent.quiz.reviewable">
-	            		Number of review rounds<input type="text" ng-model="$parent.quiz.reviewRounds">
+	            <div class="form-group" ng-show="$parent.quiz.reviewable">
+	            		<label>Number of review rounds</label>
+									<input type="text" class="form-control" ng-model="$parent.quiz.reviewRounds">
 	            </div>
 	            <div class="checkbox">
 	                <label>
@@ -37,7 +38,7 @@
 		</div>
 
 		<div class="col-md-4">
-			<div class="form-group">
+			<div class="form-group" id="widget-list">
 				<label>Quiz items</label>
 				<div class="btn-group-vertical" style="display: block">
 					<button class="btn btn-default" ng-repeat="widget in $parent.widgets" ng-click="widget.creator()">{{widget.name}}</button>
