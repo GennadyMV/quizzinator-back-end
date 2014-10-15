@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.domain.FileObject;
 import app.repositories.ImageRepository;
+import app.services.ImageService;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,11 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageController {
     
     @Autowired
-    private ImageRepository imageRepo;
+    private ImageService imageService;
     
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public byte[] showImage(@PathVariable Long id) {
-        return imageRepo.findOne(id).getContent();
+        return imageService.getImageContent(id);
     }
     
     @RequestMapping(method = RequestMethod.POST)
@@ -34,13 +35,6 @@ public class ImageController {
             return "/quiz";
         }
         
-        FileObject image = new FileObject();
-        image.setName(file.getOriginalFilename());
-        image.setMediaType(file.getContentType());
-        image.setSize(file.getSize());
-        image.setContent(file.getBytes());
-        imageRepo.save(image);
-        
-        return "/images/" + image.getId();
+        return "/images/" + imageService.saveImage(file);
     }
 }
