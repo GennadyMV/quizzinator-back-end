@@ -14,10 +14,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 @Component
 public class QuizService {
@@ -44,14 +41,14 @@ public class QuizService {
         Quiz q = quizRepo.findOne(quizId);
         answer.setQuiz(q);
         
-        answerRepo.save(answer);
+        QuizAnswer quizAnswer = answerRepo.save(answer);
         
         ReviewResponseModel model = null;
         
         if (q.isReviewable()) {
             model = new ReviewResponseModel();
             model.setAnswers(getAnswersForReview(q, u));
-            
+            model.setAnswerId(quizAnswer.getId());
             model.setUserhash(u.getHash());
         }
         
@@ -77,6 +74,12 @@ public class QuizService {
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         return reviewRepo.findByQuizAnswer(qa);
+    }
+    
+    public void validateAnswerQuizCombination(Long answerId, Long quizId) {
+        if (!isValidAnswerQuizCombination(answerId, quizId)) {
+            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
+        }
     }
     
     public boolean isValidAnswerQuizCombination(Long answerId, Long quizId) {
@@ -123,5 +126,13 @@ public class QuizService {
     
     public List<QuizAnswer> getPlaceholderAnswers(Long quizId) {
         return answerRepo.findByQuizAndPlaceholderIsTrue(quizRepo.findOne(quizId));
+    }
+
+    public QuizAnswer deleteAnswer(Long quizId, Long answerId) {
+        validateAnswerQuizCombination(answerId, quizId);
+        
+        QuizAnswer qa = answerRepo.findOne(answerId);
+        answerRepo.delete(qa);
+        return qa;
     }
 }

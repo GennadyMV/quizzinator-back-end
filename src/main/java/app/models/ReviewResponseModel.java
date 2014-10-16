@@ -1,8 +1,6 @@
 package app.models;
 
 import app.domain.QuizAnswer;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 
@@ -12,6 +10,9 @@ public class ReviewResponseModel {
     
     //returned hash should be answer rather than specific
     private String userhash;
+    
+    //id of the saved answer
+    private Long answerId;
 
     public List<QuizAnswer> getAnswers() {
         return answers;
@@ -28,6 +29,12 @@ public class ReviewResponseModel {
     public void setUserhash(String userhash) {
         this.userhash = userhash;
     }
-    
-    
+
+    public Long getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(Long answerId) {
+        this.answerId = answerId;
+    }
 }

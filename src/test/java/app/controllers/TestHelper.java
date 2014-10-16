@@ -36,7 +36,7 @@ public class TestHelper {
         return TestHelper.addQuizWithOneQuestion(mockMvc, quizTitle, question, reviewable, 1);
     }
     
-    public static void addAnAnswer(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {
+    public static Integer addAnAnswer(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {
         String jsonAnswer = 
                 "{\"answer\":\"[{"
                 + "\\\"question\\\":\\\"" + question + "\\\","
@@ -45,7 +45,13 @@ public class TestHelper {
         
         String url = "/quiz/" + quizId + "/answer";
         
-        mockMvc.perform(post(url).content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        MockHttpServletResponse response = 
+                mockMvc.perform(post(url).content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+        
+        Integer answerId = TestHelper.getIntegerByKeyFromJson(response.getContentAsString(), "answerId");
+        
+        return answerId;
     }
     
     public static String addAnswerAndGetUserhash(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {

@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,7 +22,9 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -112,10 +115,21 @@ public class QuizAnswerControllerTest {
         
         String response = mvcAnswer.getResponse().getContentAsString();
         
-        System.out.println("heh: " + response);
-        
         assertTrue(response.contains("\"user\":\"matti\""));
         assertTrue(response.contains("\\\"question\\\":\\\"testikysymys\\\""));
         assertTrue(response.contains("\\\"value\\\":\\\"testivastaus\\\""));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testDeleteAnswer() throws Exception {
+        Long quizId = quiz.getId();
+        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
+        Integer answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user2", quizId);
+        
+        this.mockMvc.perform(delete("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().isOk());
+        
+        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
     }
 }
