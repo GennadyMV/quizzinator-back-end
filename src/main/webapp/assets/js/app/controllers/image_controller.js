@@ -3,4 +3,4 @@ QuizApp.controller('ImageController', ['$scope', '$routeParams', 'QuizAPI', func
 		$scope.image = elm.image;
 		$scope.$apply();
 	}
-})
+}])
