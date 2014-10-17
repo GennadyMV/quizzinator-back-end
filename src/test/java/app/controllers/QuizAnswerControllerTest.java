@@ -129,7 +129,7 @@ public class QuizAnswerControllerTest {
         
         this.mockMvc.perform(delete("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().isOk());
         
-        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().isNotFound());
         this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
     }
 }
