@@ -14,14 +14,19 @@ describe('ReviewsController', function(){
                 {
                   id: 1,
                   reviewer: 'Pekka',
-                  review: 'Nice!'
+                  review: 'Nice!',
+                  rating: 0
                 }
               ],
               yourAnswer: {
+                id: 1,
                 user: 'Kalle'
               }
             }
         ]);
+      },
+      vote_review: function(options){
+        options.success();
       }
     }
   })();
@@ -41,5 +46,21 @@ describe('ReviewsController', function(){
       expect(scope.quizes[0].title).toBe('This is a quiz');
       expect(scope.quizes[0].reviews.length).toBe(1);
       expect(scope.username).toBe('Kalle');
+   });
+
+   it('should be able to upvote a review', function(){
+     expect(scope.quizes[0].reviews[0].rating).toBe(0);
+
+     scope.upvote_review(scope.quizes[0], scope.quizes[0].yourAnswer, scope.quizes[0].reviews[0]);
+
+     expect(scope.quizes[0].reviews[0].rating).toBe(1);
+   });
+
+   it('should be able to downvote a review', function(){
+     expect(scope.quizes[0].reviews[0].rating).toBe(0);
+
+     scope.downvote_review(scope.quizes[0], scope.quizes[0].yourAnswer, scope.quizes[0].reviews[0]);
+
+     expect(scope.quizes[0].reviews[0].rating).toBe(-1);
    });
 });

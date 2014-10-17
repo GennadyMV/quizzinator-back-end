@@ -15,7 +15,7 @@
 
 <div class="media-list">
   <div class="media" ng-repeat="quiz_answer in answers | filter: answer_filter">
-    <button class="btn btn-sm btn-danger pull-left"><i class="fa fa-times"></i></button>
+    <button class="btn btn-xs btn-danger pull-left"><i class="fa fa-times"></i></button>
     <div class="media-body">
       <h4 class="media-heading"><i class="fa fa-user text-muted"></i> {{quiz_answer.user}}</h4>
       <div class="form-group question-answer" ng-repeat="answer in quiz_answer.answer" ng-include="get_answer_template(answer)"></div>
