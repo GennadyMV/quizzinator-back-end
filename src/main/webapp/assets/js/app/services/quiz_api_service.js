@@ -171,6 +171,24 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
 
         }
 
+        _public.send_image = function(options) {
+            var data = new FormData();
+            data.append('image', image);
+            
+            $http({
+                method: 'DELETE',
+                url: 'image'
+            })
+                    .success(function() {
+                        options.success();
+                    })
+                    .error(function() {
+                        options.error();
+                    })
+
+
+        }
+
 
         return _public;
     }]);
