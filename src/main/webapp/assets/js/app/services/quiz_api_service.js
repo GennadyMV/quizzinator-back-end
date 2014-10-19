@@ -176,7 +176,7 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
             data.append('image', image);
             
             $http({
-                method: 'DELETE',
+                method: 'POST',
                 url: 'image'
             })
                     .success(function() {
