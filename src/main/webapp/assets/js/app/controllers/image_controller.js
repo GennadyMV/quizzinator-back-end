@@ -3,7 +3,7 @@ QuizApp.controller('ImageController', ['$scope', '$routeParams', 'QuizAPI', func
 		$scope.image = elm.image;
 		$scope.$apply();
 		QuizAPI.upload_image({
-			image: $scope.image
+			image: $scope.image,
 			success: function(){
 				$scope.message = {
 					content: 'The image has been sent!',
