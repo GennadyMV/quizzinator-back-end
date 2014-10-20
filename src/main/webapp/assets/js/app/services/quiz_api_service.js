@@ -177,7 +177,12 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
             
             $http({
                 method: 'POST',
-                url: 'image'
+                url: 'image',
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                },
+                data: data
+
             })
                     .success(function() {
                         options.success();

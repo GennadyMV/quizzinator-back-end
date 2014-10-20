@@ -5,8 +5,8 @@
 
 <div class="form-group">
 	<label>Image</label>
-	<div>
-		<input type="file" file-input="image">
-		<button ng-click="send_image()">Send</button>
+	<div ng-controller="ImageController">
+			<input type="file" imageInput="image"/>
+		<button ng-click="send_image(this)">Send</button>
 	</div>
 </div>
