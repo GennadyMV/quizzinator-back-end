@@ -3,6 +3,7 @@ package app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotBlank;
@@ -55,6 +57,12 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     @JsonIgnore
     @Column(nullable = false)
     private Boolean placeholder = false;
+    
+    private Date answerDate;
+    
+    @Column(nullable = true)
+    @JsonIgnore
+    private QuizAnswer previousAnswer;
 
     public Quiz getQuiz() {
         return quiz;
@@ -133,5 +141,27 @@ public class QuizAnswer extends AbstractPersistable<Long> {
 
     public void setPlaceholder(Boolean placeholder) {
         this.placeholder = placeholder;
+    }
+
+    public QuizAnswer getPreviousAnswer() {
+        return previousAnswer;
+    }
+
+    public void setPreviousAnswer(QuizAnswer previousAnswer) {
+        this.previousAnswer = previousAnswer;
+    }
+    
+    @JsonProperty("previousAnswerId")
+    public Long getPreviousAnswerId() {
+        return this.previousAnswer == null ? null : this.previousAnswer.getId();
+    }
+    
+    @PrePersist
+    void createdAt() {
+        this.answerDate = new Date();
+    }
+
+    public Date getAnswerDate() {
+        return answerDate;
     }
 }

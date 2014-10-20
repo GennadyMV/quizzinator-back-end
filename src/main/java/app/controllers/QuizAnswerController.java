@@ -38,7 +38,20 @@ public class QuizAnswerController {
             HttpServletRequest request) {
         
         quizAnswer.setIp(request.getRemoteAddr());
-        return quizService.sumbitAnswer(quizAnswer, quizId);
+        return quizService.submitAnswer(quizAnswer, quizId);
+    }
+    
+    @Transactional
+    @ResponseBody
+    @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/improve", method = RequestMethod.POST, consumes = "application/json")
+    public ReviewResponseModel improveAnswer(
+            @PathVariable Long quizId, 
+            @PathVariable Long answerId, 
+            @Valid @RequestBody QuizAnswer quizAnswer, 
+            HttpServletRequest request) {
+        
+        quizAnswer.setIp(request.getRemoteAddr());
+        return quizService.improveAnswer(quizAnswer, quizId, answerId);
     }
     
     @Transactional

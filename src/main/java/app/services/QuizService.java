@@ -34,7 +34,7 @@ public class QuizService {
     private UserService userService;
     
     
-    public ReviewResponseModel sumbitAnswer(QuizAnswer answer, Long quizId) {
+    public ReviewResponseModel submitAnswer(QuizAnswer answer, Long quizId) {
         User u = userService.getOrCreateUser(answer.getUsername());
         answer.setUser(u);
         
@@ -53,6 +53,15 @@ public class QuizService {
         }
         
         return model;
+    }
+    
+    public ReviewResponseModel improveAnswer(QuizAnswer newAnswer, Long quizId, Long answerIdToImprove) {
+        validateAnswerQuizCombination(answerIdToImprove, quizId);
+        
+        QuizAnswer prevAnswer = answerRepo.findOne(answerIdToImprove);
+        newAnswer.setPreviousAnswer(prevAnswer);
+        
+        return this.submitAnswer(newAnswer, quizId);
     }
     
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user) {
