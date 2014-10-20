@@ -43,7 +43,7 @@ public class QuizService {
         answer.setQuiz(q);
         
         //find previous answer and mark this as an improvement
-        List<QuizAnswer> previousAnswers = answerRepo.findByQuiz(q, new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
+        List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, u, new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
         if (!previousAnswers.isEmpty()) {
             answer.setPreviousAnswer(previousAnswers.get(0));
         } else {
