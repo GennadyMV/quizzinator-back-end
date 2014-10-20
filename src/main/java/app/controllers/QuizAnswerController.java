@@ -43,19 +43,6 @@ public class QuizAnswerController {
     
     @Transactional
     @ResponseBody
-    @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/improve", method = RequestMethod.POST, consumes = "application/json")
-    public ReviewResponseModel improveAnswer(
-            @PathVariable Long quizId, 
-            @PathVariable Long answerId, 
-            @Valid @RequestBody QuizAnswer quizAnswer, 
-            HttpServletRequest request) {
-        
-        quizAnswer.setIp(request.getRemoteAddr());
-        return quizService.improveAnswer(quizAnswer, quizId, answerId);
-    }
-    
-    @Transactional
-    @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}",
             method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public QuizAnswer getAnswer(@PathVariable Long quizId, @PathVariable Long answerId) {

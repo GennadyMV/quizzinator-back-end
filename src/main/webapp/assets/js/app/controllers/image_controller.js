@@ -1,5 +1,14 @@
 QuizApp.controller('ImageController', ['$scope', '$routeParams', 'QuizAPI', function($scope, $routeParams, QuizAPI){
+        $scope.filesChanged = function(elm) {
+            console.log("asd");
+            $scope.files = elm.files;
+            $scope.$apply();
+        };
+        
 	$scope.send_image = function(elm){
+                console.log('send_image');
+                console.log(elm);
+                console.log(elm.image);
 		$scope.image = elm.image;
 		$scope.$apply();
 		QuizAPI.upload_image({

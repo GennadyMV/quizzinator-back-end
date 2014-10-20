@@ -14,6 +14,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -41,6 +42,14 @@ public class QuizService {
         Quiz q = quizRepo.findOne(quizId);
         answer.setQuiz(q);
         
+        //find previous answer and mark this as an improvement
+        List<QuizAnswer> previousAnswers = answerRepo.findByQuiz(q, new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
+        if (!previousAnswers.isEmpty()) {
+            answer.setPreviousAnswer(previousAnswers.get(0));
+        } else {
+            answer.setPreviousAnswer(null);
+        }
+        
         QuizAnswer quizAnswer = answerRepo.save(answer);
         
         ReviewResponseModel model = null;
@@ -53,15 +62,6 @@ public class QuizService {
         }
         
         return model;
-    }
-    
-    public ReviewResponseModel improveAnswer(QuizAnswer newAnswer, Long quizId, Long answerIdToImprove) {
-        validateAnswerQuizCombination(answerIdToImprove, quizId);
-        
-        QuizAnswer prevAnswer = answerRepo.findOne(answerIdToImprove);
-        newAnswer.setPreviousAnswer(prevAnswer);
-        
-        return this.submitAnswer(newAnswer, quizId);
     }
     
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user) {
@@ -105,6 +105,10 @@ public class QuizService {
     public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
         List<User> users = userRepo.findByName(username);
+        
+        if (q == null) {
+            throw new app.exceptions.NotFoundException();
+        }
         
         if (users.isEmpty() || answerRepo.findByQuizAndUser(q, users.get(0)).isEmpty()) {
             q.setAnswered(false);

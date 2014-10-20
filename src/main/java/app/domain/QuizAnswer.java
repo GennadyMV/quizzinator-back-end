@@ -11,8 +11,10 @@ import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.persistence.Transient;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
@@ -58,9 +60,10 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     @Column(nullable = false)
     private Boolean placeholder = false;
     
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date answerDate;
     
-    @Column(nullable = true)
+    @OneToOne(optional = true)
     @JsonIgnore
     private QuizAnswer previousAnswer;
 
@@ -157,7 +160,7 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     }
     
     @PrePersist
-    void createdAt() {
+    private void setAnswerDate() {
         this.answerDate = new Date();
     }
 
