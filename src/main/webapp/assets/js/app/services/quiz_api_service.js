@@ -15,41 +15,52 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                     });
         }
 
-        _public.remove_answer = function(options){
+        _public.remove_answer = function (options) {
+            $http({
+                method: 'DELETE',
+                url: 'quiz/' + options.quiz_id + '/answer/' + options.answer_id,
+            })
+                    .success(function () {
+                        options.success();
+                    })
+                    .error(function () {
+                        options.error();
+                    });
+
         }
 
-        _public.vote_review = function(options){
-          $http({
-            method: 'POST',
-            url: '/quiz/' + options.quiz_id + '/answer/' + options.answer_id + '/review/' + options.review_id + '/rate',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-            },
-            data: $.param({ userhash: options.userhash, rating: options.rating })
-          }).
-          success(function(){
-            options.success();
-          })
-          .error(function(){
-            options.error();
-          });
+        _public.vote_review = function (options) {
+            $http({
+                method: 'POST',
+                url: '/quiz/' + options.quiz_id + '/answer/' + options.answer_id + '/review/' + options.review_id + '/rate',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                },
+                data: $.param({userhash: options.userhash, rating: options.rating})
+            }).
+                    success(function () {
+                        options.success();
+                    })
+                    .error(function () {
+                        options.error();
+                    });
         }
 
-        _public.get_answers = function(options){
-          $http({
-            method: 'GET',
-            url: '/quiz/' + options.quiz_id + '/answer'
-          })
-          .success(function(answers){
-            answers.forEach(function (answer) {
-                answer.answer = angular.fromJson(answer.answer);
-            });
+        _public.get_answers = function (options) {
+            $http({
+                method: 'GET',
+                url: '/quiz/' + options.quiz_id + '/answer'
+            })
+                    .success(function (answers) {
+                        answers.forEach(function (answer) {
+                            answer.answer = angular.fromJson(answer.answer);
+                        });
 
-            options.success(answers);
-          })
-          .error(function(){
-            options.error();
-          })
+                        options.success(answers);
+                    })
+                    .error(function () {
+                        options.error();
+                    })
         }
 
         _public.get_quiz = function (options) {
@@ -156,25 +167,10 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
 
         }
 
-        _public.delete_answer = function (options) {
-
-            $http({
-                method: 'DELETE',
-                url: 'quiz/' + options.quiz_id + '/answer/' + options.review_id,
-            })
-                    .success(function () {
-                        options.success();
-                    })
-                    .error(function () {
-                        options.error();
-                    });
-
-        }
-
-        _public.upload_image = function(options) {
+        _public.upload_image = function (options) {
             var data = new FormData();
             data.append('image', options.image);
-            
+
             $http({
                 method: 'POST',
                 url: 'image',
@@ -184,10 +180,10 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                 data: data
 
             })
-                    .success(function() {
+                    .success(function () {
                         options.success();
                     })
-                    .error(function() {
+                    .error(function () {
                         options.error();
                     })
 
