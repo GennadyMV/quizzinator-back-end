@@ -12,11 +12,10 @@
 <div class="form-group">
   <input type="text" placeholder="Filter answers" ng-model="answer_filter" class="form-control">
 </div>
-    <div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
 
 <div class="media-list">
   <div class="media" ng-repeat="quiz_answer in answers | filter: answer_filter">
-    <button class="btn btn-xs btn-danger pull-left" ng-click="remove_answer(quiz_answer)" id="remove-answer"><i class="fa fa-times"></i></button>
+    <button class="btn btn-xs btn-danger pull-left"><i class="fa fa-times"></i></button>
     <div class="media-body">
       <h4 class="media-heading"><i class="fa fa-user text-muted"></i> {{quiz_answer.user}}</h4>
       <div class="form-group question-answer" ng-repeat="answer in quiz_answer.answer" ng-include="get_answer_template(answer)"></div>

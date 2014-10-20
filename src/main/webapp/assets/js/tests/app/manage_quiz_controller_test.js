@@ -97,14 +97,6 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items[0].question).toBe('Choose one or more');
   });
 
-  it('should be able to add a slider question', function(){
-    scope.widgets[6].creator();
-    scope.quiz.items[0].question = 'Slider';
-
-    expect(scope.quiz.items.length).toBe(1);
-    expect(scope.quiz.items[0].question).toBe('Slider');
-  });
-
   it('should be able to add checkboxes to a checkbox question and remove checkboxes from it', function(){
     scope.widgets[3].creator();
     scope.quiz.items[0].question = 'Choose one or more';
