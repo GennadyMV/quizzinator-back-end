@@ -5,25 +5,25 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 		return {
 			question: item.question,
 			value: '',
-			item_type: type
+			item_type: item.item_type
 		}
 	}
 
 	var input_formatters = {
 		open_question: function(item){
-			var format = basic_input_formatter(item, 'open_question');
+			var format = basic_input_formatter(item);
 			format['max_length'] = item.max_length;
 
 			return format;
 		},
 		multiple_choice_question: function(item){
-			var format = basic_input_formatter(item, 'multiple_choice_question');
+			var format = basic_input_formatter(item);
 			format['options'] = item.options;
 
 			return format;
 		},
 		checkbox_question: function(item){
-			var format = basic_input_formatter(item, 'checkbox_question');
+			var format = basic_input_formatter(item);
 			format['checkboxes'] = $.map(item.checkboxes, function(checkbox){
 				return {
 					title: checkbox.title,
@@ -34,22 +34,22 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 			return format;
 		},
 		text_container: function(item){
-			var format = basic_input_formatter(item, 'text_container');
+			var format = basic_input_formatter(item);
 			format['content'] = $sce.trustAsHtml(item.content);
 			delete format['value'];
 
 			return format;
 		},
 		code_sample: function(item){
-			var format = basic_input_formatter(item, 'code_sample');
+			var format = basic_input_formatter(item);
 			format['code'] = item.code;
 			delete format['value'];
 
 			return format;
 		},
 		scale_question: function(item){
-			var format = basic_input_formatter(item, 'scale_question');
-			
+			var format = basic_input_formatter(item);
+
 			delete format['value'];
 			delete format['question'];
 
@@ -72,6 +72,15 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 			});
 
 			return format;
+		},
+		slider_question: function(item){
+			var format = basic_input_formatter(item);
+
+			format['value'] = Math.ceil(Math.abs(item.min.value - item.max.value) / 2);
+			format['min'] = item.min;
+			format['max'] = item.max;
+
+			return format;
 		}
 	}
 
@@ -86,7 +95,7 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 	var output_formatters = {
 		open_question: function(item){
 			var format = basic_output_formatter(item);
-			
+
 			if(item['max_length']){
 				format['value'] = format['value'].substring(0, item['max_length']);
 			}
@@ -100,7 +109,6 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 			format['value'] = item['questions'];
 
 			return format;
-
 		},
 		multiple_choice_question: function(item){
 			return basic_output_formatter(item);
@@ -117,6 +125,9 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 			});
 
 			return format;
+		},
+		slider_question: function(item){
+			return basic_output_formatter(item);
 		}
 	}
 
@@ -125,6 +136,7 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 			title: quiz.title,
 			answered: quiz.answered,
 			id: quiz.id,
+			is_open: quiz.isOpen,
 			items: []
 		}
 
@@ -140,10 +152,12 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 
 	_public.output = function(quiz){
 		var answers = [];
-		
+
 		if (!quiz) return [];
 
 		quiz.items.forEach(function(item){
+			console.log(item.item_type);
+
 			if(typeof output_formatters[item.item_type] === 'function'){
 				answers.push(output_formatters[item.item_type](item));
 			}

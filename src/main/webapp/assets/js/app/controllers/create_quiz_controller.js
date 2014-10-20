@@ -5,7 +5,7 @@ QuizApp.controller('CreateQuizController', ['$scope', '$location', 'QuizAPI', fu
 			success: function(quiz){
 				$scope.$parent.quiz = {
 					title: '',
-          reviewable: false,
+          			reviewable: false,
 					reviewRounds: 1,
 					items: []
 				};

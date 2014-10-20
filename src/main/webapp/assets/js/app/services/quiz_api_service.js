@@ -171,12 +171,12 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
 
         }
 
-        _public.send_image = function(options) {
+        _public.upload_image = function(options) {
             var data = new FormData();
-            data.append('image', image);
+            data.append('image', options.image);
             
             $http({
-                method: 'DELETE',
+                method: 'POST',
                 url: 'image'
             })
                     .success(function() {

@@ -1,0 +1,20 @@
+<table class="slider-table">
+  <tr>
+    <td class="slider-question">
+      {{item.question}}
+    </td>
+
+    <td class="slider-slider">
+      <input type="range" max="{{item.max.value}}" min="{{item.min.value}}" ng-model="item.value" slider>
+
+      <div class="slider-range">
+        <div class="slider-range-min text-muted">
+          {{item.min.title}}
+        </div>
+        <div class="slider-range-max text-muted">
+          {{item.max.title}}
+        </div>
+      </div>
+    </td>
+  </tr>
+<table>
