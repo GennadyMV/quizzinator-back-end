@@ -1,14 +1,14 @@
-QuizApp.directive('imageInput', ['$parse', function($parse){
-	return {
-		restrict: 'A',
-		link: function(scope, elm, attrs){
-			elm.bind('change', function(){
-                            console.log('directive called!!');
-                            console.log(elm);
-                            console.log(elm[0].files);
-                            $parse(attrs.imageInput).assign(scope, elm[0].files);
-                            scope.$apply();
-			})
-		}
-	}
+QuizApp.directive('imageInput', ['$parse', function ($parse) {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            var model = $parse(attrs.imageInput);
+            
+            element.bind('change', function(){
+                scope.$apply(function(){
+                    model.assign(scope, element[0].files[0]);
+                });
+            });
+        }
+    };
 }])

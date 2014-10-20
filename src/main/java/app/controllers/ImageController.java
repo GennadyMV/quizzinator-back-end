@@ -1,12 +1,13 @@
 package app.controllers;
 
-import app.domain.FileObject;
-import app.repositories.ImageRepository;
 import app.services.ImageService;
+import java.awt.Image;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +22,19 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
     
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public byte[] showImage(@PathVariable Long id) {
-        return imageService.getImageContent(id);
+    //TODO: fix this to support every file!!
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = "image/jpeg")
+    public ResponseEntity<byte[]> showImage(@PathVariable Long id) {
+//        MultiValueMap<String, String> headers = new HashMap();
+//        final HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.IMAGE_JPEG);
+//        headers.get
+        
+        ResponseEntity<byte[]> re = new ResponseEntity<byte[]>(imageService.getImageContent(id), HttpStatus.OK);
+        
+        return re;
+    
+//        return imageService.getImageContent(id);
     }
     
     @RequestMapping(method = RequestMethod.POST)
@@ -35,6 +46,6 @@ public class ImageController {
             return "/quiz";
         }
         
-        return "/images/" + imageService.saveImage(file);
+        return "redirect:/images/" + imageService.saveImage(file);
     }
 }
