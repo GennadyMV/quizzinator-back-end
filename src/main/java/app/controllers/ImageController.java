@@ -28,7 +28,7 @@ public class ImageController {
     }
     
     @RequestMapping(method = RequestMethod.POST)
-    public Long addImage(@RequestParam("image") MultipartFile file) throws IOException {
+    public String addImage(@RequestParam("image") MultipartFile file) throws IOException {
         if (!file.getContentType().equals("image/gif") &&
             !file.getContentType().equals("image/jpeg") &&
             !file.getContentType().equals("image/png")) {
@@ -36,6 +36,6 @@ public class ImageController {
             return null;
         }
         
-        return imageService.saveImage(file);
+        return "images/" + imageService.saveImage(file);
     }
 }
