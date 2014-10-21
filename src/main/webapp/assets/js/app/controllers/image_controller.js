@@ -2,7 +2,6 @@ QuizApp.controller('ImageController', ['$scope', '$routeParams', 'QuizAPI', func
     
     $scope.send_image = function(){
         var file = $scope.image;
-        console.log('file is ' + JSON.stringify(file));
         QuizAPI.upload_image({image:file});
     };
     

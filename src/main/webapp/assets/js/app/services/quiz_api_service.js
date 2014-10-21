@@ -175,18 +175,16 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
             var data = new FormData();
             data.append('image', options.image);
             
-            console.log('upload_image called!');
-            console.log(options.image);
             
             $http.post('images', data, {
                 transformRequest: angular.identity,
                 headers: {'Content-Type': undefined}
             })
             .success(function () {
-                console.log("success")
+                //console.log("success")
             })
             .error(function () {
-                console.log("fails")
+                //console.log("fails")
             });
         }
 
