@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -51,7 +50,7 @@ public class ImageControllerTest {
     
     @Test
     @DirtiesContext
-    public void fileWIthCorrectTypeAdded() throws Exception {
+    public void fileWithCorrectTypeAdded() throws Exception {
         assertEquals(0, imageRepo.count());
         
         MockMultipartFile multipartFile = new MockMultipartFile("image", "file.png",
@@ -79,7 +78,7 @@ public class ImageControllerTest {
     
     @Test
     @DirtiesContext
-    public void postImageReturnsCorrectUrl() throws Exception {
+    public void postImageReturnsAJsonObjectWithImageId() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("image", "kissa.jpeg",
                                         "image/jpeg", "salama".getBytes());
         this.mockMvc.perform(fileUpload("/images").file(multipartFile));
@@ -87,6 +86,8 @@ public class ImageControllerTest {
         MvcResult result = this.mockMvc.perform(fileUpload("/images").file(multipartFile))
                 .andReturn();
         
-        assertTrue(result.getResponse().getForwardedUrl().equals("images/3"));
+        Integer imageId = TestHelper.getIntegerByKeyFromJson(result.getResponse().getContentAsString(), "imageId");
+        
+        assertEquals((Integer) 3, imageId);
     }
 }
