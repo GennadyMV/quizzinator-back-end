@@ -96,7 +96,8 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 			name: 'Image',
 			creator: function(){
 				$scope.quiz.items.push({
-					item_type: 'image'
+					item_type: 'image',
+                                        imageId: undefined
 				})
 			}
 		}

@@ -1,6 +1,7 @@
 package app.services;
 
 import app.domain.FileObject;
+import app.exceptions.IllegalFileType;
 import app.repositories.ImageRepository;
 import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,14 @@ public class ImageService {
         headers.setContentType(MediaType.parseMediaType(image.getMediaType()));
         headers.setContentLength(image.getSize());
         
-        return new ResponseEntity<byte[]>(image.getContent(), headers, HttpStatus.CREATED);
+        return new ResponseEntity<byte[]>(image.getContent(), headers, HttpStatus.OK);
     }
     
     public Long saveImage(MultipartFile file) throws IOException {
+        if (!file.getContentType().matches("image/(gif|jpeg|png)")) {
+            throw new IllegalFileType();
+        }
+        
         FileObject image = new FileObject();
         image.setName(file.getOriginalFilename());
         image.setMediaType(file.getContentType());

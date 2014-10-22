@@ -180,8 +180,8 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                 transformRequest: angular.identity,
                 headers: {'Content-Type': undefined}
             })
-            .success(function () {
-                //console.log("success")
+            .success(function (data) {
+                options.success(data);
             })
             .error(function () {
                 //console.log("fails")
