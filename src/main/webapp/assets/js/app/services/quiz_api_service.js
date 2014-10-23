@@ -15,9 +15,19 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                     });
         }
 
-        _public.remove_answer = function(options){
+        _public.remove_answer = function (options) {
+            $http({
+                method: 'DELETE',
+                url: 'quiz/' + options.quiz_id + '/answer/' + options.answer_id,
+            })
+                    .success(function () {
+                        options.success();
+                    })
+                    .error(function () {
+                        options.error();
+                    });
         }
-
+          
         _public.vote_review = function(options){
           $http({
             method: 'POST',
@@ -149,21 +159,6 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
             })
                     .success(function (data) {
                         options.success(data);
-                    })
-                    .error(function () {
-                        options.error();
-                    });
-
-        }
-
-        _public.delete_answer = function (options) {
-
-            $http({
-                method: 'DELETE',
-                url: 'quiz/' + options.quiz_id + '/answer/' + options.review_id,
-            })
-                    .success(function () {
-                        options.success();
                     })
                     .error(function () {
                         options.error();
