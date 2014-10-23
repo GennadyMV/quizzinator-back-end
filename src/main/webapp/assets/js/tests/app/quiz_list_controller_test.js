@@ -36,4 +36,14 @@ describe('QuizListController', function () {
         scope.clone_quiz(quiz);
         expect(scope.message.type).toBe('success');
     });
+    
+    it('should be able to remove an existing quiz', function () {
+        var quiz = {
+            id: 1,
+            title: 'This is a quiz'
+        }
+        scope.clone_quiz(quiz);
+        expect(scope.message.type).toBe('success');
+    });
+    
 });
