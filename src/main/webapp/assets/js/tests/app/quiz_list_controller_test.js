@@ -46,4 +46,4 @@ describe('QuizListController', function () {
         expect(scope.message.type).toBe('success');
     });
     
-});
+}); 
