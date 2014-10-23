@@ -5,6 +5,7 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
+import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -14,7 +15,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -131,5 +131,52 @@ public class QuizAnswerControllerTest {
         
         this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().isNotFound());
         this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testPreviousAnswerIdIsSetAfterSecondAnswer() throws Exception {
+        Long quizId = quiz.getId();
+        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
+        Integer answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        
+        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+        
+        String response = mvcAnswer.getResponse().getContentAsString();
+        
+        assertEquals(answer1Id, TestHelper.getIntegerByKeyFromJson(response, "previousAnswerId"));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testPreviousAnswerIdIsNullFirstAnswer() throws Exception {
+        Long quizId = quiz.getId();
+        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        
+        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+        
+        String response = mvcAnswer.getResponse().getContentAsString();
+        
+        assertNull(TestHelper.getStringByKeyFromJson(response, "previousAnswerId"));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testAnswerDateIsSet() throws Exception {
+        Long quizId = quiz.getId();
+        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        
+        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+        
+        String response = mvcAnswer.getResponse().getContentAsString();
+        
+        Long answerTimestamp = TestHelper.getLongByKeyFromJson(response, "answerDate");
+        assertTrue(Math.abs(answerTimestamp-new Date().getTime())<60*1000);
     }
 }

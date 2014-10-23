@@ -88,6 +88,7 @@ public class TestHelper {
         JsonParser jp = new JsonParser();
         JsonArray ja = jp.parse(json).getAsJsonArray();
         JsonObject jo = ja.get(i).getAsJsonObject();
+        if(jo.get(key).isJsonNull()) return null;
         return jo.get(key).getAsString();
     }
     
@@ -96,18 +97,28 @@ public class TestHelper {
         JsonArray ja = jp.parse(json).getAsJsonArray();
         JsonObject jo = ja.get(i).getAsJsonObject();
         Integer val = jo.get(key).getAsInt();
+        if(jo.get(key).isJsonNull()) return null;
         return val;
     }
     
     public static String getStringByKeyFromJson(String json, String key) {
         JsonParser jp = new JsonParser();
         JsonObject jo = jp.parse(json).getAsJsonObject();
+        if(jo.get(key).isJsonNull()) return null;
         return jo.get(key).getAsString();
     }
     
     public static Integer getIntegerByKeyFromJson(String json, String key) {
         JsonParser jp = new JsonParser();
         JsonObject jo = jp.parse(json).getAsJsonObject();
+        if(jo.get(key).isJsonNull()) return null;
         return jo.get(key).getAsInt();
+    }
+
+    static Long getLongByKeyFromJson(String json, String key) {
+        JsonParser jp = new JsonParser();
+        JsonObject jo = jp.parse(json).getAsJsonObject();
+        if(jo.get(key).isJsonNull()) return null;
+        return jo.get(key).getAsLong();
     }
 }
