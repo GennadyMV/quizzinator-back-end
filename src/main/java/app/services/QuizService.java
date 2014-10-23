@@ -14,6 +14,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,12 +35,20 @@ public class QuizService {
     private UserService userService;
     
     
-    public ReviewResponseModel sumbitAnswer(QuizAnswer answer, Long quizId) {
+    public ReviewResponseModel submitAnswer(QuizAnswer answer, Long quizId) {
         User u = userService.getOrCreateUser(answer.getUsername());
         answer.setUser(u);
         
         Quiz q = quizRepo.findOne(quizId);
         answer.setQuiz(q);
+        
+        //find previous answer and mark this as an improvement
+        List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, u, new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
+        if (!previousAnswers.isEmpty()) {
+            answer.setPreviousAnswer(previousAnswers.get(0));
+        } else {
+            answer.setPreviousAnswer(null);
+        }
         
         QuizAnswer quizAnswer = answerRepo.save(answer);
         
@@ -96,6 +105,10 @@ public class QuizService {
     public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
         List<User> users = userRepo.findByName(username);
+        
+        if (q == null) {
+            throw new app.exceptions.NotFoundException();
+        }
         
         if (users.isEmpty() || answerRepo.findByQuizAndUser(q, users.get(0)).isEmpty()) {
             q.setAnswered(false);

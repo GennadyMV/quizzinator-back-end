@@ -38,7 +38,7 @@ public class QuizAnswerController {
             HttpServletRequest request) {
         
         quizAnswer.setIp(request.getRemoteAddr());
-        return quizService.sumbitAnswer(quizAnswer, quizId);
+        return quizService.submitAnswer(quizAnswer, quizId);
     }
     
     @Transactional

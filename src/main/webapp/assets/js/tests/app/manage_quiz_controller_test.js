@@ -79,7 +79,18 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('scale_question');
   });
+  it('should be able to add slider questions', function(){
+    scope.widgets[6].creator();
 
+    expect(scope.quiz.items.length).toBe(1);
+    expect(scope.quiz.items[0].item_type).toBe('slider_question');
+  });
+    it('should be able to add image questions', function(){
+    scope.widgets[7].creator();
+
+    expect(scope.quiz.items.length).toBe(1);
+    expect(scope.quiz.items[0].item_type).toBe('image');
+  });
   it('should be able to add code sample', function(){
     scope.widgets[2].creator();
     scope.quiz.items[0].code = 'int luku = 4;';

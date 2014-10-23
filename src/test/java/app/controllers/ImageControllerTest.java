@@ -43,22 +43,51 @@ public class ImageControllerTest {
         MockMultipartFile multipartFile = new MockMultipartFile("image", "file.txt",
                                         "text/plain", "123".getBytes());
         
-        MvcResult result = this.mockMvc.perform(fileUpload("/images").file(multipartFile)).andReturn();
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
         
         assertEquals(0, imageRepo.count());
     }
     
     @Test
     @DirtiesContext
-    public void fileWIthCorrectTypeAdded() throws Exception {
+    public void fileWithCorrectTypeAdded() throws Exception {
         assertEquals(0, imageRepo.count());
         
         MockMultipartFile multipartFile = new MockMultipartFile("image", "file.png",
                                         "image/png", "123".getBytes());
         
-        MvcResult result = this.mockMvc.perform(fileUpload("/images").file(multipartFile)).andReturn();
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
         
         assertEquals(1, imageRepo.count());
         assertTrue(imageRepo.findOne(1L).getMediaType().equals("image/png"));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void multipleImagesAdded() throws Exception {
+        assertEquals(0, imageRepo.count());
+        MockMultipartFile multipartFile = new MockMultipartFile("image", "file.gif",
+                                        "image/gif", "123".getBytes());
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        
+        assertEquals(4, imageRepo.count());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void postImageReturnsAJsonObjectWithImageId() throws Exception {
+        MockMultipartFile multipartFile = new MockMultipartFile("image", "kissa.jpeg",
+                                        "image/jpeg", "salama".getBytes());
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        MvcResult result = this.mockMvc.perform(fileUpload("/images").file(multipartFile))
+                .andReturn();
+        
+        Integer imageId = TestHelper.getIntegerByKeyFromJson(result.getResponse().getContentAsString(), "imageId");
+        
+        assertEquals((Integer) 3, imageId);
     }
 }

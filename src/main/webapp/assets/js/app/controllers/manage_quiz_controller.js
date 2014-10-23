@@ -91,6 +91,15 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 					question: ''
 				});
 			}
+		},
+		{
+			name: 'Image',
+			creator: function(){
+				$scope.quiz.items.push({
+					item_type: 'image',
+                                        imageId: undefined
+				})
+			}
 		}
 	];
 
