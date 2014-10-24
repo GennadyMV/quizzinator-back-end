@@ -17,6 +17,7 @@ public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Long> {
     public List<QuizAnswer> findQuizzesToReview(@Param("quiz") Quiz quiz, @Param("user") User user, Pageable pageable);
     public List<QuizAnswer> findByQuizAndPlaceholderIsTrue(Quiz quiz);
     public List<QuizAnswer> findByQuiz(Quiz quiz);
+    public List<QuizAnswer> findByPreviousAnswer(QuizAnswer answer);
     public List<QuizAnswer> findByQuiz(Quiz quiz, Pageable pageable);
     public List<QuizAnswer> findByQuizAndUser(Quiz q, User user);
     public List<QuizAnswer> findByQuizAndUser(Quiz q, User user, Pageable pageable);

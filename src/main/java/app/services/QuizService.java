@@ -145,6 +145,12 @@ public class QuizService {
         validateAnswerQuizCombination(answerId, quizId);
         
         QuizAnswer qa = answerRepo.findOne(answerId);
+        
+        //fix links, for every answer linking to this, make them link to this.previousAnswer 
+        List<QuizAnswer> answers = answerRepo.findByPreviousAnswer(qa);
+        for (QuizAnswer answer : answers) {
+            answer.setPreviousAnswer(qa.getPreviousAnswer());
+        }
         answerRepo.delete(qa);
         return qa;
     }

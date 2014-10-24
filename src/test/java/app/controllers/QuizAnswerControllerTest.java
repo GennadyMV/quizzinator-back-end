@@ -127,10 +127,33 @@ public class QuizAnswerControllerTest {
         Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
         Integer answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user2", quizId);
         
-        this.mockMvc.perform(delete("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().isOk());
+        this.mockMvc.perform(delete("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
         
-        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().isNotFound());
-        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
+        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)).andExpect(status().isOk());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testDeleteAnswerWontBreakPreviousAnswerLink() throws Exception {
+        Long quizId = quiz.getId();
+        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
+        Integer answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        Integer answer3Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus3", "user1", quizId);
+        
+        this.mockMvc.perform(delete("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
+        
+        String response = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        assertNull(TestHelper.getIntegerByKeyFromJson(response, "previousAnswerId"));
+        
+        this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isNotFound());
+        
+        response = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer3Id))
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        
+        //last answers previousAnswerId should be fixed to point to the first answer
+        assertEquals(answer1Id, TestHelper.getIntegerByKeyFromJson(response, "previousAnswerId"));
     }
     
     @Test
