@@ -1,19 +1,18 @@
-describe('QuizListController', function () {
+describe('QuizAnswersController', function () {
     beforeEach(module('QuizApp'));
     
     var ctrl, scope;
 
     var QuizAPIMock = (function () {
         return {
-            clone_quiz: function (options) {
+            remove_answer: function (options) {
                 options.success(
                         {
-                            id: 2,
-                            title: 'This is a quiz'
+                            
                         }
                 );
             },
-            get_quizes: function(options){
+            get_answers: function(options){
                 return [];
             }
         }
@@ -21,20 +20,17 @@ describe('QuizListController', function () {
 
     beforeEach(inject(function ($controller, $rootScope) {
         scope = $rootScope.$new();
+        
 
-        ctrl = $controller('QuizListController', {
+        ctrl = $controller('QuizAnswersController', {
             $scope: scope,
             QuizAPI: QuizAPIMock
         });
     }));
-
-    it('should be able to clone an existing quiz', function () {
-        var quiz = {
-            id: 1,
-            title: 'This is a quiz'
-        }
-        scope.clone_quiz(quiz);
+    
+    it('should be able to remove an existing quiz', function () {
+        scope.remove_answer(1);
         expect(scope.message.type).toBe('success');
     });
-
+    
 }); 
