@@ -5,10 +5,10 @@
 
 <div class="form-group">
 	<label>Image</label>
-        <div ng-controller="ImageController">
+  <div ng-controller="ImageController">
 		<input type="file" image-input="image" />
-		<button ng-click="send_image()">Send</button>
-                <div ng-model="item.imageId"></div>
-                <img ng-src="images/{{item.imageId}}" alt="preview" />
+		<button ng-click="send_image()" class="btn btn-default"><i class="fa fa-download"></i> Upload</button>
+    <div ng-model="item.imageId"></div>
 	</div>
+	<img ng-src="images/{{item.imageId}}" ng-show="item.imageId">
 </div>

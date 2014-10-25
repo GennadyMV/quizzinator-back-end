@@ -93,12 +93,21 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 			}
 		},
 		{
+			name: 'Sketchpad',
+			creator: function(){
+				$scope.quiz.items.push({
+					item_type: 'sketchpad',
+					title: ''
+				});
+			}
+		},
+		{
 			name: 'Image',
 			creator: function(){
 				$scope.quiz.items.push({
 					item_type: 'image',
-                                        imageId: undefined
-				})
+        	imageId: undefined
+				});
 			}
 		}
 	];

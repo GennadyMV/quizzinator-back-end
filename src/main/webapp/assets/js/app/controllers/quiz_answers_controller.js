@@ -1,4 +1,4 @@
-QuizApp.controller('QuizAnswersController', ['$scope', '$routeParams', 'QuizAPI','$route', function($scope, $routeParams, QuizAPI, $route){
+QuizApp.controller('QuizAnswersController', ['$scope', '$routeParams', 'QuizAPI', '$route', function($scope, $routeParams, QuizAPI, $route){
   $scope.quiz_id = $routeParams.quizId;
 
   QuizAPI.get_answers({
@@ -18,15 +18,15 @@ QuizApp.controller('QuizAnswersController', ['$scope', '$routeParams', 'QuizAPI'
                 quiz_id: $scope.quiz_id,
                 success: function () {
                     $scope.message = {
-                        content: 'The answer has been remove!',
+                        content: 'The answer has been removed!',
                         type: 'success'
                     };
                     $route.reload();
-                   
+
                 },
                 error: function () {
                     $scope.message = {
-                        content: 'Error remove the answer!',
+                        content: 'Error removing the answer!',
                         type: 'danger'
                     };
                 }
