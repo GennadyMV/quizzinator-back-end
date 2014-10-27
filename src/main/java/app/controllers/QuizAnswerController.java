@@ -2,7 +2,7 @@ package app.controllers;
 
 import app.domain.QuizAnswer;
 import app.exceptions.NotFoundException;
-import app.models.ReviewResponseModel;
+import app.models.NewAnswerResponseModel;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
@@ -32,7 +32,7 @@ public class QuizAnswerController {
     @Transactional
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer", method = RequestMethod.POST, consumes = "application/json")
-    public ReviewResponseModel newAnswer(
+    public NewAnswerResponseModel newAnswer(
             @PathVariable Long quizId, 
             @Valid @RequestBody QuizAnswer quizAnswer, 
             HttpServletRequest request) {

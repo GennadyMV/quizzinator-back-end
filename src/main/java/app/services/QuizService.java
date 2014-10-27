@@ -4,9 +4,10 @@ import app.repositories.UserRepository;
 import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
-import app.models.ReviewResponseModel;
+//import app.models.ReviewResponseModel;
 import app.domain.User;
 import app.exceptions.InvalidIdCombinationException;
+import app.models.NewAnswerResponseModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
@@ -35,7 +36,7 @@ public class QuizService {
     private UserService userService;
     
     
-    public ReviewResponseModel submitAnswer(QuizAnswer answer, Long quizId) {
+    public NewAnswerResponseModel submitAnswer(QuizAnswer answer, Long quizId) {
         User u = userService.getOrCreateUser(answer.getUsername());
         answer.setUser(u);
         
@@ -50,15 +51,14 @@ public class QuizService {
             answer.setPreviousAnswer(null);
         }
         
-        QuizAnswer quizAnswer = answerRepo.save(answer);
+        QuizAnswer newAnswer = answerRepo.save(answer);
         
-        ReviewResponseModel model = null;
+        NewAnswerResponseModel model = null;
         
         if (q.isReviewable()) {
-            model = new ReviewResponseModel();
-            model.setAnswers(getAnswersForReview(q, u));
-            model.setAnswerId(quizAnswer.getId());
-            model.setUserhash(u.getHash());
+            model = new NewAnswerResponseModel();
+            model.setAnswer(newAnswer);
+            model.setUserhash(newAnswer.getUser().getHash());
         }
         
         return model;

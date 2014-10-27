@@ -1,10 +1,14 @@
 package app.controllers;
 
 import app.domain.PeerReview;
+import app.domain.QuizAnswer;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
+import app.repositories.QuizRepository;
+import app.repositories.UserRepository;
 import app.services.QuizService;
 import app.services.ReviewService;
+import app.services.UserService;
 import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -21,6 +25,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PeerReviewController {
     @Autowired
     private PeerReviewRepository reviewRepo;
+    
+    @Autowired
+    private UserRepository userRepo;
+    
+    @Autowired
+    private UserService userService;
+    
+    @Autowired
+    private QuizRepository quizRepo;
     
     @Autowired
     private QuizService quizService;
@@ -43,14 +56,27 @@ public class PeerReviewController {
     }
     
     @ResponseBody
+    @RequestMapping(value = "/quiz/{quizId}/review_answers", method = RequestMethod.GET, produces="application/json")
+    @Transactional
+    public List<QuizAnswer> getAnswersForReview(
+            @PathVariable Long quizId, 
+            @RequestParam(required = true) String username, 
+            @RequestParam(required = false) Integer answerCount) {
+        if (answerCount==null) {
+            return quizService.getAnswersForReview(quizRepo.findOne(quizId), userService.getOrCreateUser(username));
+        } else {
+            return quizService.getAnswersForReview(quizRepo.findOne(quizId), userService.getOrCreateUser(username), answerCount);
+        }
+    }
+    
+    @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.POST, consumes = "application/json")
     @Transactional
-    public String newReview(
+    public void newReview(
             @Valid @RequestBody PeerReview review,
             @PathVariable Long quizId,
             @PathVariable Long answerId) {
         reviewService.saveNewReview(review, answerId, quizId);
-        return "";
     }
     
     @ResponseBody

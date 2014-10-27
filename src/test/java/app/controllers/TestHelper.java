@@ -36,7 +36,7 @@ public class TestHelper {
         return TestHelper.addQuizWithOneQuestion(mockMvc, quizTitle, question, reviewable, 1);
     }
     
-    public static Integer addAnAnswer(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {
+    public static Long addAnAnswer(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {
         String jsonAnswer = 
                 "{\"answer\":\"[{"
                 + "\\\"question\\\":\\\"" + question + "\\\","
@@ -49,9 +49,9 @@ public class TestHelper {
                 mockMvc.perform(post(url).content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
         
-        Integer answerId = TestHelper.getIntegerByKeyFromJson(response.getContentAsString(), "answerId");
+        JsonObject jo = TestHelper.getObjectByKeyFromJson(response.getContentAsString(), "answer");
         
-        return answerId;
+        return jo.get("id").getAsLong();
     }
     
     public static String addAnswerAndGetUserhash(MockMvc mockMvc, String question, String answer, String user, Long quizId) throws Exception {
@@ -101,6 +101,15 @@ public class TestHelper {
         return val;
     }
     
+    public static Long getLongByKeyAndIndexFromJsonArray(String json, String key, Integer i) {
+        JsonParser jp = new JsonParser();
+        JsonArray ja = jp.parse(json).getAsJsonArray();
+        JsonObject jo = ja.get(i).getAsJsonObject();
+        Long val = jo.get(key).getAsLong();
+        if(jo.get(key).isJsonNull()) return null;
+        return val;
+    }
+    
     public static String getStringByKeyFromJson(String json, String key) {
         JsonParser jp = new JsonParser();
         JsonObject jo = jp.parse(json).getAsJsonObject();
@@ -113,6 +122,13 @@ public class TestHelper {
         JsonObject jo = jp.parse(json).getAsJsonObject();
         if(jo.get(key).isJsonNull()) return null;
         return jo.get(key).getAsInt();
+    }
+    
+    public static JsonObject getObjectByKeyFromJson(String json, String key) {
+        JsonParser jp = new JsonParser();
+        JsonObject jo = jp.parse(json).getAsJsonObject();
+        if(!jo.get(key).isJsonObject()) return null;
+        return jo.get(key).getAsJsonObject();
     }
 
     static Long getLongByKeyFromJson(String json, String key) {

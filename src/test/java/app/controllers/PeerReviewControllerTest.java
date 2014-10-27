@@ -76,33 +76,32 @@ public class PeerReviewControllerTest {
     @Test
     @DirtiesContext
     public void leastReviewedAnswersAreOffered() throws Exception {
-        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        Long qId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
 
-        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", 1L);
-        TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user2", 1L);
-        TestHelper.addAnAnswer(mockMvc, "question1", "answer3", "user3", 1L);
+        Long aId1 = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", qId);
+        Long aId2 = TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user2", qId);
+        Long aId3 = TestHelper.addAnAnswer(mockMvc, "question1", "answer3", "user3", qId);
 
-        TestHelper.addAReview(mockMvc, 1L, 1L, "user2", "good answer1!");
-        TestHelper.addAReview(mockMvc, 1L, 2L, "user2", "good answer2!");
-        TestHelper.addAReview(mockMvc, 1L, 3L, "user2", "good answer3!");
-        TestHelper.addAReview(mockMvc, 1L, 1L, "user2", "good answer4!");
+        TestHelper.addAReview(mockMvc, qId, aId1, "user2", "good answer1!");
+        TestHelper.addAReview(mockMvc, qId, aId2, "user2", "good answer2!");
+        TestHelper.addAReview(mockMvc, qId, aId3, "user2", "good answer3!");
+        TestHelper.addAReview(mockMvc, qId, aId1, "user2", "good answer4!");
 
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer4\\\"}]\","
-                + "\"user\":\"user4\"}";
 
-        MockHttpServletResponse response = mockMvc.perform(post("/quiz/1/answer")
-                .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/quiz/" + qId + "/review_answers")
+                .param("username", "user4"))
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         String content = response.getContentAsString();
-
-        assertFalse(content.contains("\"id\":1"));
-        assertTrue(content.contains("\"id\":2"));
-        assertTrue(content.contains("\"id\":3"));
+        JsonParser jp = new JsonParser();
+        
+        for (int i = 0; i < jp.parse(content).getAsJsonArray().size(); i++) {
+            Long answerId = TestHelper.getLongByKeyAndIndexFromJsonArray(content, "id", i);
+            assertTrue(answerId.equals(aId2) || answerId.equals(aId3));
+        }
     }
 
     @Test
@@ -115,19 +114,16 @@ public class PeerReviewControllerTest {
         TestHelper.addAnAnswer(mockMvc, "question1", "answer4", "user4", quizId);
         TestHelper.addAnAnswer(mockMvc, "question1", "answer5", "user5", quizId);
 
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer6\\\"}]\","
-                + "\"user\":\"user6\"}";
-
-        MockHttpServletResponse response = mockMvc.perform(post("/quiz/" + quizId + "/answer")
-                .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
+        
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/quiz/" + quizId + "/review_answers")
+                .param("username", "user6"))
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         JsonParser jsonParser = new JsonParser();
-        JsonElement e = jsonParser.parse(response.getContentAsString()).getAsJsonObject().get("answers");
+        JsonElement e = jsonParser.parse(response.getContentAsString()).getAsJsonArray();
 
         assertEquals(2, e.getAsJsonArray().size());
     }
@@ -142,19 +138,15 @@ public class PeerReviewControllerTest {
         TestHelper.addAnAnswer(mockMvc, "question1", "answer4", "user4", quizId);
         TestHelper.addAnAnswer(mockMvc, "question1", "answer5", "user5", quizId);
 
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer6\\\"}]\","
-                + "\"user\":\"user6\"}";
-
-        MockHttpServletResponse response = mockMvc.perform(post("/quiz/" + quizId + "/answer")
-                .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/quiz/" + quizId + "/review_answers")
+                .param("username", "user6"))
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
         JsonParser jsonParser = new JsonParser();
-        JsonElement e = jsonParser.parse(response.getContentAsString()).getAsJsonObject().get("answers");
+        JsonElement e = jsonParser.parse(response.getContentAsString()).getAsJsonArray();
 
         assertEquals(4, e.getAsJsonArray().size());
     }
@@ -165,48 +157,27 @@ public class PeerReviewControllerTest {
         MockHttpServletResponse response;
         JsonParser jsonParser = new JsonParser();
         JsonElement e;
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer6\\\"}]\","
-                + "\"user\":\"user6\"}";
-
+        
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
 
-        response = mockMvc.perform(post("/quiz/" + quizId + "/answer")
-                .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        e = jsonParser.parse(response.getContentAsString()).getAsJsonObject().get("answers");
-        assertEquals(1, e.getAsJsonArray().size());
-
-        TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user2", quizId);
-
-        response = mockMvc.perform(post("/quiz/" + quizId + "/answer")
-                .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        e = jsonParser.parse(response.getContentAsString()).getAsJsonObject().get("answers");
-        assertEquals(2, e.getAsJsonArray().size());
-
-        TestHelper.addAnAnswer(mockMvc, "question1", "answer3", "user3", quizId);
-
-        response = mockMvc.perform(post("/quiz/" + quizId + "/answer")
-                .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        e = jsonParser.parse(response.getContentAsString()).getAsJsonObject().get("answers");
-        assertEquals(3, e.getAsJsonArray().size());
-
-        TestHelper.addAnAnswer(mockMvc, "question1", "answer4", "user4", quizId);
-
-        response = mockMvc.perform(post("/quiz/" + quizId + "/answer")
-                .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
-                .andReturn().getResponse();
-
-        e = jsonParser.parse(response.getContentAsString()).getAsJsonObject().get("answers");
-        assertEquals(4, e.getAsJsonArray().size());
+        response = mockMvc.perform(get("/quiz/" + quizId + "/review_answers").param("username", "user0")).andReturn().getResponse();
+        assertEquals(1, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", quizId);
+        response = mockMvc.perform(get("/quiz/" + quizId + "/review_answers").param("username", "user0")).andReturn().getResponse();
+        
+        assertEquals(2, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user3", quizId);
+        response = mockMvc.perform(get("/quiz/" + quizId + "/review_answers").param("username", "user0")).andReturn().getResponse();
+        
+        assertEquals(3, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user4", quizId);
+        response = mockMvc.perform(get("/quiz/" + quizId + "/review_answers").param("username", "user0")).andReturn().getResponse();
+        
+        assertEquals(4, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
     }
     
     @Test

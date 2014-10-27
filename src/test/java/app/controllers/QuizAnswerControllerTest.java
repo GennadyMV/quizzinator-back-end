@@ -5,9 +5,9 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import java.util.Date;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.Assert;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -70,25 +71,24 @@ public class QuizAnswerControllerTest {
     
     @Test
     @DirtiesContext
-    public void testPostAnswerReturnsTwoAnswers() throws Exception {
-        String jsonQuiz = "{\"user\": \"eero\","
-                         + "\"answer\": \"vastaus\"}";
-        this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
-                             .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+    public void testPostAnswerReturnsNewAnswerModel() throws Exception {
+        Long qId = quiz.getId();
         
-        jsonQuiz = "{\"user\": \"masa\","
-                         + "\"answer\": \"vastaus\"}";
-        this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
-                             .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON));
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user1", qId);
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user2", qId);
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user3", qId);
         
-        jsonQuiz = "{\"user\": \"kalevi\","
+        String jsonAnswer = "{\"user\": \"user4\","
                          + "\"answer\": \"vastaus\"}";
-        MvcResult mvcAnswer = this.mockMvc.perform(post("/quiz/"+ quiz.getId() + "/answer")
-                             .content(jsonQuiz).contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult mvcAnswer = this.mockMvc.perform(post("/quiz/"+ qId + "/answer")
+                             .content(jsonAnswer).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn();
         
-        JSONObject obj = new JSONObject(mvcAnswer.getResponse().getContentAsString());
-   
-        assertEquals(2, new JSONArray(obj.getString("answers")).length());
+        JsonParser jp = new JsonParser();
+        JsonObject answerModel = jp.parse(mvcAnswer.getResponse().getContentAsString()).getAsJsonObject();
+        assertTrue(answerModel.get("answer").isJsonObject());
+        assertTrue(answerModel.get("userhash").isJsonPrimitive());
     }
     
     @Test
@@ -124,8 +124,8 @@ public class QuizAnswerControllerTest {
     @DirtiesContext
     public void testDeleteAnswer() throws Exception {
         Long quizId = quiz.getId();
-        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
-        Integer answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user2", quizId);
+        Long answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
+        Long answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user2", quizId);
         
         this.mockMvc.perform(delete("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
         
@@ -137,15 +137,15 @@ public class QuizAnswerControllerTest {
     @DirtiesContext
     public void testDeleteAnswerWontBreakPreviousAnswerLink() throws Exception {
         Long quizId = quiz.getId();
-        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
-        Integer answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
-        Integer answer3Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus3", "user1", quizId);
+        Long answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
+        Long answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        Long answer3Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus3", "user1", quizId);
         
         this.mockMvc.perform(delete("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isOk());
         
         String response = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        assertNull(TestHelper.getIntegerByKeyFromJson(response, "previousAnswerId"));
+        assertNull(TestHelper.getLongByKeyFromJson(response, "previousAnswerId"));
         
         this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)).andExpect(status().isNotFound());
         
@@ -153,15 +153,15 @@ public class QuizAnswerControllerTest {
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         
         //last answers previousAnswerId should be fixed to point to the first answer
-        assertEquals(answer1Id, TestHelper.getIntegerByKeyFromJson(response, "previousAnswerId"));
+        assertEquals(answer1Id, TestHelper.getLongByKeyFromJson(response, "previousAnswerId"));
     }
     
     @Test
     @DirtiesContext
     public void testPreviousAnswerIdIsSetAfterSecondAnswer() throws Exception {
         Long quizId = quiz.getId();
-        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
-        Integer answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        Long answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus1", "user1", quizId);
+        Long answer2Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
         
         MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer2Id)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -169,14 +169,14 @@ public class QuizAnswerControllerTest {
         
         String response = mvcAnswer.getResponse().getContentAsString();
         
-        assertEquals(answer1Id, TestHelper.getIntegerByKeyFromJson(response, "previousAnswerId"));
+        assertEquals(answer1Id, TestHelper.getLongByKeyFromJson(response, "previousAnswerId"));
     }
     
     @Test
     @DirtiesContext
     public void testPreviousAnswerIdIsNullFirstAnswer() throws Exception {
         Long quizId = quiz.getId();
-        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        Long answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
         
         MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -191,7 +191,7 @@ public class QuizAnswerControllerTest {
     @DirtiesContext
     public void testAnswerDateIsSet() throws Exception {
         Long quizId = quiz.getId();
-        Integer answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
+        Long answer1Id = TestHelper.addAnAnswer(mockMvc, "testikysymys", "testivastaus2", "user1", quizId);
         
         MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answer1Id)
                 .contentType(MediaType.APPLICATION_JSON))
@@ -201,5 +201,12 @@ public class QuizAnswerControllerTest {
         
         Long answerTimestamp = TestHelper.getLongByKeyFromJson(response, "answerDate");
         assertTrue(Math.abs(answerTimestamp-new Date().getTime())<60*1000);
+    }
+    
+    
+    @Test
+    @DirtiesContext
+    public void test() throws Exception {
+    
     }
 }
