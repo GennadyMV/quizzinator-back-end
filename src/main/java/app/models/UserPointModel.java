@@ -4,11 +4,13 @@ public class UserPointModel {
     private final String username;
     private final Integer answerCount;
     private final Integer reviewCount;
+    private final Integer ratingCount;
     
-    public UserPointModel(String username, Integer answerCount, Integer reviewCount) {
+    public UserPointModel(String username, Integer answerCount, Integer reviewCount, Integer ratingCount) {
         this.username = username;
         this.answerCount = answerCount;
         this.reviewCount = reviewCount;
+        this.ratingCount = ratingCount;
     }
     
     public String getUsername() {
@@ -21,5 +23,9 @@ public class UserPointModel {
     
     public Integer getReviewCount() {
         return reviewCount;
+    }
+    
+    public Integer getRatingCount() {
+        return ratingCount;
     }
 }

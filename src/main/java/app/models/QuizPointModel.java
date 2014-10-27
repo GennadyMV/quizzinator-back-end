@@ -7,11 +7,13 @@ public class QuizPointModel {
     private final Quiz quiz;
     private final List<String> answerers;
     private final List<String> reviewers;
+    private final List<String> raters;
     
-    public QuizPointModel(Quiz quiz, List<String> answerers, List<String> reviewers) {
+    public QuizPointModel(Quiz quiz, List<String> answerers, List<String> reviewers, List<String> raters) {
         this.quiz = quiz;
         this.answerers = answerers;
         this.reviewers = reviewers;
+        this.raters = raters;
     }
     
     public Quiz getQuiz() {
@@ -24,5 +26,9 @@ public class QuizPointModel {
     
     public List<String> getReviewers() {
         return reviewers;
+    }
+    
+    public List<String> getRaters() {
+        return raters;
     }
 }

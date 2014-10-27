@@ -8,7 +8,11 @@ import app.repositories.QuizRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import static org.junit.Assert.assertEquals;
@@ -269,6 +273,36 @@ public class QuizControllerTest {
         Boolean answered = o.getAsJsonObject().getAsJsonPrimitive("answered").getAsBoolean();
         
         assertFalse(answered);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void deadlineNotExpiredReturnedCorrectly() throws ParseException {
+        Quiz quiz = new Quiz();
+        quiz.setIsOpen(false);
+        quiz.setTitle("testquiz");
+        quiz.setItems("[{}]");
+        quiz.setAnswerDeadline("03/11/2025");
+        quiz.setReviewDeadline("02/1/2037");
+        quizRepository.save(quiz);
+        
+        assertFalse(quiz.isAnsweringExpired());
+        assertFalse(quiz.isReviewingExpired());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void deadlineExpiredReturnedCorrectly() throws ParseException {
+        Quiz quiz = new Quiz();
+        quiz.setIsOpen(false);
+        quiz.setTitle("testquiz");
+        quiz.setItems("[{}]");
+        quiz.setAnswerDeadline("08/06/2014");
+        quiz.setReviewDeadline("10/22/2014");
+        quizRepository.save(quiz);
+        
+        assertTrue(quiz.isAnsweringExpired());
+        assertTrue(quiz.isReviewingExpired());
     }
     
     private void postTestquiz1() throws Exception {
