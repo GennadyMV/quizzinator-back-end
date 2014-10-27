@@ -85,8 +85,8 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('slider_question');
   });
-    it('should be able to add image questions', function(){
-    scope.widgets[7].creator();
+  it('should be able to add image questions', function(){
+    scope.widgets[8].creator();
 
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('image');
