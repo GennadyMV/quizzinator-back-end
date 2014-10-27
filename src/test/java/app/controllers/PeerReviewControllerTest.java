@@ -156,7 +156,6 @@ public class PeerReviewControllerTest {
     public void testAnswersReturnedForReviewIsAsMuchAsPossible() throws Exception {
         MockHttpServletResponse response;
         JsonParser jsonParser = new JsonParser();
-        JsonElement e;
         
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
@@ -179,6 +178,40 @@ public class PeerReviewControllerTest {
         
         assertEquals(4, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
     }
+    
+    
+    @Test
+    @DirtiesContext
+    public void testThetNumberOfAnswersReturnedForReviewWorks() throws Exception {
+        JsonParser jp = new JsonParser();
+        
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user2", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer3", "user3", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer4", "user4", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer5", "user5", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user2", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer3", "user3", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer4", "user4", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer5", "user5", quizId);
+        
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/quiz/" + quizId + "/review_answers")
+                .param("username", "user0")
+                .param("count", "3")).andReturn().getResponse();
+        
+        assertEquals(3, jp.parse(response.getContentAsString()).getAsJsonArray().size());
+        
+        response = mockMvc.perform(
+                get("/quiz/" + quizId + "/review_answers")
+                .param("username", "user0")
+                .param("count", "10")).andReturn().getResponse();
+        
+        assertEquals(10, jp.parse(response.getContentAsString()).getAsJsonArray().size());
+    }
+    
     
     @Test
     @DirtiesContext

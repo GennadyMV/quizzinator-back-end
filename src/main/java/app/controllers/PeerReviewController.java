@@ -61,11 +61,11 @@ public class PeerReviewController {
     public List<QuizAnswer> getAnswersForReview(
             @PathVariable Long quizId, 
             @RequestParam(required = true) String username, 
-            @RequestParam(required = false) Integer answerCount) {
-        if (answerCount==null) {
+            @RequestParam(required = false) Integer count) {
+        if (count==null) {
             return quizService.getAnswersForReview(quizRepo.findOne(quizId), userService.getOrCreateUser(username));
         } else {
-            return quizService.getAnswersForReview(quizRepo.findOne(quizId), userService.getOrCreateUser(username), answerCount);
+            return quizService.getAnswersForReview(quizRepo.findOne(quizId), userService.getOrCreateUser(username), count);
         }
     }
     
