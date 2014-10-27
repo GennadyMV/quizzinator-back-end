@@ -219,17 +219,19 @@ public class PeerReviewControllerTest {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         
         //add answer
-        TestHelper.addAnAnswer(mockMvc, "question1", "this is for review", "reviewme", quizId);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "this is for review", "reviewme", quizId);
         
         //add review
         TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "good job!");
         
         //get review
-        MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
+        MockHttpServletResponse response = mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answerId + "/review"))
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         
-        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rating", 0);
+        System.out.println("aaaaaaaaaaaaaaaaaa");
+        System.out.println(response.getContentAsString());
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
         Integer expected = 0;
         assertEquals(expected, rating);
     }
@@ -252,7 +254,7 @@ public class PeerReviewControllerTest {
         MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
                 .andReturn().getResponse();
         
-        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rating", 0);
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
         Integer expected = 1;
         assertEquals(expected, rating);
     }
@@ -275,7 +277,7 @@ public class PeerReviewControllerTest {
         MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
                 .andReturn().getResponse();
         
-        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rating", 0);
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
         Integer expected = -1;
         assertEquals(expected, rating);
     }
