@@ -1,8 +1,10 @@
 package app.services;
 
+import app.repositories.ReviewRatingRepository;
 import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
+import app.domain.ReviewRating;
 import app.domain.User;
 import app.exceptions.InvalidIdCombinationException;
 import app.exceptions.InvalidParameterException;
@@ -33,6 +35,9 @@ public class ReviewService {
     @Autowired
     private UserService userService;
     
+    @Autowired
+    private ReviewRatingRepository ratingRepo;
+    
     public boolean isValidAnswerReviewCombination(Long answerId, Long reviewId) {
         QuizAnswer qa = answerRepo.findOne(answerId);
         PeerReview pr = reviewRepo.findOne(reviewId);
@@ -58,7 +63,9 @@ public class ReviewService {
             answersReviews.setQuizId(quiz.getId());
             answersReviews.setTitle(quiz.getTitle());
             answersReviews.setAnswer(answer);
-            answersReviews.setReviews(reviewRepo.findByQuizAnswer(answer));
+            
+            List<PeerReview> reviews = reviewRepo.findByQuizAnswer(answer);
+            answersReviews.setReviews(reviews);
             
             ret.add(answersReviews);
         }
@@ -95,6 +102,8 @@ public class ReviewService {
             throw new InvalidParameterException("like value must be -1 or 1");
         }
         
+        
+        ReviewRating reviewRating = new ReviewRating();
         User u = userRepo.findOne(user);
         PeerReview review = reviewRepo.findOne(reviewId);
         
@@ -102,7 +111,10 @@ public class ReviewService {
             throw new UnauthorizedRateException();
         }
         
-        review.setRating(rating);
+        reviewRating.setReview(review);
+        reviewRating.setRater(u);
+        reviewRating.setRating(rating);
+        ratingRepo.save(reviewRating);
         reviewRepo.save(review);
     }
 }

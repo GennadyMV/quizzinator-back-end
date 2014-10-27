@@ -2,10 +2,12 @@ package app.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
@@ -20,9 +22,9 @@ public class PeerReview extends AbstractPersistable<Long> {
     
     private String review;
     
-    @Max(1)
-    @Min(-1)
-    private Integer rating = 0;
+    @JsonIgnore
+    @OneToMany(mappedBy = "review", fetch = FetchType.EAGER)
+    private List<ReviewRating> ratings;
 
     public QuizAnswer getQuizAnswer() {
         return quizAnswer;
@@ -47,12 +49,20 @@ public class PeerReview extends AbstractPersistable<Long> {
     public void setReview(String review) {
         this.review = review;
     }
-
-    public Integer getRating() {
-        return rating;
+    
+    public List<ReviewRating> getRatings() {
+        return ratings;
     }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
+    public void setRatings(List<ReviewRating> ratings) {
+        this.ratings = ratings;
+    }
+    
+    public Integer getTotalRating() {
+        int total = 0;
+        for (ReviewRating rating : ratings) {
+            total += rating.getRating();
+        }
+        return total;
     }
 }

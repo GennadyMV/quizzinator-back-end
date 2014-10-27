@@ -5,6 +5,7 @@ import app.domain.QuizAnswer;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizRepository;
+import app.repositories.ReviewRatingRepository;
 import app.repositories.UserRepository;
 import app.services.QuizService;
 import app.services.ReviewService;
@@ -40,6 +41,9 @@ public class PeerReviewController {
     
     @Autowired
     private ReviewService reviewService;
+    
+    @Autowired
+    private ReviewRatingRepository rateRepo;
     
     @ResponseBody
     @RequestMapping(value = "/review", method = RequestMethod.GET, produces="application/json")
