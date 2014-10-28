@@ -277,6 +277,19 @@ public class QuizControllerTest {
     
     @Test
     @DirtiesContext
+    public void quizNotExpiredWhenDeadlineNotSet() throws ParseException {
+        Quiz quiz = new Quiz();
+        quiz.setIsOpen(false);
+        quiz.setTitle("testquiz");
+        quiz.setItems("[{}]");
+        quizRepository.save(quiz);
+        
+        assertFalse(quiz.isAnsweringExpired());
+        assertFalse(quiz.isReviewingExpired());
+    }
+    
+    @Test
+    @DirtiesContext
     public void deadlineNotExpiredReturnedCorrectly() throws ParseException {
         Quiz quiz = new Quiz();
         quiz.setIsOpen(false);
