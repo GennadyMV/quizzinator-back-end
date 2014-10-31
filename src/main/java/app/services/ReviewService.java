@@ -102,7 +102,6 @@ public class ReviewService {
             throw new InvalidParameterException("like value must be -1 or 1");
         }
         
-        
         ReviewRating reviewRating = new ReviewRating();
         User u = userRepo.findOne(user);
         PeerReview review = reviewRepo.findOne(reviewId);
