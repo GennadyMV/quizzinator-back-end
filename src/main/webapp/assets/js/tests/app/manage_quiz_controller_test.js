@@ -70,7 +70,7 @@ describe('ManageQuizController', function(){
 
     scope.remove_option(scope.quiz.items[0], 0);
 
-    expect(scope.quiz.items[0].options.length).toBe(0);      
+    expect(scope.quiz.items[0].options.length).toBe(0);
   });
 
   it('should be able to add scale questions', function(){
@@ -126,6 +126,13 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items[0].checkboxes.length).toBe(0);
   });
 
+	it('should be able to add a sketchpad', function(){
+		scope.widgets[7].creator();
+
+		expect(scope.quiz.items.length).toBe(1);
+		expect(scope.quiz.items[0].item_type).toBe('sketchpad');
+	});
+
   it('should be able to remove an item', function(){
     scope.widgets[1].creator();
 
@@ -141,7 +148,7 @@ describe('ManageQuizController', function(){
 
     scope.remove_item(0);
 
-    expect(scope.quiz.items.length).toBe(0);      
+    expect(scope.quiz.items.length).toBe(0);
   });
 
 	it('should have items ordered correctly when added', function(){
