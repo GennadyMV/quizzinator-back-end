@@ -208,6 +208,7 @@
                             <configuration>
                                 <url>https://raw.githubusercontent.com/kaint-ohtu/quiz-lib/master/build/quiz.min.css</url>
                                 <outputDirectory>src/main/webapp/assets/css/</outputDirectory>
+                                <outputFileName>quiz-plugin.min.css</outputFileName>
                             </configuration>
                         </execution>
                         <execution>
@@ -219,6 +220,7 @@
                             <configuration>
                                 <url>https://raw.githubusercontent.com/kaint-ohtu/quiz-lib/master/build/quiz.min.js</url>
                                 <outputDirectory>src/main/webapp/assets/js/</outputDirectory>
+                                <outputFileName>quiz-plugin.min.js</outputFileName>
                             </configuration>
                         </execution>
                     </executions>

@@ -8,5 +8,5 @@ target/
 **/glassfish-web.xml
 /src/main/webapp/assets/js/tests/TEST-jasmine.xml
 npm-debug.log
-src/main/webapp/assets/js/quiz.min.js
-src/main/webapp/assets/css/quiz.min.css
+src/main/webapp/assets/js/quiz-plugin.min.js
+src/main/webapp/assets/css/quiz-plugin.min.css
