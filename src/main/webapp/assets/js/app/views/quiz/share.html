@@ -10,11 +10,14 @@
 </div>
 <ol>
   <li>
+    <div ng-model="apiurl" share-libs></div>
+  </li>
+  <li>
     <p>
       Add the following piece of code to your <code>body</code>-tag
     </p>
     <div highlight language="html" content="true">
-      <pre>ng-app="QuizApp" ng-controller="MainController" ng-init="init({ 'api': 'http://localhost:8080' })"</pre>
+      <pre>ng-app="QuizApp" ng-controller="MainController" ng-init="init({ 'api': '{{apiurl}}' })"</pre>
     </div>
     <p>
       in <code>ng-init</code> set the <code>api</code> variable to match the API you're using

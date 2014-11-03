@@ -53,6 +53,13 @@ public class PeerReviewController {
     }
     
     @ResponseBody
+    @RequestMapping(value = "/quiz/{quizId}/reviews", method = RequestMethod.GET, produces="application/json")
+    @Transactional
+    public List<PeerReview> getReviewsByQuiz(@PathVariable Long quizId, @RequestParam Integer reviewCount, @RequestParam String username) {
+        return reviewService.getReviewsByQuizForRating(quizId, reviewCount, username);
+    }
+    
+    @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.GET, produces="application/json")
     @Transactional
     public List<PeerReview> getAnswerReviews(@PathVariable Long quizId, @PathVariable Long answerId) {

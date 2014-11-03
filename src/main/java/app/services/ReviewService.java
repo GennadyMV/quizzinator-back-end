@@ -12,16 +12,22 @@ import app.exceptions.UnauthorizedRateException;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
+import app.repositories.QuizRepository;
 import app.repositories.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ReviewService {
     @Autowired
     private QuizService quizService;
+    
+    @Autowired
+    private QuizRepository quizRepo;
     
     @Autowired
     private QuizAnswerRepository answerRepo;
@@ -114,6 +120,17 @@ public class ReviewService {
         reviewRating.setRater(u);
         reviewRating.setRating(rating);
         ratingRepo.save(reviewRating);
+        review.incrementRateCount();
         reviewRepo.save(review);
+    }
+
+    public List<PeerReview> getReviewsByQuizForRating(Long quizId, Integer reviewCount, String username) {
+        User u = userService.getOrCreateUser(username);
+        Quiz q = quizRepo.findOne(quizId);
+        
+        PageRequest pageRequest = new PageRequest(0, reviewCount, Sort.Direction.ASC, "rateCount");
+        List<PeerReview> reviews = reviewRepo.findForRate(u, q, pageRequest);
+        
+        return reviews;
     }
 }
