@@ -28,9 +28,6 @@ public class PeerReviewController {
     private PeerReviewRepository reviewRepo;
     
     @Autowired
-    private UserRepository userRepo;
-    
-    @Autowired
     private UserService userService;
     
     @Autowired
@@ -41,9 +38,6 @@ public class PeerReviewController {
     
     @Autowired
     private ReviewService reviewService;
-    
-    @Autowired
-    private ReviewRatingRepository rateRepo;
     
     @ResponseBody
     @RequestMapping(value = "/review", method = RequestMethod.GET, produces="application/json")

@@ -68,6 +68,10 @@ public class PeerReview extends AbstractPersistable<Long> {
         }
         return total;
     }
+    
+    public Long getAnswerId() {
+        return this.quizAnswer.getId();
+    }
 
     public Integer getRateCount() {
         return rateCount;
