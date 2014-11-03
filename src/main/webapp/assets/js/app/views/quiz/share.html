@@ -8,5 +8,27 @@
 <div class="page-header">
 	<h1>Share this quiz</h1>
 </div>
+<ol>
+  <li>
+    <p>
+      Add the following piece of code to your <code>body</code>-tag
+    </p>
+    <div highlight language="html" content="true">
+      <pre>ng-app="QuizApp" ng-controller="MainController" ng-init="init({ 'api': 'http://localhost:8080' })"</pre>
+    </div>
+    <p>
+      in <code>ng-init</code> set the <code>api</code> variable to match the API you're using
+    </p>
+  </li>
+  <li>
+    <p>
+      Next add this piece of code where you want your quiz
+    </p>
 
-<div ng-model="quiz_id" share-quiz></div>
+    <div ng-model="quiz_id" share-quiz></div>
+  </li>
+  <li>
+    Lastly choose where you want the peer review form to be displayed
+    <div ng-model="quiz_id" share-peer-review></div>
+  </li>
+</ol>

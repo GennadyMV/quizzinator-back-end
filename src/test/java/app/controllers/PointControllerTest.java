@@ -4,6 +4,9 @@ import app.Application;
 import app.models.QuizPointModel;
 import app.domain.User;
 import app.models.UserPointModel;
+import app.repositories.PeerReviewRepository;
+import app.repositories.QuizAnswerRepository;
+import app.repositories.ReviewRatingRepository;
 import app.repositories.UserRepository;
 import com.google.gson.Gson;
 import static org.junit.Assert.assertEquals;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -40,6 +44,12 @@ public class PointControllerTest {
     
     private User user1;
     private User user2;
+    
+    @Autowired
+    private PeerReviewRepository reviewRepo;
+    
+    @Autowired
+    private QuizAnswerRepository answerRepo;
     
     public PointControllerTest() {
     }
@@ -65,6 +75,7 @@ public class PointControllerTest {
         assertTrue(userPoint.getUsername().equals(user1.getName()));
         assertEquals(1, userPoint.getReviewCount().intValue());
         assertEquals(1, userPoint.getAnswerCount().intValue());
+        assertEquals(1, userPoint.getRatingCount().intValue());
     }
     
     @Test
@@ -80,6 +91,13 @@ public class PointControllerTest {
         assertEquals(1L, quizPoint.getQuiz().getId().longValue());
         assertEquals(2, quizPoint.getAnswerers().size());
         assertEquals(2, quizPoint.getReviewers().size());
+        assertEquals(2, quizPoint.getRaters().size());
+        assertTrue(quizPoint.getAnswerers().contains(user1.getName()));
+        assertTrue(quizPoint.getAnswerers().contains(user2.getName()));
+        assertTrue(quizPoint.getReviewers().contains(user1.getName()));
+        assertTrue(quizPoint.getReviewers().contains(user2.getName()));
+        assertTrue(quizPoint.getRaters().contains(user1.getName()));
+        assertTrue(quizPoint.getRaters().contains(user2.getName()));
     }
     
     private void initQuiz() throws Exception {
@@ -129,5 +147,19 @@ public class PointControllerTest {
                 "\"review\":\"surkea esitys\"}";
         mockMvc.perform(post("/quiz/1/answer/2/review").content(jsonReview)
                                                        .contentType(MediaType.APPLICATION_JSON));
+        
+        initReviewRatings();
+    }
+    
+    private void initReviewRatings() throws Exception {
+        mockMvc.perform(post("/quiz/1/answer/1/review/1/rate")
+                .param("userhash", user1.getHash())
+                .param("rating", "1"))
+                .andExpect(status().isOk());
+        
+        mockMvc.perform(post("/quiz/1/answer/2/review/2/rate")
+                .param("userhash", user2.getHash())
+                .param("rating", "-1"))
+                .andExpect(status().isOk());
     }
 }
