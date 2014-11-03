@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.Application;
 import app.repositories.ImageRepository;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -43,51 +44,62 @@ public class ImageControllerTest {
         MockMultipartFile multipartFile = new MockMultipartFile("image", "file.txt",
                                         "text/plain", "123".getBytes());
         
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile)).andReturn();
         
         assertEquals(0, imageRepo.count());
     }
     
     @Test
     @DirtiesContext
-    public void fileWithCorrectTypeAdded() throws Exception {
+    public void pngAdded() throws Exception {
         assertEquals(0, imageRepo.count());
         
         MockMultipartFile multipartFile = new MockMultipartFile("image", "file.png",
                                         "image/png", "123".getBytes());
         
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile)).andReturn();
         
+        MvcResult result = this.mockMvc.perform(get("/images/1")).andReturn();
         assertEquals(1, imageRepo.count());
-        assertTrue(imageRepo.findOne(1L).getMediaType().equals("image/png"));
+        assertTrue(Arrays.equals(result.getResponse().getContentAsByteArray(), "123".getBytes()));
+        assertTrue(result.getResponse().getContentType().equals("image/png"));
+        assertTrue(result.getResponse().getHeader("filename").equals("file.png"));
+        assertEquals("123".getBytes().length, result.getResponse().getContentLength());
     }
     
     @Test
     @DirtiesContext
-    public void multipleImagesAdded() throws Exception {
+    public void jpegAdded() throws Exception {
         assertEquals(0, imageRepo.count());
-        MockMultipartFile multipartFile = new MockMultipartFile("image", "file.gif",
-                                        "image/gif", "123".getBytes());
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
         
-        assertEquals(4, imageRepo.count());
+        MockMultipartFile multipartFile = new MockMultipartFile("image", "file.jpeg",
+                                        "image/jpeg", "koiruli".getBytes());
+        
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile)).andReturn();
+        
+        MvcResult result = this.mockMvc.perform(get("/images/1")).andReturn();
+        assertEquals(1, imageRepo.count());
+        assertTrue(Arrays.equals(result.getResponse().getContentAsByteArray(), "koiruli".getBytes()));
+        assertTrue(result.getResponse().getContentType().equals("image/jpeg"));
+        assertTrue(result.getResponse().getHeader("filename").equals("file.jpeg"));
+        assertEquals("koiruli".getBytes().length, result.getResponse().getContentLength());
     }
     
     @Test
     @DirtiesContext
-    public void postImageReturnsAJsonObjectWithImageId() throws Exception {
-        MockMultipartFile multipartFile = new MockMultipartFile("image", "kissa.jpeg",
-                                        "image/jpeg", "salama".getBytes());
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
-        this.mockMvc.perform(fileUpload("/images").file(multipartFile));
-        MvcResult result = this.mockMvc.perform(fileUpload("/images").file(multipartFile))
-                .andReturn();
+    public void gifAdded() throws Exception {
+        assertEquals(0, imageRepo.count());
         
-        Integer imageId = TestHelper.getIntegerByKeyFromJson(result.getResponse().getContentAsString(), "imageId");
+        MockMultipartFile multipartFile = new MockMultipartFile("image", "file.gif",
+                                        "image/gif", "muah".getBytes());
         
-        assertEquals((Integer) 3, imageId);
+        this.mockMvc.perform(fileUpload("/images").file(multipartFile)).andReturn();
+        
+        MvcResult result = this.mockMvc.perform(get("/images/1")).andReturn();
+        assertEquals(1, imageRepo.count());
+        assertTrue(Arrays.equals(result.getResponse().getContentAsByteArray(), "muah".getBytes()));
+        assertTrue(result.getResponse().getContentType().equals("image/gif"));
+        assertTrue(result.getResponse().getHeader("filename").equals("file.gif"));
+        assertEquals("muah".getBytes().length, result.getResponse().getContentLength());
     }
 }

@@ -24,6 +24,7 @@ public class ImageService {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.parseMediaType(image.getMediaType()));
         headers.setContentLength(image.getSize());
+        headers.set("filename", image.getName());
         
         return new ResponseEntity<byte[]>(image.getContent(), headers, HttpStatus.OK);
     }
