@@ -5,8 +5,6 @@ import app.domain.QuizAnswer;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizRepository;
-import app.repositories.ReviewRatingRepository;
-import app.repositories.UserRepository;
 import app.services.QuizService;
 import app.services.ReviewService;
 import app.services.UserService;
