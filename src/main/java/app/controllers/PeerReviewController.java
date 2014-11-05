@@ -2,9 +2,11 @@ package app.controllers;
 
 import app.domain.PeerReview;
 import app.domain.QuizAnswer;
+import app.domain.User;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizRepository;
+import app.repositories.UserRepository;
 import app.services.QuizService;
 import app.services.ReviewService;
 import app.services.UserService;
@@ -27,6 +29,10 @@ public class PeerReviewController {
     
     @Autowired
     private UserService userService;
+    
+    
+    @Autowired
+    private UserRepository userRepo;
     
     @Autowired
     private QuizRepository quizRepo;
@@ -96,9 +102,18 @@ public class PeerReviewController {
             @PathVariable Long quizId, 
             @PathVariable Long answerId, 
             @PathVariable Long reviewId, 
-            @RequestParam String userhash, 
+            @RequestParam(required = false) String userhash, 
+            @RequestParam(required = false) String username, 
             @RequestParam Integer rating) {
         
-        reviewService.rateReview(quizId, answerId, reviewId, userhash, rating);
+        User user;
+        if (userhash != null && !userhash.isEmpty()) {
+            user = userRepo.findOne(userhash);
+        } else if (username != null) {
+            user = userService.getOrCreateUser(username);
+        } else {
+            throw new app.exceptions.InvalidParameterException("username or userhash parameter expected");
+        }
+        reviewService.rateReview(quizId, answerId, reviewId, user, rating);
     }
 }

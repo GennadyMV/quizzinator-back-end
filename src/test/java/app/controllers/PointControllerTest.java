@@ -45,12 +45,6 @@ public class PointControllerTest {
     private User user1;
     private User user2;
     
-    @Autowired
-    private PeerReviewRepository reviewRepo;
-    
-    @Autowired
-    private QuizAnswerRepository answerRepo;
-    
     public PointControllerTest() {
     }
     

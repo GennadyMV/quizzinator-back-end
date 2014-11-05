@@ -88,14 +88,15 @@ public class ReviewService {
         qa.setReviewCount(qa.getReviewCount()+1);
         review.setQuizAnswer(qa);
         
-        review.setReviewer(userService.getUser(review.getReviewer()));
+        User reviewer = userService.getOrCreateUser(review.getReviewer().getName());
+        review.setReviewer(reviewer);
         
         PeerReview newReview = reviewRepo.save(review);
         
         return newReview;
     }
 
-    public void rateReview(Long quizId, Long answerId, Long reviewId, String user, Integer rating) {
+    public void rateReview(Long quizId, Long answerId, Long reviewId, User user, Integer rating) {
         if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) {
             throw new InvalidIdCombinationException("bad answerId, quizId combination!");
         }
@@ -109,15 +110,15 @@ public class ReviewService {
         }
         
         ReviewRating reviewRating = new ReviewRating();
-        User u = userRepo.findOne(user);
         PeerReview review = reviewRepo.findOne(reviewId);
         
-        if (!review.getQuizAnswer().getUser().equals(u)) {
+        //user shouldn't rate their own review
+        if (review.getReviewer().equals(user)) {
             throw new UnauthorizedRateException();
         }
         
         reviewRating.setReview(review);
-        reviewRating.setRater(u);
+        reviewRating.setRater(user);
         reviewRating.setRating(rating);
         ratingRepo.save(reviewRating);
         review.incrementRateCount();

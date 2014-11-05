@@ -4,9 +4,10 @@ import app.Application;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.json.JSONArray;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -232,8 +233,6 @@ public class PeerReviewControllerTest {
                 .andExpect(status().isOk())
                 .andReturn().getResponse();
         
-        System.out.println("aaaaaaaaaaaaaaaaaa");
-        System.out.println(response.getContentAsString());
         Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
         Integer expected = 0;
         assertEquals(expected, rating);
@@ -288,30 +287,24 @@ public class PeerReviewControllerTest {
     
     @Test
     @DirtiesContext
-    public void testUserCantRateReviewsOnOtherPeoplesAnswers() throws Exception {
+    public void testUserCantRateTheirOwnReviews() throws Exception {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
-        TestHelper.addAnAnswer(mockMvc, "question1", "this is for review and a good answer", "user1", quizId);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "this is for review and a good answer", "user1", quizId);
         String user2hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "this is for review and a good answer", "user2", quizId);
         
-        //assume the first asnwer got anserId=1
-        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_troll", "thats stupid u fool trololl");
+        //user2 reviews
+        TestHelper.addAReview(mockMvc, quizId, answerId, "user2", "asdsda");
         
-        //rate someone elses answer's review
-        mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
+        //rate the review given by user2
+        mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
             .param("userhash", user2hash)
-            .param("rating", "-1"))
+            .param("rating", "1"))
             .andExpect(status().isForbidden());
     }
     
     @Test
     @DirtiesContext
     public void testGetUserReviews() throws Exception {
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer6\\\"}]\","
-                + "\"user\":\"user6\"}";
-
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         String hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "answer1", "user1", quizId);
         TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "good job!");
@@ -326,32 +319,28 @@ public class PeerReviewControllerTest {
         
         MvcResult result = mockMvc.perform(get("/reviews/" + hash)).andReturn();
         
-        Gson gson = new Gson();
-        JSONArray array = new JSONArray(result.getResponse().getContentAsString());
-        assertEquals(2, array.length());
+        String content = result.getResponse().getContentAsString();
+        JsonParser jp = new JsonParser();
+        JsonArray ja = jp.parse(content).getAsJsonArray();
         
-        UsersReviewModel reviews = gson.fromJson(array.getJSONObject(0).toString(), UsersReviewModel.class);
-        assertEquals(1, reviews.getQuizId().intValue());
-        assertEquals(1, array.getJSONObject(0).getJSONObject("yourAnswer").get("id"));
-        assertEquals(3, reviews.getReviews().size());
-        assertTrue(reviews.getTitle().equals("quiz1"));
+        assertEquals(2, ja.size());
         
-        reviews = gson.fromJson(array.getJSONObject(1).toString(), UsersReviewModel.class);
-        assertEquals(2, reviews.getQuizId().intValue());
-        assertEquals(2, array.getJSONObject(1).getJSONObject("yourAnswer").get("id"));
-        assertEquals(3, reviews.getReviews().size());
-        assertTrue(reviews.getTitle().equals("quiz2"));
+        JsonObject jo = ja.get(0).getAsJsonObject();
+        assertEquals(1, jo.get("quizId").getAsInt());
+        assertEquals(1, jo.get("yourAnswer").getAsJsonObject().get("id").getAsInt());
+        assertEquals(3, jo.get("reviews").getAsJsonArray().size());
+        assertEquals("quiz1", jo.get("title").getAsString());
+        
+        jo = ja.get(1).getAsJsonObject();
+        assertEquals(2, jo.get("quizId").getAsInt());
+        assertEquals(2, jo.get("yourAnswer").getAsJsonObject().get("id").getAsInt());
+        assertEquals(3, jo.get("reviews").getAsJsonArray().size());
+        assertEquals("quiz2", jo.get("title").getAsString());
     }
     
     @Test
     @DirtiesContext
     public void badAnswerQuizCombination() throws Exception {
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer6\\\"}]\","
-                + "\"user\":\"user6\"}";
-
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         String hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "answer1", "user1", quizId);
         
@@ -375,12 +364,6 @@ public class PeerReviewControllerTest {
     @Test
     @DirtiesContext
     public void badAnswerReviewCombination() throws Exception {
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer6\\\"}]\","
-                + "\"user\":\"user6\"}";
-
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         String hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "answer1", "user1", quizId);
         
@@ -395,12 +378,6 @@ public class PeerReviewControllerTest {
     @Test
     @DirtiesContext
     public void badRatingValue() throws Exception {
-        String jsonAnswer
-                = "{\"answer\":\"[{"
-                + "\\\"question\\\":\\\"question1\\\","
-                + "\\\"value\\\":\\\"answer6\\\"}]\","
-                + "\"user\":\"user6\"}";
-
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         final String hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "answer1", "user1", quizId);
         
