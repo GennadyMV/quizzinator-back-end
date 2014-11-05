@@ -75,6 +75,8 @@ public class PointControllerTest {
     @Test
     @DirtiesContext
     public void testGetPointsForQuiz() throws Exception {
+        initOverlappingPoints();
+        
         MvcResult mvcResult = this.mockMvc.perform(get("/points/quiz/1")
                             .contentType(MediaType.APPLICATION_JSON))
                             .andReturn();
@@ -152,6 +154,48 @@ public class PointControllerTest {
                 .andExpect(status().isOk());
         
         mockMvc.perform(post("/quiz/1/answer/2/review/2/rate")
+                .param("userhash", user2.getHash())
+                .param("rating", "-1"))
+                .andExpect(status().isOk());
+    }
+    
+    private void initOverlappingPoints() throws Exception {
+        String jsonAnswer = 
+                "{\"answer\":\"[{"
+                + "\\\"question\\\":\\\"testquestion1\\\","
+                + "\\\"value\\\":\\\"blablaaa\\\"},"
+                + "{\\\"question\\\":\\\"testquestion2\\\","
+                + "\\\"value\\\":\\\"faaaag\\\"}]\","
+                + "\"user\":\"asko\"}";
+        mockMvc.perform(post("/quiz/1/answer").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        
+        jsonAnswer = 
+                "{\"answer\":\"[{"
+                + "\\\"question\\\":\\\"testquestion1\\\","
+                + "\\\"value\\\":\\\"baumtsss\\\"},"
+                + "{\\\"question\\\":\\\"testquestion2\\\","
+                + "\\\"value\\\":\\\"hoho\\\"}]\","
+                + "\"user\":\"esko\"}";
+        mockMvc.perform(post("/quiz/1/answer").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        
+        String jsonReview = 
+                "{\"reviewer\":\"asko\"," +
+                "\"review\":\"hyvahyva\"}";
+        mockMvc.perform(post("/quiz/1/answer/4/review").content(jsonReview)
+                                                       .contentType(MediaType.APPLICATION_JSON));
+        
+        jsonReview = 
+                "{\"reviewer\":\"esko\"," +
+                "\"review\":\"surkea esitys\"}";
+        mockMvc.perform(post("/quiz/1/answer/3/review").content(jsonReview)
+                                                       .contentType(MediaType.APPLICATION_JSON));
+        
+        mockMvc.perform(post("/quiz/1/answer/4/review/3/rate")
+                .param("userhash", user1.getHash())
+                .param("rating", "1"))
+                .andExpect(status().isOk());
+        
+        mockMvc.perform(post("/quiz/1/answer/3/review/4/rate")
                 .param("userhash", user2.getHash())
                 .param("rating", "-1"))
                 .andExpect(status().isOk());

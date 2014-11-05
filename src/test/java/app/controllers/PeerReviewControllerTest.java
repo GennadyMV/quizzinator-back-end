@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.json.JSONArray;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -388,4 +389,51 @@ public class PeerReviewControllerTest {
             .param("rating", "0"))
             .andExpect(status().is4xxClientError());
     }
+    
+    @Test
+    @DirtiesContext
+    public void testGetReviewsByQuizForRating() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user3", quizId);
+        
+        
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, quizId, 2L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, quizId, 3L, "reviewer_guy", "good job!");
+        
+        MvcResult result = mockMvc.perform(get("/quiz/1/reviews")
+                .param("reviewCount", "2")
+                .param("username", "user1"))
+                .andReturn();
+        
+        JSONArray array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(2, array.length());
+        
+        result = mockMvc.perform(get("/quiz/1/reviews")
+                .param("reviewCount", "4")
+                .param("username", "user2"))
+                .andReturn();
+        
+        array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(3, array.length());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGetAnswerReviewsFaultyParameters() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz2", "question1", true, 2);
+       
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", 1L);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", 2L);
+        
+        TestHelper.addAReview(mockMvc, 1L, 1L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, 2L, 2L, "reviewer_guy", "good job!");
+        
+        mockMvc.perform(get("/quiz/1/answer/2/review")).andExpect(status().is4xxClientError());
+    }
+    
+    
 }
