@@ -66,15 +66,7 @@ public class QuizControllerTest {
     @DirtiesContext
     public void testAddingQuiz() throws Exception {
         postTestquiz1();
-
-        List<Quiz> quizes = quizRepository.findAll();
-        for (int i = 0; i < quizes.size(); i++) {
-            if (quizes.get(i).getTitle().equals("testquiz1")) {
-                return;
-            }
-        }
-
-        throw new AssertionError();
+        assertTrue(quizRepository.findOne(1L).getTitle().equals("testquiz1"));
     }
 
     @Test
@@ -316,6 +308,23 @@ public class QuizControllerTest {
         
         assertTrue(quiz.isAnsweringExpired());
         assertTrue(quiz.isReviewingExpired());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGetPlaceholderAnswers() throws Exception {
+        postTestquiz1();
+
+        String jsonAnswer = "{\"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        jsonAnswer = "{\"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+        jsonAnswer = "{\"answer\": \"vastaus\"}";
+        this.mockMvc.perform(post("/quiz/1/placeholder").content(jsonAnswer).contentType(MediaType.APPLICATION_JSON));
+
+        MvcResult result = this.mockMvc.perform(get("/quiz/1/placeholder")).andReturn();
+        JSONArray answers = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(3, answers.length());
     }
     
     private void postTestquiz1() throws Exception {

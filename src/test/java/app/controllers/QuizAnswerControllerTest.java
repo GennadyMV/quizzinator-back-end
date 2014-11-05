@@ -8,6 +8,7 @@ import app.repositories.QuizRepository;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Date;
+import org.json.JSONArray;
 import org.junit.Assert;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -203,10 +204,41 @@ public class QuizAnswerControllerTest {
         assertTrue(Math.abs(answerTimestamp-new Date().getTime())<60*1000);
     }
     
+    @Test
+    @DirtiesContext
+    public void testGetAnswers() throws Exception {
+        Long qId = quiz.getId();
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user1", qId);
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user2", qId);
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user3", qId);
+        
+        TestHelper.addQuizWithOneQuestion(mockMvc, "testquiz2", "testquestion2", true);
+        qId = 2L;
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user1", qId);
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user2", qId);
+        TestHelper.addAnAnswer(mockMvc, "q", "a", "user3", qId);
+        
+        MvcResult result = mockMvc.perform(get("/quiz/1/answer")).andReturn();
+        JSONArray array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(3, array.length());
+        
+        result = mockMvc.perform(get("/answer")).andReturn();
+        array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(6, array.length());
+    }
     
     @Test
     @DirtiesContext
-    public void test() throws Exception {
-    
+    public void cannotDeleteWithBadAnswerQuizCombination() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz2", "question1", true, 2);
+       
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", 1L);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", 2L);
+        
+        TestHelper.addAReview(mockMvc, 1L, 1L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, 2L, 2L, "reviewer_guy", "good job!");
+        
+        mockMvc.perform(delete("/quiz/1/answer/2/review")).andExpect(status().is4xxClientError());
     }
 }

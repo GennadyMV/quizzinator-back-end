@@ -1,14 +1,13 @@
 package app.controllers;
 
 import app.Application;
-import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.HashSet;
+import org.json.JSONArray;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -387,6 +386,89 @@ public class PeerReviewControllerTest {
     
     @Test
     @DirtiesContext
+    public void testGetReviewsByQuizForRating() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user3", quizId);
+        
+        
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, quizId, 2L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, quizId, 3L, "reviewer_guy", "good job!");
+        
+        MvcResult result = mockMvc.perform(get("/quiz/1/reviews")
+                .param("reviewCount", "2")
+                .param("username", "user1"))
+                .andReturn();
+        
+        JSONArray array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(2, array.length());
+        
+        result = mockMvc.perform(get("/quiz/1/reviews")
+                .param("reviewCount", "4")
+                .param("username", "user2"))
+                .andReturn();
+        
+        array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(3, array.length());
+    }
+    
+    public void testGetAnswerReviewsFaultyParameters() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz2", "question1", true, 2);
+       
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", 1L);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", 2L);
+        
+        TestHelper.addAReview(mockMvc, 1L, 1L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, 2L, 2L, "reviewer_guy", "good job!");
+        
+        mockMvc.perform(get("/quiz/1/answer/2/review")).andExpect(status().is4xxClientError());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testReturnedPeerReviewsContainsNoDuplicates() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        Long answerId2 = TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user0", quizId);
+        
+        TestHelper.addAReview(mockMvc, quizId, answerId, "user2", "way to go!"); //assume id = 1
+        TestHelper.addAReview(mockMvc, quizId, answerId2, "user7", "yeah!"); //2
+        
+        //multiple ratings duplicated returned reviews at some point
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user3", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user4", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user5", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user6", -1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user11", -1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user8", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user9", -1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user10", -1);
+        
+        
+        MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/reviews")
+            .param("reviewCount", "5")
+            .param("username", "user12"))
+            .andExpect(status().isOk())
+            .andReturn();
+        
+        String response = result.getResponse().getContentAsString();
+        JsonArray ja = jsonParser.parse(response).getAsJsonArray();
+        
+        //only 2 should be found, but might be duplicated by an error
+        assertEquals(2, ja.size());
+        
+        HashSet<Integer> reviewIds = new HashSet<Integer>();
+        for (JsonElement je : ja) {
+            Integer reviewId = je.getAsJsonObject().get("id").getAsInt();
+            assertTrue(reviewIds.add(reviewId));
+        }
+    }
+    
+    @Test
+    @DirtiesContext
     public void testGettingPeerReviewsWithoutAnsweringIsPossible() throws Exception {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
@@ -446,45 +528,6 @@ public class PeerReviewControllerTest {
         
         assertTrue(reviewer2.equals("reviewer_guy") || reviewer2.equals("reviewer_guy4"));
         assertTrue(review2.equals(expectedReview1) || review2.equals(expectedReview2));
-    }
-    
-    @Test
-    @DirtiesContext
-    public void testReturnedPeerReviewsContainsNoDuplicates() throws Exception {
-        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
-        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
-        Long answerId2 = TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user0", quizId);
-        
-        TestHelper.addAReview(mockMvc, quizId, answerId, "user2", "way to go!"); //assume id = 1
-        TestHelper.addAReview(mockMvc, quizId, answerId2, "user7", "yeah!"); //2
-        
-        //multiple ratings duplicated returned reviews at some point
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user3", 1);
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user4", 1);
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user5", 1);
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user6", -1);
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user11", -1);
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user8", 1);
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user9", -1);
-        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user10", -1);
-        
-        
-        MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/reviews")
-            .param("reviewCount", "5")
-            .param("username", "user12"))
-            .andExpect(status().isOk())
-            .andReturn();
-        
-        String response = result.getResponse().getContentAsString();
-        JsonArray ja = jsonParser.parse(response).getAsJsonArray();
-        
-        //only 2 should be found, but might be duplicated by an error
-        assertEquals(2, ja.size());
-        
-        HashSet<Integer> reviewIds = new HashSet<Integer>();
-        for (JsonElement je : ja) {
-            Integer reviewId = je.getAsJsonObject().get("id").getAsInt();
-            assertTrue(reviewIds.add(reviewId));
-        }
+
     }
 }
