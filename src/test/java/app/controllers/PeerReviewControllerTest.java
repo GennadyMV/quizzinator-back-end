@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import java.util.HashSet;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -445,5 +446,45 @@ public class PeerReviewControllerTest {
         
         assertTrue(reviewer2.equals("reviewer_guy") || reviewer2.equals("reviewer_guy4"));
         assertTrue(review2.equals(expectedReview1) || review2.equals(expectedReview2));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testReturnedPeerReviewsContainsNoDuplicates() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        Long answerId2 = TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user0", quizId);
+        
+        TestHelper.addAReview(mockMvc, quizId, answerId, "user2", "way to go!"); //assume id = 1
+        TestHelper.addAReview(mockMvc, quizId, answerId2, "user7", "yeah!"); //2
+        
+        //multiple ratings duplicated returned reviews at some point
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user3", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user4", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user5", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId, 1L, "user6", -1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user11", -1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user8", 1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user9", -1);
+        TestHelper.addAReviewRating(mockMvc, quizId, answerId2, 2L, "user10", -1);
+        
+        
+        MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/reviews")
+            .param("reviewCount", "5")
+            .param("username", "user12"))
+            .andExpect(status().isOk())
+            .andReturn();
+        
+        String response = result.getResponse().getContentAsString();
+        JsonArray ja = jsonParser.parse(response).getAsJsonArray();
+        
+        //only 2 should be found, but might be duplicated by an error
+        assertEquals(2, ja.size());
+        
+        HashSet<Integer> reviewIds = new HashSet<Integer>();
+        for (JsonElement je : ja) {
+            Integer reviewId = je.getAsJsonObject().get("id").getAsInt();
+            assertTrue(reviewIds.add(reviewId));
+        }
     }
 }

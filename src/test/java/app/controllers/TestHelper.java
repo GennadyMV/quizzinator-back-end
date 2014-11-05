@@ -84,6 +84,12 @@ public class TestHelper {
         mockMvc.perform(post(url).content(jsonReview).contentType(MediaType.APPLICATION_JSON));
     }
     
+    public static void addAReviewRating(MockMvc mockMvc, Long quizId, Long answerId, Long reviewId, String rater, Integer rating) throws Exception {
+        String url = "/quiz/" + quizId + "/answer/"+ answerId +"/review/" + reviewId + "/rate";
+        
+        mockMvc.perform(post(url).param("username", rater).param("rating", rating.toString()));
+    }
+    
     public static String getStringByKeyAndIndexFromJsonArray(String json, String key, Integer i) {
         JsonParser jp = new JsonParser();
         JsonArray ja = jp.parse(json).getAsJsonArray();
