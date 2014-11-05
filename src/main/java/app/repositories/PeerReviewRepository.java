@@ -17,7 +17,7 @@ public interface PeerReviewRepository extends JpaRepository<PeerReview, Long> {
     
     //find peer reviews for a user to be rated
     //this query filters out user's own PeerReviews and PeerReviews already rated by the user
-    @Query("select pr from PeerReview pr"
+    @Query("select distinct pr from PeerReview pr"
             + " left join pr.ratings rr"
             + " inner join pr.quizAnswer qa"
             + " where pr.reviewer <> :user and qa.quiz = :quiz"

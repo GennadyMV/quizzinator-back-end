@@ -39,6 +39,8 @@ public class PeerReviewControllerTest {
 
     @Autowired
     private PeerReviewRepository reviewRepo;
+    
+    private final JsonParser jsonParser = new JsonParser();
 
     @Before
     public void setUp() {
@@ -100,9 +102,8 @@ public class PeerReviewControllerTest {
                 .andReturn().getResponse();
 
         String content = response.getContentAsString();
-        JsonParser jp = new JsonParser();
         
-        for (int i = 0; i < jp.parse(content).getAsJsonArray().size(); i++) {
+        for (int i = 0; i < jsonParser.parse(content).getAsJsonArray().size(); i++) {
             Long answerId = TestHelper.getLongByKeyAndIndexFromJsonArray(content, "id", i);
             assertTrue(answerId.equals(aId2) || answerId.equals(aId3));
         }
@@ -126,7 +127,6 @@ public class PeerReviewControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-        JsonParser jsonParser = new JsonParser();
         JsonElement e = jsonParser.parse(response.getContentAsString()).getAsJsonArray();
 
         assertEquals(2, e.getAsJsonArray().size());
@@ -149,7 +149,6 @@ public class PeerReviewControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse();
 
-        JsonParser jsonParser = new JsonParser();
         JsonElement e = jsonParser.parse(response.getContentAsString()).getAsJsonArray();
 
         assertEquals(4, e.getAsJsonArray().size());
@@ -159,7 +158,6 @@ public class PeerReviewControllerTest {
     @DirtiesContext
     public void testAnswersReturnedForReviewIsAsMuchAsPossible() throws Exception {
         MockHttpServletResponse response;
-        JsonParser jsonParser = new JsonParser();
         
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
@@ -187,8 +185,6 @@ public class PeerReviewControllerTest {
     @Test
     @DirtiesContext
     public void testThetNumberOfAnswersReturnedForReviewWorks() throws Exception {
-        JsonParser jp = new JsonParser();
-        
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
         TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user2", quizId);
@@ -206,14 +202,14 @@ public class PeerReviewControllerTest {
                 .param("username", "user0")
                 .param("count", "3")).andReturn().getResponse();
         
-        assertEquals(3, jp.parse(response.getContentAsString()).getAsJsonArray().size());
+        assertEquals(3, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
         
         response = mockMvc.perform(
                 get("/quiz/" + quizId + "/review_answers")
                 .param("username", "user0")
                 .param("count", "10")).andReturn().getResponse();
         
-        assertEquals(10, jp.parse(response.getContentAsString()).getAsJsonArray().size());
+        assertEquals(10, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
     }
     
     
@@ -320,8 +316,7 @@ public class PeerReviewControllerTest {
         MvcResult result = mockMvc.perform(get("/reviews/" + hash)).andReturn();
         
         String content = result.getResponse().getContentAsString();
-        JsonParser jp = new JsonParser();
-        JsonArray ja = jp.parse(content).getAsJsonArray();
+        JsonArray ja = jsonParser.parse(content).getAsJsonArray();
         
         assertEquals(2, ja.size());
         
@@ -340,7 +335,7 @@ public class PeerReviewControllerTest {
     
     @Test
     @DirtiesContext
-    public void badAnswerQuizCombination() throws Exception {
+    public void testBadAnswerQuizCombination() throws Exception {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         String hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "answer1", "user1", quizId);
         
@@ -363,7 +358,7 @@ public class PeerReviewControllerTest {
     
     @Test
     @DirtiesContext
-    public void badAnswerReviewCombination() throws Exception {
+    public void testBadAnswerReviewCombination() throws Exception {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         String hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "answer1", "user1", quizId);
         
@@ -377,7 +372,7 @@ public class PeerReviewControllerTest {
     
     @Test
     @DirtiesContext
-    public void badRatingValue() throws Exception {
+    public void testBadRatingValue() throws Exception {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         final String hash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "answer1", "user1", quizId);
         
@@ -387,5 +382,68 @@ public class PeerReviewControllerTest {
             .param("userhash", hash)
             .param("rating", "0"))
             .andExpect(status().is4xxClientError());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGettingPeerReviewsWithoutAnsweringIsPossible() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        
+        
+        TestHelper.addAReview(mockMvc, quizId, answerId, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, quizId, answerId, "reviewer_guy2", "allright!");
+        TestHelper.addAReview(mockMvc, quizId, answerId, "reviewer_guy3", "way to go!");
+        TestHelper.addAReview(mockMvc, quizId, answerId, "reviewer_guy4", "that's the spirit!");
+        
+        MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/reviews")
+            .param("reviewCount", "3")
+            .param("username", "user2"))
+            .andExpect(status().isOk())
+            .andReturn();
+        
+        String response = result.getResponse().getContentAsString();
+        JsonArray ja = jsonParser.parse(response).getAsJsonArray();
+        
+        assertEquals(3, ja.size());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testReturnedPeerReviewsDontContainUsersOwnReviews() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        Long answerId2 = TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user3", quizId);
+        
+        String expectedReview1 = "good job!";
+        String expectedReview2 = "that's the spirit!";
+        
+        TestHelper.addAReview(mockMvc, quizId, answerId, "reviewer_guy", expectedReview1);
+        TestHelper.addAReview(mockMvc, quizId, answerId2, "user2", "allright!");
+        TestHelper.addAReview(mockMvc, quizId, answerId, "user2", "way to go!");
+        TestHelper.addAReview(mockMvc, quizId, answerId2, "reviewer_guy4", expectedReview2);
+        
+        MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/reviews")
+            .param("reviewCount", "3")
+            .param("username", "user2"))
+            .andExpect(status().isOk())
+            .andReturn();
+        
+        String response = result.getResponse().getContentAsString();
+        JsonArray ja = jsonParser.parse(response).getAsJsonArray();
+        
+        //only two should be available
+        assertEquals(2, ja.size());
+    
+        String reviewer1 = ja.get(0).getAsJsonObject().get("reviewer").getAsString();
+        String review1 = ja.get(0).getAsJsonObject().get("review").getAsString();
+        String reviewer2 = ja.get(1).getAsJsonObject().get("reviewer").getAsString();
+        String review2 = ja.get(1).getAsJsonObject().get("review").getAsString();
+        
+        assertTrue(reviewer1.equals("reviewer_guy") || reviewer1.equals("reviewer_guy4"));
+        assertTrue(review1.equals(expectedReview1) || review1.equals(expectedReview2));
+        
+        assertTrue(reviewer2.equals("reviewer_guy") || reviewer2.equals("reviewer_guy4"));
+        assertTrue(review2.equals(expectedReview1) || review2.equals(expectedReview2));
     }
 }
