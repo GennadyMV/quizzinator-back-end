@@ -530,4 +530,24 @@ public class PeerReviewControllerTest {
         assertTrue(review2.equals(expectedReview1) || review2.equals(expectedReview2));
 
     }
+    
+    
+    @Test
+    @DirtiesContext
+    public void testRatingSamePeerReviewMultipleTimesIsForbidden() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        
+        TestHelper.addAReview(mockMvc, quizId, answerId, "reviewer_guy", "good job!");
+        
+        mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
+            .param("username", "user1")
+            .param("rating", "1"))
+            .andExpect(status().isOk());
+        
+        mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
+            .param("username", "user1")
+            .param("rating", "1"))
+            .andExpect(status().isForbidden());
+    }
 }

@@ -9,4 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ReviewRatingRepository extends JpaRepository<ReviewRating, Long>  {
     List<ReviewRating> findByRater(User rater);
     List<ReviewRating> findByReview(PeerReview peerReview);
+    List<ReviewRating> findByReviewAndRater(PeerReview peerReview, User rater);
 }

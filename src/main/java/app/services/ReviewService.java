@@ -117,6 +117,11 @@ public class ReviewService {
             throw new UnauthorizedRateException();
         }
         
+        //user can only rate reviews they haven't yet rated
+        if (!ratingRepo.findByReviewAndRater(review, user).isEmpty()) {
+            throw new UnauthorizedRateException();
+        }
+        
         reviewRating.setReview(review);
         reviewRating.setRater(user);
         reviewRating.setRating(rating);
