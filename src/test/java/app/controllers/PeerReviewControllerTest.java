@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.Application;
 import app.repositories.PeerReviewRepository;
+import app.repositories.ReviewRatingRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,6 +40,9 @@ public class PeerReviewControllerTest {
 
     @Autowired
     private PeerReviewRepository reviewRepo;
+    
+    @Autowired
+    private ReviewRatingRepository ratingRepo;
     
     private final JsonParser jsonParser = new JsonParser();
 
@@ -549,5 +553,46 @@ public class PeerReviewControllerTest {
             .param("username", "user1")
             .param("rating", "1"))
             .andExpect(status().isForbidden());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void canRateWithUsernameOrUserhash() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        String userhash = TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "this is for review and a good answer", "reviewme", quizId);
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "thats great, but use camelcase");
+        TestHelper.addAReview(mockMvc, quizId, 1L, "other_guy", "thats great, but use camelcase");
+        
+        //rate review as good
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
+                .param("userhash", userhash)
+                .param("rating", "1"))
+                .andExpect(status().isOk());
+        
+        assertEquals(1, ratingRepo.count());
+        
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/2/rate")
+                .param("username", "masa")
+                .param("rating", "1"))
+                .andExpect(status().isOk());
+        
+        assertEquals(2, ratingRepo.count());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void cannotRateWithFaultyUser() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnswerAndGetUserhash(mockMvc, "question1", "this is for review and a good answer", "reviewme", quizId);
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "thats great, but use camelcase");
+        TestHelper.addAReview(mockMvc, quizId, 1L, "other_guy", "thats great, but use camelcase");
+        
+        //rate review as good
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
+                .param("userhash", "")
+                .param("rating", "1"))
+                .andExpect(status().is4xxClientError());
+        
+        assertEquals(0, ratingRepo.count());
     }
 }
