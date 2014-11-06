@@ -89,10 +89,10 @@ public class PeerReviewController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/reviews/{hash}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/reviews/{userhash}", method = RequestMethod.GET, produces = "application/json")
     @Transactional
-    public List<UsersReviewModel> userPeerReviews(@PathVariable String hash) {
-        return reviewService.getUserReviews(hash);
+    public List<UsersReviewModel> userPeerReviews(@PathVariable String userhash) {
+        return reviewService.getUserReviews(userhash);
     }
     
     @ResponseBody
