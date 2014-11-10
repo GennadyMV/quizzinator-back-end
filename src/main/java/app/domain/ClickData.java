@@ -19,7 +19,7 @@ public class ClickData extends AbstractPersistable<Long> {
     
     private Timestamp saveTime;
     
-    @ElementCollection(targetClass=ClickModel.class)
+    @ElementCollection
     private List<ClickModel> clicks;
     
     public Quiz getQuiz() {

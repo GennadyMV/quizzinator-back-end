@@ -21,6 +21,11 @@ public class ClickDataController {
         return clickDataService.getUserClicks(name);
     }
     
+    @RequestMapping(value = "clicks/quiz/{id}", method = RequestMethod.GET)
+    public List<ClickData> getClicksForQuiz(@PathVariable Long id) {
+        return clickDataService.getQuizClicks(id);
+    }
+    
     @RequestMapping(value = "clicks", method = RequestMethod.POST)
     public void addClicks(@RequestBody ClickData clickData) {
         clickDataService.addClickData(clickData);
