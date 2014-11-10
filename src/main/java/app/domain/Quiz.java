@@ -39,18 +39,15 @@ public class Quiz extends AbstractPersistable<Long> {
     private String reviewDeadline;
 
     @Transient
-    private boolean answeringExpired;
-
-    @Transient
-    private boolean reviewingExpired;
-
-    @Transient
     private boolean answered;
 
     private Boolean isOpen;
 
     @Column(nullable = false)
     private Integer reviewRounds = 1;
+    
+    @Transient
+    private QuizAnswer myLatestAnswer;
 
     public String getTitle() {
         return title;
@@ -112,17 +109,7 @@ public class Quiz extends AbstractPersistable<Long> {
         return (today.getTime() - deadline.getTime() > 0);
       }
     }
-
-    @JsonIgnore
-    public void setAnsweringExpired(boolean expired){
-        this.answeringExpired = expired;
-    }
-
-    @JsonIgnore
-    public void setReviewingExpired(boolean expired){
-        this.reviewingExpired = expired;
-    }
-
+    
     @JsonIgnore
     public void setAnswered(boolean answered) {
         this.answered = answered;
@@ -158,5 +145,13 @@ public class Quiz extends AbstractPersistable<Long> {
 
     public void setReviewDeadline(String reviewDeadline){
         this.reviewDeadline = reviewDeadline;
+    }
+    
+    public QuizAnswer getMyLatestAnswer() {
+        return myLatestAnswer;
+    }
+    
+    public void setMyLatestAnswer(QuizAnswer myLatestAnswer) {
+        this.myLatestAnswer = myLatestAnswer;
     }
 }

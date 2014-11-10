@@ -110,10 +110,17 @@ public class QuizService {
             throw new app.exceptions.NotFoundException();
         }
         
-        if (users.isEmpty() || answerRepo.findByQuizAndUser(q, users.get(0)).isEmpty()) {
+        
+        if (users.isEmpty()) {
             q.setAnswered(false);
         } else {
-            q.setAnswered(true);
+            List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, users.get(0), new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
+            if (previousAnswers.isEmpty()) {
+                q.setAnswered(false);
+            } else {
+                q.setAnswered(true);
+                q.setMyLatestAnswer(previousAnswers.get(0)); 
+            }
         }
             
         return q;
