@@ -1,18 +1,23 @@
 package app.domain;
 
 import app.models.ClickModel;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.sql.Timestamp;
 import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true) 
 public class ClickData extends AbstractPersistable<Long> {
-    
     @ManyToOne
     private Quiz quiz;
+    
+    @Transient
+    private Long quizId;
     
     @ManyToOne
     private User user;
@@ -52,5 +57,13 @@ public class ClickData extends AbstractPersistable<Long> {
     
     public void setClicks(List<ClickModel> clicks) {
         this.clicks = clicks;
+    }
+
+    public Long getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(Long quizId) {
+        this.quizId = quizId;
     }
 }

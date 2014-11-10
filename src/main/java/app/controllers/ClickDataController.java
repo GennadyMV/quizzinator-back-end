@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ClickDataController {
-    
     @Autowired
     private ClickDataService clickDataService;
     
@@ -27,7 +27,9 @@ public class ClickDataController {
     }
     
     @RequestMapping(value = "clicks", method = RequestMethod.POST)
-    public void addClicks(@RequestBody ClickData clickData) {
+    @ResponseBody
+    public String addClicks(@RequestBody ClickData clickData) {
         clickDataService.addClickData(clickData);
+        return "";
     }
 }

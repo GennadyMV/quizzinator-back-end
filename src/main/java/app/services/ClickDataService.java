@@ -37,7 +37,11 @@ public class ClickDataService {
         User user = userService.getOrCreateUser(clickData.getUser().getName());
         clickData.setUser(user);
         
+        clickData.setQuiz(quizRepo.findOne(clickData.getQuizId()));
+        
         Date date = new Date();
         clickData.setSaveTime(new Timestamp(date.getTime()));
+        
+        clickRepo.save(clickData);
     }
 }
