@@ -51,6 +51,8 @@ public class Quiz extends AbstractPersistable<Long> {
 
     @Column(nullable = false)
     private Integer reviewRounds = 1;
+    
+    private QuizAnswer myLatestAnswer;
 
     public String getTitle() {
         return title;
@@ -158,5 +160,13 @@ public class Quiz extends AbstractPersistable<Long> {
 
     public void setReviewDeadline(String reviewDeadline){
         this.reviewDeadline = reviewDeadline;
+    }
+    
+    public QuizAnswer getMyLatestAnswer() {
+        return myLatestAnswer;
+    }
+    
+    public void setMyLatestAnswer(QuizAnswer myLatestAnswer) {
+        this.myLatestAnswer = myLatestAnswer;
     }
 }
