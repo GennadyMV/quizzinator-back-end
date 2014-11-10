@@ -39,12 +39,6 @@ public class Quiz extends AbstractPersistable<Long> {
     private String reviewDeadline;
 
     @Transient
-    private boolean answeringExpired;
-
-    @Transient
-    private boolean reviewingExpired;
-
-    @Transient
     private boolean answered;
 
     private Boolean isOpen;
@@ -112,17 +106,7 @@ public class Quiz extends AbstractPersistable<Long> {
         return (today.getTime() - deadline.getTime() > 0);
       }
     }
-
-    @JsonIgnore
-    public void setAnsweringExpired(boolean expired){
-        this.answeringExpired = expired;
-    }
-
-    @JsonIgnore
-    public void setReviewingExpired(boolean expired){
-        this.reviewingExpired = expired;
-    }
-
+    
     @JsonIgnore
     public void setAnswered(boolean answered) {
         this.answered = answered;
