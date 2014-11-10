@@ -223,7 +223,8 @@ public class QuizControllerTest {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         TestHelper.addAnAnswer(mockMvc, "question1", "asnwer", "user1", quizId);
         
-        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId + "?username=user1")
+        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/" + quizId)
+                            .param("username", "user1")
                             .contentType(MediaType.APPLICATION_JSON))
                             .andReturn();
         
