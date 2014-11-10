@@ -118,6 +118,12 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
                                         count:''
                                 });
 			}
+		},
+		{
+			name: 'My peer reviews',
+			$scope.quiz.items.push({
+				item_type: 'my_peer_reviews'
+			});
 		}
 	];
 
