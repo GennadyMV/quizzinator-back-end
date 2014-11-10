@@ -52,6 +52,7 @@ public class Quiz extends AbstractPersistable<Long> {
     @Column(nullable = false)
     private Integer reviewRounds = 1;
     
+    @Transient
     private QuizAnswer myLatestAnswer;
 
     public String getTitle() {

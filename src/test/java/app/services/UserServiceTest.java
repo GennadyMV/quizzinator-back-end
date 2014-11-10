@@ -1,8 +1,7 @@
-package app.controllers.service;
+package app.services;
 
 import app.Application;
 import app.domain.User;
-import app.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
