@@ -121,9 +121,11 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 		},
 		{
 			name: 'My peer reviews',
-			$scope.quiz.items.push({
-				item_type: 'my_peer_reviews'
-			});
+			creator: function(){
+				$scope.quiz.items.push({
+					item_type: 'my_peer_reviews'
+				});
+			}
 		}
 	];
 
