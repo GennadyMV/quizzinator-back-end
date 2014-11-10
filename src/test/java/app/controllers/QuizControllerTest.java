@@ -9,15 +9,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -326,6 +321,72 @@ public class QuizControllerTest {
         MvcResult result = this.mockMvc.perform(get("/quiz/1/placeholder")).andReturn();
         JSONArray answers = new JSONArray(result.getResponse().getContentAsString());
         assertEquals(3, answers.length());
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGetQuizReturnsUsersLatestAnswer() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz", "question1", true);
+        MvcResult mvcResult = this.mockMvc.perform(get("/quiz/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "masa"))
+                .andReturn();
+        
+        JSONObject returnedQuiz = new JSONObject(mvcResult.getResponse().getContentAsString());
+        assertFalse(returnedQuiz.getBoolean("answered"));
+        assertTrue(returnedQuiz.getString("myLatestAnswer").equals("null"));
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "moi", "masa", 1L);
+        
+        mvcResult = this.mockMvc.perform(get("/quiz/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "masa"))
+                .andReturn();
+        
+        returnedQuiz = new JSONObject(mvcResult.getResponse().getContentAsString());
+        String answer = new JSONObject(
+                new JSONArray(
+                new JSONObject(returnedQuiz.getString("myLatestAnswer"))
+                .getString("answer")).getString(0)).getString("value");
+        
+        assertTrue(returnedQuiz.getBoolean("answered"));
+        assertTrue(answer.equals("moi"));
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "sup", "masa", 1L);
+        
+        mvcResult = this.mockMvc.perform(get("/quiz/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "masa"))
+                .andReturn();
+        
+        returnedQuiz = new JSONObject(mvcResult.getResponse().getContentAsString());
+        answer = new JSONObject(
+                new JSONArray(
+                new JSONObject(returnedQuiz.getString("myLatestAnswer"))
+                .getString("answer")).getString(0)).getString("value");
+        
+        assertTrue(returnedQuiz.getBoolean("answered"));
+        assertTrue(answer.equals("sup"));
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
+        
+        mvcResult = this.mockMvc.perform(get("/quiz/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("username", "masa"))
+                .andReturn();
+        
+        System.out.println("|||||||||||||||");
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        System.out.println("|||||||||||||||");
+        
+        returnedQuiz = new JSONObject(mvcResult.getResponse().getContentAsString());
+        answer = new JSONObject(
+                new JSONArray(
+                new JSONObject(returnedQuiz.getString("myLatestAnswer"))
+                .getString("answer")).getString(0)).getString("value");
+        
+        assertTrue(returnedQuiz.getBoolean("answered"));
+        assertTrue(answer.equals("hehe"));
     }
     
     private void postTestquiz1() throws Exception {
