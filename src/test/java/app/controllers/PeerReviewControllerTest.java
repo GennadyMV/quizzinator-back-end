@@ -538,7 +538,7 @@ public class PeerReviewControllerTest {
     
     @Test
     @DirtiesContext
-    public void testRatingSamePeerReviewMultipleTimesIsForbidden() throws Exception {
+    public void testRatingSamePeerReviewReplacesOldRating() throws Exception {
         Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
         Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
         
@@ -551,8 +551,22 @@ public class PeerReviewControllerTest {
         
         mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
             .param("username", "user1")
-            .param("rating", "1"))
-            .andExpect(status().isForbidden());
+            .param("rating", "-1"))
+            .andExpect(status().isOk());
+        
+        
+        MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answerId + "/review"))
+            .andExpect(status().isOk())
+            .andReturn();
+        
+        String response = result.getResponse().getContentAsString();
+        
+        //only one review is expected
+        assertEquals(1, jsonParser.parse(response).getAsJsonArray().size());
+        
+        //jsonParser.parse(response).getAsJsonArray().get(0).getAsJsonObject().get("rateCount").getAsInt()
+        assertEquals(1, jsonParser.parse(response).getAsJsonArray().get(0).getAsJsonObject().get("rateCount").getAsInt());
+        
     }
     
     @Test
