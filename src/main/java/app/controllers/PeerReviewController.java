@@ -97,6 +97,14 @@ public class PeerReviewController {
     }
     
     @ResponseBody
+    @RequestMapping(value = "/reviews", method = RequestMethod.GET, produces = "application/json")
+    @Transactional
+    public List<UsersReviewModel> userPeerReviewsByUsername(@RequestParam String username) {
+        String userhash = userRepo.findByName(username).get(0).getHash();
+        return reviewService.getUserReviews(userhash);
+    }
+    
+    @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review/{reviewId}/rate", method = RequestMethod.POST)
     @Transactional
     public void rateReview(
