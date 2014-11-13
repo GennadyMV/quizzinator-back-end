@@ -14,6 +14,7 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 					question: '',
 					item_type: 'open_question'
 				});
+
 			}
 		},
 		{
