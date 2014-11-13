@@ -3,6 +3,7 @@ package app.controllers;
 import app.domain.PeerReview;
 import app.domain.QuizAnswer;
 import app.domain.User;
+import app.exceptions.InvalidParameterException;
 import app.models.UsersReviewModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizRepository;
@@ -89,10 +90,18 @@ public class PeerReviewController {
     }
     
     @ResponseBody
-    @RequestMapping(value = "/reviews/{hash}", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/reviews/{userhash}", method = RequestMethod.GET, produces = "application/json")
     @Transactional
-    public List<UsersReviewModel> userPeerReviews(@PathVariable String hash) {
-        return reviewService.getUserReviews(hash);
+    public List<UsersReviewModel> userPeerReviews(@PathVariable String userhash) {
+        return reviewService.getUserReviews(userhash);
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/reviews", method = RequestMethod.GET, produces = "application/json")
+    @Transactional
+    public List<UsersReviewModel> userPeerReviewsByUsername(@RequestParam String username) {
+        String userhash = userRepo.findByName(username).get(0).getHash();
+        return reviewService.getUserReviews(userhash);
     }
     
     @ResponseBody
@@ -112,7 +121,7 @@ public class PeerReviewController {
         } else if (username != null) {
             user = userService.getOrCreateUser(username);
         } else {
-            throw new app.exceptions.InvalidParameterException("username or userhash parameter expected");
+            throw new InvalidParameterException("username or userhash parameter expected");
         }
         reviewService.rateReview(quizId, answerId, reviewId, user, rating);
     }

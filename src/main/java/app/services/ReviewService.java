@@ -109,7 +109,7 @@ public class ReviewService {
             throw new InvalidParameterException("like value must be -1 or 1");
         }
         
-        ReviewRating reviewRating = new ReviewRating();
+        ReviewRating reviewRating;
         PeerReview review = reviewRepo.findOne(reviewId);
         
         //user shouldn't rate their own review
@@ -117,11 +117,19 @@ public class ReviewService {
             throw new UnauthorizedRateException();
         }
         
+        //replace user's old rating
+        List<ReviewRating> oldRating = ratingRepo.findByReviewAndRater(review, user);
+        if (!oldRating.isEmpty()) {
+            reviewRating = oldRating.get(0);
+        } else {
+            reviewRating = new ReviewRating();
+            review.incrementRateCount();
+        }
+        
         reviewRating.setReview(review);
         reviewRating.setRater(user);
         reviewRating.setRating(rating);
         ratingRepo.save(reviewRating);
-        review.incrementRateCount();
         reviewRepo.save(review);
     }
 
