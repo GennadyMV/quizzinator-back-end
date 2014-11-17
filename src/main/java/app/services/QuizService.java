@@ -126,14 +126,6 @@ public class QuizService {
         return q;
     }
 
-    public List<PeerReview> getReviewsByUserHash(String hash) {
-        User u = userRepo.findOne(hash);
-        
-        List<QuizAnswer> answers = answerRepo.findByUser(u);
-        
-        return reviewRepo.findByQuizAnswerIn(answers);
-    }
-
     public void addPlaceHolderAnswer(String quizAnswer, Long quizId) {
         Quiz quiz = quizRepo.findOne(quizId);
         QuizAnswer answer = new QuizAnswer();

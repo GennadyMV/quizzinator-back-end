@@ -34,8 +34,8 @@ public class ReviewService {
     
     @Autowired
     private PeerReviewRepository reviewRepo;
-    @Autowired
     
+    @Autowired
     private UserRepository userRepo;
     
     @Autowired
@@ -141,5 +141,21 @@ public class ReviewService {
         List<PeerReview> reviews = reviewRepo.findForRate(u, q, pageRequest);
         
         return reviews;
+    }
+
+    public List<PeerReview> getReviewsByUsername(String username) {
+        User u = userService.getOrCreateUser(username);
+        
+        List<QuizAnswer> answers = answerRepo.findByUser(u);
+        
+        return reviewRepo.findByQuizAnswerIn(answers);
+    }
+
+    public List<PeerReview> getReviewsByQuizAndReviewee(Long quizId, String username) {
+        User u = userService.getOrCreateUser(username);
+        Quiz q = quizRepo.findOne(quizId);
+        
+        List<QuizAnswer> answers = answerRepo.findByQuizAndUser(q, u);
+        return reviewRepo.findByQuizAnswerIn(answers);
     }
 }
