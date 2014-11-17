@@ -3,7 +3,6 @@ package app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -35,13 +34,20 @@ public class Quiz extends AbstractPersistable<Long> {
     private boolean reviewable;
 
     @Temporal(TemporalType.DATE)
+    @NotNull
     private Date answerDeadline;
 
     @Temporal(TemporalType.DATE)
+    @NotNull
     private Date reviewDeadline;
     
     @Temporal(TemporalType.DATE)
+    @NotNull
     private Date answerImproveStart;
+    
+    @Temporal(TemporalType.DATE)
+    @NotNull
+    private Date answerImproveDeadline;
 
     @Transient
     private boolean answered;
@@ -92,13 +98,19 @@ public class Quiz extends AbstractPersistable<Long> {
     }
 
     @JsonProperty(value = "answeringExpired")
-    public boolean isAnsweringExpired() throws ParseException{
+    public boolean answeringExpired() {
         return this.answerDeadline.before(new Date());
     }
 
     @JsonProperty(value = "reviewingExpired")
-    public boolean isReviewingExpired() throws ParseException{
+    public boolean reviewingExpired() {
         return this.reviewDeadline.before(new Date());
+    }
+
+    @JsonProperty(value = "answerImprovingPossible")
+    public boolean answerImprovable() {
+        Date now = new Date();
+        return this.answerImproveStart.before(now) && this.answerImproveDeadline.before(now);
     }
     
     @JsonIgnore
@@ -152,5 +164,13 @@ public class Quiz extends AbstractPersistable<Long> {
 
     public void setAnswerImproveStart(Date answerImproveStart) {
         this.answerImproveStart = answerImproveStart;
+    }
+
+    public Date getAnswerImproveDeadline() {
+        return answerImproveDeadline;
+    }
+
+    public void setAnswerImproveDeadline(Date answerImproveDeadline) {
+        this.answerImproveDeadline = answerImproveDeadline;
     }
 }
