@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.domain.ClickData;
+import app.models.ClickDataModel;
 import app.services.ClickDataService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +17,21 @@ public class ClickDataController {
     @Autowired
     private ClickDataService clickDataService;
     
+    @ResponseBody
     @RequestMapping(value = "clicks/user/{name}", method = RequestMethod.GET)
     public List<ClickData> getClicksForUser(@PathVariable String name) {
         return clickDataService.getUserClicks(name);
     }
     
+    @ResponseBody
     @RequestMapping(value = "clicks/quiz/{id}", method = RequestMethod.GET)
     public List<ClickData> getClicksForQuiz(@PathVariable Long id) {
         return clickDataService.getQuizClicks(id);
     }
     
-    @RequestMapping(value = "clicks", method = RequestMethod.POST)
     @ResponseBody
-    public String addClicks(@RequestBody ClickData clickData) {
+    @RequestMapping(value = "clicks", method = RequestMethod.POST)
+    public String addClicks(@RequestBody ClickDataModel clickData) {
         clickDataService.addClickData(clickData);
         return "";
     }

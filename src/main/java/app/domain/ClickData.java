@@ -1,5 +1,6 @@
 package app.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Timestamp;
@@ -12,10 +13,8 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @JsonIgnoreProperties(ignoreUnknown = true) 
 public class ClickData extends AbstractPersistable<Long> {
     @ManyToOne
+    @JsonIgnore
     private Quiz quiz;
-    
-    @Transient
-    private Long quizId;
     
     @ManyToOne
     private User user;
@@ -54,11 +53,7 @@ public class ClickData extends AbstractPersistable<Long> {
     }
 
     public Long getQuizId() {
-        return quizId;
-    }
-
-    public void setQuizId(Long quizId) {
-        this.quizId = quizId;
+        return this.quiz.getId();
     }
     
     public Timestamp getClickTime() {
