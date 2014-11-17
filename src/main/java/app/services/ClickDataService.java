@@ -59,7 +59,7 @@ public class ClickDataService {
             clickData.setSaveTime(ts);
             
             clickData.setAction(event.getAction());
-            clickData.setChildElement(event.getElement());
+            clickData.setChildElement(event.getChild());
             clickData.setElement(event.getElement());
             clickData.setStatus(event.getValue());
             clickData.setClickTime(event.getClickTime());

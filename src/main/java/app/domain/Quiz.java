@@ -34,19 +34,15 @@ public class Quiz extends AbstractPersistable<Long> {
     private boolean reviewable;
 
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date answerDeadline;
 
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date reviewDeadline;
     
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date answerImproveStart;
     
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date answerImproveDeadline;
 
     @Transient
@@ -99,18 +95,34 @@ public class Quiz extends AbstractPersistable<Long> {
 
     @JsonProperty(value = "answeringExpired")
     public boolean answeringExpired() {
-        return this.answerDeadline.before(new Date());
+        if (answerDeadline == null) {
+            return false;
+        }
+        return answerDeadline.before(new Date());
     }
 
     @JsonProperty(value = "reviewingExpired")
     public boolean reviewingExpired() {
-        return this.reviewDeadline.before(new Date());
+        if (reviewDeadline == null) {
+            return false;
+        }
+        return reviewDeadline.before(new Date());
     }
 
     @JsonProperty(value = "answerImprovingPossible")
-    public boolean answerImprovable() {
+    public boolean improvingPossible() {
+        boolean started = false;
+        boolean ended = true;
         Date now = new Date();
-        return this.answerImproveStart.before(now) && this.answerImproveDeadline.before(now);
+        
+        if (answerImproveStart == null || answerImproveStart.before(now)) {
+            started = true;
+        }
+        
+        if (answerImproveDeadline == null || answerImproveDeadline.after(now)) {
+            ended = false;
+        }
+        return started && !ended;
     }
     
     @JsonIgnore
