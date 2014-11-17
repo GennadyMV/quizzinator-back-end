@@ -69,7 +69,7 @@ public class ClickDataControllerTest {
         
         assertTrue(clickData.getAction().equals("press"));
         assertTrue(clickData.getElement().equals("button"));
-        assertTrue(clickData.getStatus().equals("success"));
+        assertTrue(clickData.getValue().equals("success"));
         assertTrue(clickData.getChildElement().equals("child1"));
         assertEquals(new Timestamp(millis), clickData.getClickTime());
     }
@@ -94,7 +94,7 @@ public class ClickDataControllerTest {
         
         assertTrue(clickData.getAction().equals("press"));
         assertTrue(clickData.getElement().equals("button"));
-        assertTrue(clickData.getStatus().equals("success"));
+        assertTrue(clickData.getValue().equals("success"));
         assertTrue(clickData.getChildElement().equals("child1"));
         assertEquals(new Timestamp(millis), clickData.getClickTime());
     }
@@ -113,12 +113,6 @@ public class ClickDataControllerTest {
         MvcResult result = mockMvc.perform(get("/clicks/user/pertti"))
                 .andExpect(status().isOk())
                 .andReturn();
-        
-        System.out.println("||||||||||||||||||||");
-        System.out.println(clickRepo.count());
-        System.out.println(result.getResponse().getContentAsString());
-        System.out.println("||||||||||||||||||||");
-        
         
         JSONArray clicks = new JSONArray(result.getResponse().getContentAsString());
         
@@ -143,17 +137,12 @@ public class ClickDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         
-        System.out.println("||||||||||||||||||||");
-        System.out.println(clickRepo.count());
-        System.out.println(result.getResponse().getContentAsString());
-        System.out.println("||||||||||||||||||||");
-        
         JSONArray clicks = new JSONArray(result.getResponse().getContentAsString());
         
         assertEquals(1, clicks.length());
         assertTrue(clicks.getJSONObject(0).getString("user").equals("masa"));
         
-        assertEquals(2L, clicks.getJSONObject(0).getJSONObject("quiz").getLong("id"));
+        assertEquals(2L, clicks.getJSONObject(0).getJSONObject("quizId"));
     }
     
     @Test
@@ -183,11 +172,12 @@ public class ClickDataControllerTest {
     private void postClickData(Long quizId, String username, Long clickTime) throws Exception {
         String jsonClick = "{\"quizId\":"+quizId+","
                 + "\"user\":\""+username+"\","
-                + "\"clickTime\":"+clickTime+","
-                + "\"element\":\"button\","
-                + "\"action\":\"press\","
-                + "\"status\":\"success\","
-                + "\"child\":\"child1\"}";
+                + "\"clicks\":["
+                    + "{\"clickTime\":"+clickTime+","
+                    + "\"element\":\"button\","
+                    + "\"action\":\"press\","
+                    + "\"value\":\"success\","
+                    + "\"child\":\"child1\"}]}";
         
         mockMvc.perform(post("/clicks").content(jsonClick).contentType(MediaType.APPLICATION_JSON));
     }

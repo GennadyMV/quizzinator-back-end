@@ -10,7 +10,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -377,10 +376,6 @@ public class QuizControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("username", "masa"))
                 .andReturn();
-        
-        System.out.println("|||||||||||||||");
-        System.out.println(mvcResult.getResponse().getContentAsString());
-        System.out.println("|||||||||||||||");
         
         returnedQuiz = new JSONObject(mvcResult.getResponse().getContentAsString());
         answer = new JSONObject(

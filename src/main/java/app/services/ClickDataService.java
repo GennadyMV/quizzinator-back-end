@@ -9,7 +9,6 @@ import app.models.EventModel;
 import app.repositories.ClickDataRepository;
 import app.repositories.QuizRepository;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,7 @@ public class ClickDataService {
         if (user == null) {
             throw new InvalidParameterException("Invalid user name");
         }
+        
         
         return clickRepo.findByUser(user);
     }
@@ -61,7 +61,7 @@ public class ClickDataService {
             clickData.setAction(event.getAction());
             clickData.setChildElement(event.getChild());
             clickData.setElement(event.getElement());
-            clickData.setStatus(event.getValue());
+            clickData.setValue(event.getValue());
             clickData.setClickTime(event.getClickTime());
 
             clickRepo.save(clickData);

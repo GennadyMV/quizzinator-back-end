@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
@@ -24,7 +23,7 @@ public class ClickData extends AbstractPersistable<Long> {
     private Timestamp clickTime;
     private String element;
     private String action;
-    private String status;
+    private String value;
     @JsonProperty("child")
     private String childElement;
     
@@ -80,12 +79,12 @@ public class ClickData extends AbstractPersistable<Long> {
         this.action = action;
     }
 
-    public String getStatus() {
-        return status;
+    public String getValue() {
+        return value;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setValue(String value) {
+        this.value = value;
     }
 
     public String getChildElement() {
