@@ -31,6 +31,7 @@ public class ClickDataService {
             throw new InvalidParameterException("Invalid user name");
         }
         
+        
         return clickRepo.findByUser(user);
     }
     

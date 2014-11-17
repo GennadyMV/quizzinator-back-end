@@ -114,8 +114,8 @@ public class ClickDataControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         
+        
         System.out.println("||||||||||||||||||||");
-        System.out.println(clickRepo.count());
         System.out.println(result.getResponse().getContentAsString());
         System.out.println("||||||||||||||||||||");
         
@@ -144,7 +144,6 @@ public class ClickDataControllerTest {
                 .andReturn();
         
         System.out.println("||||||||||||||||||||");
-        System.out.println(clickRepo.count());
         System.out.println(result.getResponse().getContentAsString());
         System.out.println("||||||||||||||||||||");
         
