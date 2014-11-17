@@ -58,6 +58,19 @@ public class PeerReviewController {
         return reviewService.getReviewsByQuizForRating(quizId, reviewCount, username);
     }
     
+    /**
+     * 
+     * @param quizId
+     * @param username
+     * @return reviews given to the username
+     */
+    @ResponseBody
+    @RequestMapping(value = "/quiz/{quizId}/myReviews", method = RequestMethod.GET, produces="application/json")
+    @Transactional
+    public List<PeerReview> getReviewsByQuizAndReviewee(@PathVariable Long quizId, @RequestParam String username) {
+        return reviewService.getReviewsByQuizAndReviewee(quizId, username);
+    }
+    
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.GET, produces="application/json")
     @Transactional
