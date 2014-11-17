@@ -300,8 +300,8 @@ public class QuizControllerTest {
         quiz.setIsOpen(false);
         quiz.setTitle("testquiz");
         quiz.setItems("[{}]");
-        quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("08/06/2014"));
-        quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("10/22/2014"));
+        quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("08-06-2014"));
+        quiz.setReviewDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("10-22-2014"));
         quizRepository.save(quiz);
         
         assertTrue(quiz.answeringExpired());

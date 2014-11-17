@@ -4,9 +4,6 @@ import app.Application;
 import app.models.QuizPointModel;
 import app.domain.User;
 import app.models.UserPointModel;
-import app.repositories.PeerReviewRepository;
-import app.repositories.QuizAnswerRepository;
-import app.repositories.ReviewRatingRepository;
 import app.repositories.UserRepository;
 import com.google.gson.Gson;
 import static org.junit.Assert.assertEquals;
@@ -81,6 +78,11 @@ public class PointControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                             .andReturn();
         
+        System.out.println("||||||||||||");
+        System.out.println(userRepo.count());
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        System.out.println("||||||||||||||");
+        
         QuizPointModel quizPoint = gson.fromJson(mvcResult.getResponse().getContentAsString(),
                                                  QuizPointModel.class);
         
@@ -97,7 +99,7 @@ public class PointControllerTest {
     }
     
     private void initQuiz() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
+        String jsonQuiz = "{\"title\":\"testquiz2\",\"reviewable\":\"true\",\"items\":\"["
                 + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
                 + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"006\\\"}"
                 + "]\"}";

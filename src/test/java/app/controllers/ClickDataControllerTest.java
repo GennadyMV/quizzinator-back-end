@@ -142,7 +142,7 @@ public class ClickDataControllerTest {
         assertEquals(1, clicks.length());
         assertTrue(clicks.getJSONObject(0).getString("user").equals("masa"));
         
-        assertEquals(2L, clicks.getJSONObject(0).getJSONObject("quizId"));
+        assertEquals(2L, clicks.getJSONObject(0).getLong("quizId"));
     }
     
     @Test
