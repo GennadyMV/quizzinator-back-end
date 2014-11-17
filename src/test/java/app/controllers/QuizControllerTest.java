@@ -274,8 +274,8 @@ public class QuizControllerTest {
         quiz.setItems("[{}]");
         quizRepository.save(quiz);
         
-        assertFalse(quiz.isAnsweringExpired());
-        assertFalse(quiz.isReviewingExpired());
+        assertFalse(quiz.answeringExpired());
+        assertFalse(quiz.reviewingExpired());
     }
     
     @Test
@@ -290,8 +290,8 @@ public class QuizControllerTest {
         quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("02-1-2037"));
         quizRepository.save(quiz);
         
-        assertFalse(quiz.isAnsweringExpired());
-        assertFalse(quiz.isReviewingExpired());
+        assertFalse(quiz.answeringExpired());
+        assertFalse(quiz.reviewingExpired());
     }
     
     @Test
@@ -305,8 +305,8 @@ public class QuizControllerTest {
         quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("10/22/2014"));
         quizRepository.save(quiz);
         
-        assertTrue(quiz.isAnsweringExpired());
-        assertTrue(quiz.isReviewingExpired());
+        assertTrue(quiz.answeringExpired());
+        assertTrue(quiz.reviewingExpired());
     }
     
     @Test
