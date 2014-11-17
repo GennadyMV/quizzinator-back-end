@@ -1,59 +1,73 @@
 <div ng-controller="CreateQuizController">
-	<div class="page-header page-header-button">
-		<h1>Create a quiz</h1>
-		<button class="btn btn-primary pull-right btn-header" ng-click="save_quiz()" id="save-quiz"><i class="fa fa-check"></i> Save</button>
-	</div>
+    <div class="page-header page-header-button">
+        <h1>Create a quiz</h1>
+        <button class="btn btn-primary pull-right btn-header" ng-click="save_quiz()" id="save-quiz"><i class="fa fa-check"></i> Save</button>
+    </div>
 
-	<div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
+    <div class="alert" ng-class="{'alert-success': message.type == 'success', 'alert-danger': message.type == 'danger'}" ng-show="message">{{message.content}}</div>
 
-	<div class="row">
-		<div class="col-md-8">
-			<div class="form-group">
-				<label>Title</label>
-				<input type="text" placeholder="Title" id="new-quiz-title" name="title" class="form-control" ng-model="$parent.quiz.title">
-			</div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" placeholder="Title" id="new-quiz-title" name="title" class="form-control" ng-model="$parent.quiz.title">
+            </div>
 
-			<ul class="media-list" ui-sortable="{'handle': '.quiz-item-title', 'opacity': '0.5', 'cursor': 'move'}" ng-model="$parent.quiz.items" id="quiz-item-list">
-				<li ng-repeat="item in $parent.quiz.items" class="media quiz-item" ng-include="$parent.get_item_template(item)"></li>
-			</ul>
-		</div>
+            <ul class="media-list" ui-sortable="{'handle': '.quiz-item-title', 'opacity': '0.5', 'cursor': 'move'}" ng-model="$parent.quiz.items" id="quiz-item-list">
+                <li ng-repeat="item in $parent.quiz.items" class="media quiz-item" ng-include="$parent.get_item_template(item)"></li>
+            </ul>
+        </div>
 
-		<div class="col-md-4">
-			<div class="form-group">
-				<label>Options</label>
-				<div class="checkbox" style="margin-top: 0px;">
-						<label>
-								<input type="checkbox" ng-model="$parent.quiz.reviewable">
-								Enable peer reviews
-						</label>
-				</div>
-				<div class="form-group" ng-show="$parent.quiz.reviewable">
-						<label>Number of review rounds</label>
-						<input type="text" class="form-control" ng-model="$parent.quiz.reviewRounds">
-				</div>
-				<div class="checkbox">
-						<label>
-								<input type="checkbox" ng-model="$parent.quiz.isOpen">
-								Collapse this quiz
-						</label>
-				</div>
-				<div class="form-group">
-						<label>Answer deadline</label>
-						<input type="text" class="form-control" ng-model="$parent.quiz.answerDeadline" datepicker>
-				</div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Options</label>
+                
+                <div class="checkbox" style="margin-top: 0px;">
+                    <label>
+                        <input type="checkbox" ng-model="$parent.quiz.reviewable">
+                        Enable peer reviews
+                    </label>
+                </div>
+                
+                <div class="form-group" ng-show="$parent.quiz.reviewable">
+                    <label>Number of review rounds</label>
+                    <input type="text" class="form-control" ng-model="$parent.quiz.reviewRounds">
+                </div>
+                
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" ng-model="$parent.quiz.isOpen">
+                        Collapse this quiz
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>Answer deadline</label>
+                    <input type="text" class="form-control" ng-model="$parent.quiz.answerDeadline" datepicker>
+                </div>
 
-				<div class="form-group">
-						<label>Review deadline</label>
-						<input type="text" class="form-control" ng-model="$parent.quiz.reviewDeadline" datepicker>
-				</div>
-			</div>
-			
-			<div class="form-group" id="widget-list">
-				<label>Quiz items</label>
-				<div class="btn-group-vertical" style="display: block">
-					<button class="btn btn-default" ng-repeat="widget in $parent.widgets" ng-click="widget.creator()">{{widget.name}}</button>
-				</div>
-			</div>
-		</div>
-	</div>
+                <div class="form-group">
+                    <label>Review deadline</label>
+                    <input type="text" class="form-control" ng-model="$parent.quiz.reviewDeadline" datepicker>
+                </div>
+
+                <div class="form-group">
+                    <label>Answer improvement period start</label>
+                    <input type="text" class="form-control" ng-model="$parent.quiz.answerImproveStart" datepicker>
+                </div>
+
+                <!--div class="form-group">
+                    <label>Answer improvement period end</label>
+                    <input type="text" class="form-control" ng-model="$parent.quiz.answerImproveEnd" datepicker>
+                </div-->
+            </div>
+
+            <div class="form-group" id="widget-list">
+                <label>Quiz items</label>
+                <div class="btn-group-vertical" style="display: block">
+                    <button class="btn btn-default" ng-repeat="widget in $parent.widgets" ng-click="widget.creator()">{{widget.name}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

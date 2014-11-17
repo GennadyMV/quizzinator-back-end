@@ -60,8 +60,8 @@ public class PeerReviewController {
     
     /**
      * 
-     * @param quizId
-     * @param username
+     * @param quizId id of the quiz we want answers for
+     * @param username the user whose answers' reviews we are interested in
      * @return reviews given to the username
      */
     @ResponseBody
