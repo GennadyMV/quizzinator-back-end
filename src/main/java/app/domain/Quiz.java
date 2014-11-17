@@ -34,19 +34,15 @@ public class Quiz extends AbstractPersistable<Long> {
     private boolean reviewable;
 
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date answerDeadline;
 
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date reviewDeadline;
     
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date answerImproveStart;
     
     @Temporal(TemporalType.DATE)
-    @NotNull
     private Date answerImproveDeadline;
 
     @Transient
