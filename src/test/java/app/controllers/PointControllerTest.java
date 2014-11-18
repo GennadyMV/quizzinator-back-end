@@ -78,11 +78,6 @@ public class PointControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                             .andReturn();
         
-        System.out.println("||||||||||||");
-        System.out.println(userRepo.count());
-        System.out.println(mvcResult.getResponse().getContentAsString());
-        System.out.println("||||||||||||||");
-        
         QuizPointModel quizPoint = gson.fromJson(mvcResult.getResponse().getContentAsString(),
                                                  QuizPointModel.class);
         
@@ -96,6 +91,13 @@ public class PointControllerTest {
         assertTrue(quizPoint.getReviewers().contains(user2.getName()));
         assertTrue(quizPoint.getRaters().contains(user1.getName()));
         assertTrue(quizPoint.getRaters().contains(user2.getName()));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void cannotFindPointsForNonexistentId() throws Exception {
+        this.mockMvc.perform(get("/points/user/" + user1.getId().substring(2))).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(get("/points/quiz/2")).andExpect(status().is4xxClientError());
     }
     
     private void initQuiz() throws Exception {

@@ -6,6 +6,7 @@ import app.domain.QuizAnswer;
 import app.domain.ReviewRating;
 import app.models.QuizPointModel;
 import app.domain.User;
+import app.exceptions.InvalidParameterException;
 import app.models.UserPointModel;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
@@ -38,6 +39,10 @@ public class PointService {
     public UserPointModel getPointsForUser(String id) {
         User user = userRepo.findOne(id);
         
+        if (user == null) {
+            throw new InvalidParameterException("Invalid user hash");
+        }
+        
         return new UserPointModel(user.getName(),
                                 answerRepo.findByUser(user).size(),
                                 reviewRepo.findByReviewer(user).size(),
@@ -46,6 +51,11 @@ public class PointService {
     
     public QuizPointModel getPointsForQuiz(Long id) {
         Quiz quiz = quizRepo.findOne(id);
+        
+        if (quiz == null) {
+            throw new InvalidParameterException("Invalid quiz id");
+        }
+        
         List<String> answerers = new ArrayList<String>();
         List<String> reviewers = new ArrayList<String>();
         List<String> raters = new ArrayList<String>();
