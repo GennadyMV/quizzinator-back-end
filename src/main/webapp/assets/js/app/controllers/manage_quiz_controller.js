@@ -4,7 +4,7 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 		reviewable: true,
 		reviewRounds: 1,
 		items: []
-	}
+	};
 
 	$scope.widgets = [
 		{
@@ -132,7 +132,7 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 
 	$scope.get_item_template = function(item){
 		return '/assets/js/app/views/widgets/' + item.item_type + '.html';
-	}
+	};
 
 	$scope.add_checkbox = function(item){
 		item.checkboxes.push({
@@ -140,11 +140,11 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 		});
 
 		item.new_checkbox = {};
-	}
+	};
 
 	$scope.remove_item = function(index){
 		$scope.quiz.items.splice(index, 1);
-	}
+	};
 
 	$scope.add_option = function(item){
 		item.options.push({
@@ -152,13 +152,13 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 		});
 
 		item.new_option = {};
-	}
+	};
 
 	$scope.remove_option = function(item, index){
 		item.options.splice(index, 1);
-	}
+	};
 
 	$scope.remove_checkbox = function(item, index){
 		item.checkboxes.splice(index, 1);
-	}
+	};
 }]);

@@ -1,31 +1,31 @@
 package app.domain;
 
-import app.models.ClickModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Timestamp;
-import java.util.List;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true) 
 public class ClickData extends AbstractPersistable<Long> {
     @ManyToOne
+    @JsonIgnore
     private Quiz quiz;
-    
-    @Transient
-    private Long quizId;
     
     @ManyToOne
     private User user;
     
     private Timestamp saveTime;
     
-    @ElementCollection
-    private List<ClickModel> clicks;
+    private Timestamp clickTime;
+    private String element;
+    private String action;
+    private String value;
+    @JsonProperty("child")
+    private String childElement;
     
     public Quiz getQuiz() {
         return quiz;
@@ -50,20 +50,48 @@ public class ClickData extends AbstractPersistable<Long> {
     public void setSaveTime(Timestamp saveTime) {
         this.saveTime = saveTime;
     }
-    
-    public List<ClickModel> getClicks() {
-        return clicks;
-    }
-    
-    public void setClicks(List<ClickModel> clicks) {
-        this.clicks = clicks;
-    }
 
     public Long getQuizId() {
-        return quizId;
+        return this.quiz.getId();
+    }
+    
+    public Timestamp getClickTime() {
+        return clickTime;
     }
 
-    public void setQuizId(Long quizId) {
-        this.quizId = quizId;
+    public void setClickTime(Timestamp clickTime) {
+        this.clickTime = clickTime;
+    }
+
+    public String getElement() {
+        return element;
+    }
+
+    public void setElement(String element) {
+        this.element = element;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String getChildElement() {
+        return childElement;
+    }
+
+    public void setChildElement(String childElement) {
+        this.childElement = childElement;
     }
 }

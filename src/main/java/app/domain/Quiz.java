@@ -3,21 +3,20 @@ package app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
-@JsonIgnoreProperties(value = "new")
+@JsonIgnoreProperties(value = "new", ignoreUnknown = true)
 public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private String title;
@@ -34,9 +33,17 @@ public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private boolean reviewable;
 
-    private String answerDeadline;
+    @Temporal(TemporalType.DATE)
+    private Date answerDeadline;
 
-    private String reviewDeadline;
+    @Temporal(TemporalType.DATE)
+    private Date reviewDeadline;
+    
+    @Temporal(TemporalType.DATE)
+    private Date answerImproveStart;
+    
+    @Temporal(TemporalType.DATE)
+    private Date answerImproveDeadline;
 
     @Transient
     private boolean answered;
@@ -87,27 +94,35 @@ public class Quiz extends AbstractPersistable<Long> {
     }
 
     @JsonProperty(value = "answeringExpired")
-    public boolean isAnsweringExpired() throws ParseException{
-        if(this.answerDeadline == null){
-          return false;
-        }else{
-          Date today = new Date();
-          Date deadline = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(this.answerDeadline);
-
-          return (today.getTime() - deadline.getTime() > 0);
+    public boolean answeringExpired() {
+        if (answerDeadline == null) {
+            return false;
         }
+        return answerDeadline.before(new Date());
     }
 
     @JsonProperty(value = "reviewingExpired")
-    public boolean isReviewingExpired() throws ParseException{
-      if(this.reviewDeadline == null){
-        return false;
-      }else{
-        Date today = new Date();
-        Date deadline = new SimpleDateFormat("MM/dd/yyyy", Locale.ENGLISH).parse(this.reviewDeadline);
+    public boolean reviewingExpired() {
+        if (reviewDeadline == null) {
+            return false;
+        }
+        return reviewDeadline.before(new Date());
+    }
 
-        return (today.getTime() - deadline.getTime() > 0);
-      }
+    @JsonProperty(value = "answerImprovingPossible")
+    public boolean improvingPossible() {
+        boolean started = false;
+        boolean ended = true;
+        Date now = new Date();
+        
+        if (answerImproveStart == null || answerImproveStart.before(now)) {
+            started = true;
+        }
+        
+        if (answerImproveDeadline == null || answerImproveDeadline.after(now)) {
+            ended = false;
+        }
+        return started && !ended;
     }
     
     @JsonIgnore
@@ -130,22 +145,6 @@ public class Quiz extends AbstractPersistable<Long> {
     public void setReviewRounds(Integer reviewRounds) {
         this.reviewRounds = reviewRounds;
     }
-
-    public String getAnswerDeadline(){
-        return this.answerDeadline;
-    }
-
-    public void setAnswerDeadline(String answerDeadline){
-        this.answerDeadline = answerDeadline;
-    }
-
-    public String getReviewDeadline(){
-        return this.reviewDeadline;
-    }
-
-    public void setReviewDeadline(String reviewDeadline){
-        this.reviewDeadline = reviewDeadline;
-    }
     
     public QuizAnswer getMyLatestAnswer() {
         return myLatestAnswer;
@@ -153,5 +152,37 @@ public class Quiz extends AbstractPersistable<Long> {
     
     public void setMyLatestAnswer(QuizAnswer myLatestAnswer) {
         this.myLatestAnswer = myLatestAnswer;
+    }
+
+    public Date getAnswerDeadline() {
+        return answerDeadline;
+    }
+
+    public void setAnswerDeadline(Date answerDeadline) {
+        this.answerDeadline = answerDeadline;
+    }
+
+    public Date getReviewDeadline() {
+        return reviewDeadline;
+    }
+
+    public void setReviewDeadline(Date reviewDeadline) {
+        this.reviewDeadline = reviewDeadline;
+    }
+    
+    public Date getAnswerImproveStart() {
+        return answerImproveStart;
+    }
+
+    public void setAnswerImproveStart(Date answerImproveStart) {
+        this.answerImproveStart = answerImproveStart;
+    }
+
+    public Date getAnswerImproveDeadline() {
+        return answerImproveDeadline;
+    }
+
+    public void setAnswerImproveDeadline(Date answerImproveDeadline) {
+        this.answerImproveDeadline = answerImproveDeadline;
     }
 }
