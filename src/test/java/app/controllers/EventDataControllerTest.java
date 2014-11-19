@@ -1,8 +1,8 @@
 package app.controllers;
 
 import app.Application;
-import app.domain.ClickData;
-import app.repositories.ClickDataRepository;
+import app.domain.EventData;
+import app.repositories.EventDataRepository;
 import app.repositories.QuizRepository;
 import app.repositories.UserRepository;
 import java.sql.Timestamp;
@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = Application.class)
-public class ClickDataControllerTest {
+public class EventDataControllerTest {
     
     @Autowired
     private WebApplicationContext wac;
@@ -39,7 +39,7 @@ public class ClickDataControllerTest {
     private QuizRepository quizRepo;
     
     @Autowired
-    private ClickDataRepository clickRepo;
+    private EventDataRepository eventRepo;
     
     @Autowired
     private UserRepository userRepo;
@@ -52,7 +52,7 @@ public class ClickDataControllerTest {
     @Test
     @DirtiesContext
     @Transactional
-    public void testAddClickDataExistingUser() throws Exception {
+    public void testAddEventDataExistingUser() throws Exception {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         TestHelper.addAnAnswer(mockMvc, "question1", "heh", "pertti", 1L);
         
@@ -60,18 +60,18 @@ public class ClickDataControllerTest {
         assertEquals(1, userRepo.count());
         
         Long millis = 1415716083277L;
-        postClickData(1L, "pertti", millis);
+        postEventData(1L, "pertti", millis);
         
-        assertEquals(1, clickRepo.count());
+        assertEquals(1, eventRepo.count());
         
-        ClickData clickData = clickRepo.findOne(1L);
-        assertTrue(clickData.getUser().getName().equals("pertti"));
+        EventData eventData = eventRepo.findOne(1L);
+        assertTrue(eventData.getUser().getName().equals("pertti"));
         
-        assertTrue(clickData.getAction().equals("press"));
-        assertTrue(clickData.getElement().equals("button"));
-        assertTrue(clickData.getValue().equals("success"));
-        assertTrue(clickData.getChildElement().equals("child1"));
-        assertEquals(new Timestamp(millis), clickData.getClickTime());
+        assertTrue(eventData.getAction().equals("press"));
+        assertTrue(eventData.getElement().equals("button"));
+        assertTrue(eventData.getValue().equals("success"));
+        assertTrue(eventData.getChildElement().equals("child1"));
+        assertEquals(new Timestamp(millis), eventData.getActionTime());
     }
     
     @Test
@@ -84,19 +84,19 @@ public class ClickDataControllerTest {
         assertEquals(0, userRepo.count());
         
         Long millis = 1415716083277L;
-        postClickData(1L, "pertti", millis);
+        postEventData(1L, "pertti", millis);
         
         assertEquals(1, userRepo.count());
-        assertEquals(1, clickRepo.count());
+        assertEquals(1, eventRepo.count());
         
-        ClickData clickData = clickRepo.findOne(1L);
-        assertTrue(clickData.getUser().getName().equals("pertti"));
+        EventData eventData = eventRepo.findOne(1L);
+        assertTrue(eventData.getUser().getName().equals("pertti"));
         
-        assertTrue(clickData.getAction().equals("press"));
-        assertTrue(clickData.getElement().equals("button"));
-        assertTrue(clickData.getValue().equals("success"));
-        assertTrue(clickData.getChildElement().equals("child1"));
-        assertEquals(new Timestamp(millis), clickData.getClickTime());
+        assertTrue(eventData.getAction().equals("press"));
+        assertTrue(eventData.getElement().equals("button"));
+        assertTrue(eventData.getValue().equals("success"));
+        assertTrue(eventData.getChildElement().equals("child1"));
+        assertEquals(new Timestamp(millis), eventData.getActionTime());
     }
     
     @Test
@@ -106,11 +106,11 @@ public class ClickDataControllerTest {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         
         Long millis = 1415716083388L;
-        postClickData(1L, "pertti", millis);
-        postClickData(1L, "pertti", millis);
-        postClickData(1L, "masa", millis);
+        postEventData(1L, "pertti", millis);
+        postEventData(1L, "pertti", millis);
+        postEventData(1L, "masa", millis);
         
-        MvcResult result = mockMvc.perform(get("/clicks/user/pertti"))
+        MvcResult result = mockMvc.perform(get("/events/user/pertti"))
                 .andExpect(status().isOk())
                 .andReturn();
         
@@ -129,11 +129,11 @@ public class ClickDataControllerTest {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz2", "question1", true);
         
         Long millis = 1415716083388L;
-        postClickData(1L, "pertti", millis);
-        postClickData(1L, "masa", millis);
-        postClickData(2L, "masa", millis);
+        postEventData(1L, "pertti", millis);
+        postEventData(1L, "masa", millis);
+        postEventData(2L, "masa", millis);
         
-        MvcResult result = mockMvc.perform(get("/clicks/quiz/2"))
+        MvcResult result = mockMvc.perform(get("/events/quiz/2"))
                 .andExpect(status().isOk())
                 .andReturn();
         
@@ -151,10 +151,10 @@ public class ClickDataControllerTest {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         
         Long millis = 1415716083388L;
-        postClickData(1L, "pertti", millis);
-        postClickData(1L, "masa", millis);
+        postEventData(1L, "pertti", millis);
+        postEventData(1L, "masa", millis);
         
-        mockMvc.perform(get("/clicks/quiz/2")).andExpect(status().is4xxClientError());
+        mockMvc.perform(get("/events/quiz/2")).andExpect(status().is4xxClientError());
     }
     
     @Test
@@ -163,22 +163,22 @@ public class ClickDataControllerTest {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         
         Long millis = 1415716083388L;
-        postClickData(1L, "pertti", millis);
-        postClickData(1L, "masa", millis);
+        postEventData(1L, "pertti", millis);
+        postEventData(1L, "masa", millis);
         
-        mockMvc.perform(get("/clicks/quiz/erno")).andExpect(status().is4xxClientError());
+        mockMvc.perform(get("/events/quiz/erno")).andExpect(status().is4xxClientError());
     }
     
-    private void postClickData(Long quizId, String username, Long clickTime) throws Exception {
-        String jsonClick = "{\"quizId\":"+quizId+","
+    private void postEventData(Long quizId, String username, Long actionTime) throws Exception {
+        String jsonEvent = "{\"quizId\":"+quizId+","
                 + "\"user\":\""+username+"\","
-                + "\"clicks\":["
-                    + "{\"clickTime\":"+clickTime+","
+                + "\"events\":["
+                    + "{\"actionTime\":"+actionTime+","
                     + "\"element\":\"button\","
                     + "\"action\":\"press\","
                     + "\"value\":\"success\","
                     + "\"child\":\"child1\"}]}";
         
-        mockMvc.perform(post("/clicks").content(jsonClick).contentType(MediaType.APPLICATION_JSON));
+        mockMvc.perform(post("/events").content(jsonEvent).contentType(MediaType.APPLICATION_JSON));
     }
 }
