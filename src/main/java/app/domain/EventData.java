@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Timestamp;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true) 
-public class ClickData extends AbstractPersistable<Long> {
+public class EventData extends AbstractPersistable<Long> {
     @ManyToOne
     @JsonIgnore
     private Quiz quiz;
@@ -20,9 +21,11 @@ public class ClickData extends AbstractPersistable<Long> {
     
     private Timestamp saveTime;
     
-    private Timestamp clickTime;
+    private Timestamp actionTime;
     private String element;
+    @Column(name = "event_action")
     private String action;
+    @Column(name = "element_value")
     private String value;
     @JsonProperty("child")
     private String childElement;
@@ -55,12 +58,12 @@ public class ClickData extends AbstractPersistable<Long> {
         return this.quiz.getId();
     }
     
-    public Timestamp getClickTime() {
-        return clickTime;
+    public Timestamp getActionTime() {
+        return actionTime;
     }
 
-    public void setClickTime(Timestamp clickTime) {
-        this.clickTime = clickTime;
+    public void setActionTime(Timestamp actionTime) {
+        this.actionTime = actionTime;
     }
 
     public String getElement() {

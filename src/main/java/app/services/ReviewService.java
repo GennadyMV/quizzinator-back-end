@@ -6,6 +6,7 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.domain.ReviewRating;
 import app.domain.User;
+import app.exceptions.DeadlinePassedException;
 import app.exceptions.InvalidIdCombinationException;
 import app.exceptions.InvalidParameterException;
 import app.exceptions.UnauthorizedRateException;
@@ -82,6 +83,10 @@ public class ReviewService {
     public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
         if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) {
             throw new InvalidIdCombinationException("bad answerId, quizId combination!");
+        }
+        
+        if (quizRepo.findOne(quizId).reviewingExpired()) {
+            throw new DeadlinePassedException();
         }
         
         QuizAnswer qa = answerRepo.findOne(answerId);
