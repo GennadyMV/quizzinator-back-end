@@ -50,9 +50,9 @@ public class QuizServiceTest {
     public void tearDown() {
     }
 
-    @Test
-    public void testValidateAnswerQuizCombination() {
-    }
+//    @Test
+//    public void testValidateAnswerQuizCombination() {
+//    }
 
     @Test
     public void testIsValidAnswerQuizCombinationWithNonExistentQuizAndAnswer() {
@@ -61,9 +61,9 @@ public class QuizServiceTest {
         assertFalse(qs.isValidAnswerQuizCombination(1L, 1L));
     }
 
-    @Test
-    public void testSubmitAnswer() {
-    }
+//    @Test
+//    public void testSubmitAnswer() {
+//    }
     
     @Test
     public void testGetAnswersForReview() {
@@ -73,25 +73,25 @@ public class QuizServiceTest {
                 any(User.class), 
                 any(PageRequest.class));
     }
-
-    @Test
-    public void testGetReviewsByAnswer() {
-    }
-
-    @Test
-    public void testGetQuizForUsername() {
-    }
-
-    @Test
-    public void testAddPlaceHolderAnswer() {
-    }
-
-    @Test
-    public void testGetPlaceholderAnswers() {
-    }
-
-    @Test
-    public void testDeleteAnswer() {
-    }
+//
+//    @Test
+//    public void testGetReviewsByAnswer() {
+//    }
+//
+//    @Test
+//    public void testGetQuizForUsername() {
+//    }
+//
+//    @Test
+//    public void testAddPlaceHolderAnswer() {
+//    }
+//
+//    @Test
+//    public void testGetPlaceholderAnswers() {
+//    }
+//
+//    @Test
+//    public void testDeleteAnswer() {
+//    }
     
 }
