@@ -26,6 +26,7 @@ public class PeerReview extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "review", fetch = FetchType.EAGER)
     private List<ReviewRating> ratings;
 
+    //TODO: get rid of this. replace with a COUNT query when needed
     @Column(nullable = false)
     private Integer rateCount = 0;
     
