@@ -201,7 +201,7 @@
                     <executions>
                         <execution>
                             <id>delete-temps</id>
-                            <phase>compile</phase>
+                            <phase>generate-sources</phase>
                             <goals>
                                 <goal>clean</goal>
                             </goals>
@@ -229,7 +229,7 @@
                     <executions>
                         <execution>
                             <id>get-quizlib-css</id>
-                            <phase>compile</phase>
+                            <phase>generate-sources</phase>
                             <goals>
                                 <goal>wget</goal>
                             </goals>
@@ -242,7 +242,7 @@
                         </execution>
                         <execution>
                             <id>get-quizlib-js</id>
-                            <phase>compile</phase>
+                            <phase>generate-sources</phase>
                             <goals>
                                 <goal>wget</goal>
                             </goals>
