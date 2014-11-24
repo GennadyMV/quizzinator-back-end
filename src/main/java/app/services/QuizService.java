@@ -121,11 +121,11 @@ public class QuizService {
             throw new app.exceptions.NotFoundException();
         }
         
-        
         if (users.isEmpty()) {
             q.setAnswered(false);
         } else {
-            List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, users.get(0), new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
+            PageRequest pr = new PageRequest(0, 1, Sort.Direction.DESC, "answerDate");
+            List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, users.get(0), pr);
             if (previousAnswers.isEmpty()) {
                 q.setAnswered(false);
             } else {
@@ -156,7 +156,7 @@ public class QuizService {
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         
-        //fix links, for every answer linking to this, make them link to this.previousAnswer 
+        //this fixes links, for every answer linking to this, make them link to this.previousAnswer 
         List<QuizAnswer> answers = answerRepo.findByPreviousAnswer(qa);
         for (QuizAnswer answer : answers) {
             answer.setPreviousAnswer(qa.getPreviousAnswer());

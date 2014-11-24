@@ -209,6 +209,7 @@
                                 <url>https://raw.githubusercontent.com/kaint-ohtu/quiz-lib/master/build/quiz.min.css</url>
                                 <outputDirectory>src/main/webapp/assets/css/</outputDirectory>
                                 <outputFileName>quiz-plugin.min.css</outputFileName>
+                                <skipCache>true</skipCache>
                             </configuration>
                         </execution>
                         <execution>
@@ -221,6 +222,33 @@
                                 <url>https://raw.githubusercontent.com/kaint-ohtu/quiz-lib/master/build/quiz.min.js</url>
                                 <outputDirectory>src/main/webapp/assets/js/</outputDirectory>
                                 <outputFileName>quiz-plugin.min.js</outputFileName>
+                                <skipCache>true</skipCache>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <plugin>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>2.6.1</version>
+                    <executions>
+                        <execution>
+                            <id>auto-clean</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                            <configuration>
+                                <filesets>
+                                    <fileset>
+                                        <directory>src/main/webapp/assets/</directory>
+                                        
+                                        <includes>
+                                            <include>css/quiz-plugin.min.css</include>
+                                            <include>js/quiz-plugin.min.js</include>
+                                        </includes>
+                                    </fileset>
+                                </filesets>
                             </configuration>
                         </execution>
                     </executions>
