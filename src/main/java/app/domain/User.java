@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import org.springframework.data.domain.Persistable;
 
 //TODO: this doesnt make much sense yet.
-//hash is supposed to protect peoples answers
+//hash is (was?) supposed to protect peoples answers
 
 @Entity(name = "review_user")
 @JsonIgnoreProperties(value = "new")
@@ -26,6 +26,11 @@ public class User implements Persistable<String> {
     @Id
     @Column(name = "user_hash")
     private String hash;
+    
+    //determines the amount of reviews given to user
+    //eg  reviewWeight=2, user gets twice as much reviews as other users
+    @Column(nullable = false)
+    private Integer reviewWeight = 1;
 
     public String getName() {
         return name;
@@ -50,5 +55,12 @@ public class User implements Persistable<String> {
     public boolean isNew() {
         return false;
     }
-    
+
+    public Integer getReviewWeight() {
+        return reviewWeight;
+    }
+
+    public void setReviewWeight(Integer reviewWeight) {
+        this.reviewWeight = reviewWeight;
+    }
 }
