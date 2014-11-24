@@ -195,7 +195,7 @@
                 </plugin>
                 
                 <!-- delete quiz-plugin related js and css -->
-                <plugin>
+                <!--plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>2.6.1</version>
                     <executions>
@@ -219,7 +219,7 @@
                             </configuration>
                         </execution>
                     </executions>
-                </plugin>
+                </plugin-->
                 
                 <!-- download quiz-plugin related js and css from github -->
                 <plugin>
