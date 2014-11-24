@@ -59,7 +59,7 @@ public class ReviewService {
     public List<UsersReviewModel> getUserReviews(String hash) {
         List<UsersReviewModel> ret = new ArrayList<UsersReviewModel>();
         
-        User u = userRepo.findOne(hash);
+        User u = userRepo.findByHash(hash);
         
         List<QuizAnswer> userAnswers = answerRepo.findByUser(u);
         

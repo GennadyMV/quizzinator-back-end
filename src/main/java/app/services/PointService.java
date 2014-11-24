@@ -36,8 +36,8 @@ public class PointService {
     @Autowired
     private ReviewRatingRepository ratingRepo;
     
-    public UserPointModel getPointsForUser(String id) {
-        User user = userRepo.findOne(id);
+    public UserPointModel getPointsForUser(String userhash) {
+        User user = userRepo.findByHash(userhash);
         
         if (user == null) {
             throw new InvalidParameterException("Invalid user hash");

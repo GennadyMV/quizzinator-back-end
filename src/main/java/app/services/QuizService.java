@@ -115,17 +115,17 @@ public class QuizService {
 
     public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
-        List<User> users = userRepo.findByName(username);
+        User u = userRepo.findByName(username);
         
         if (q == null) {
             throw new app.exceptions.NotFoundException();
         }
         
-        if (users.isEmpty()) {
+        if (u == null) {
             q.setAnswered(false);
         } else {
             PageRequest pr = new PageRequest(0, 1, Sort.Direction.DESC, "answerDate");
-            List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, users.get(0), pr);
+            List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, u, pr);
             if (previousAnswers.isEmpty()) {
                 q.setAnswered(false);
             } else {
