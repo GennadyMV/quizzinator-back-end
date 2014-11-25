@@ -90,7 +90,7 @@ public class ReviewService {
         }
         
         QuizAnswer qa = answerRepo.findOne(answerId);
-        qa.setReviewCount(qa.getReviewCount()+1);
+//        qa.setReviewCount(qa.getReviewCount()+1);
         review.setQuizAnswer(qa);
         
         User reviewer = userService.getOrCreateUser(review.getReviewer().getName());

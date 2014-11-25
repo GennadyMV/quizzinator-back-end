@@ -52,9 +52,9 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     @Lob
     private String answer;
 
-    @JsonIgnore
-    @Column(nullable = false)
-    private Integer reviewCount = 0;
+//    @JsonIgnore
+//    @Column(nullable = false)
+//    private Integer reviewCount = 0;
     
     @JsonIgnore
     @Column(nullable = false)
@@ -130,13 +130,13 @@ public class QuizAnswer extends AbstractPersistable<Long> {
         return this.user.getName();
     }
 
-    public Integer getReviewCount() {
-        return reviewCount;
-    }
-
-    public void setReviewCount(Integer reviewCount) {
-        this.reviewCount = reviewCount;
-    }
+//    public Integer getReviewCount() {
+//        return reviewCount;
+//    }
+//
+//    public void setReviewCount(Integer reviewCount) {
+//        this.reviewCount = reviewCount;
+//    }
 
     public Boolean getPlaceholder() {
         return placeholder;

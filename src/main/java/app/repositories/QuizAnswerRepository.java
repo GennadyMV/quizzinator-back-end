@@ -13,7 +13,9 @@ public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Long> {
     public List<QuizAnswer> findByQuizAndUserNot(Quiz quiz, User user, Pageable pageable);
     
     //show answers with least reviews. placeholders only if no other available
-    @Query("select qa from QuizAnswer qa where quiz = :quiz and (user is null or user <> :user) order by placeholder asc, reviewCount asc")
+    @Query("select qa from QuizAnswer qa where quiz = :quiz and (user is null or user <> :user) "
+            + "order by placeholder asc, "
+            + "((select count(pr) from PeerReview pr where quizAnswer = qa)/qa.user.reviewWeight) asc")
     public List<QuizAnswer> findQuizzesToReview(@Param("quiz") Quiz quiz, @Param("user") User user, Pageable pageable);
     public List<QuizAnswer> findByQuizAndPlaceholderIsTrue(Quiz quiz);
     public List<QuizAnswer> findByQuiz(Quiz quiz);
