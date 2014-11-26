@@ -56,7 +56,7 @@ public class PointControllerTest {
     @Test
     @DirtiesContext
     public void testGetPointsForUser() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(get("/points/user/" + user1.getId())
+        MvcResult mvcResult = this.mockMvc.perform(get("/points/user/" + user1.getHash())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
         
@@ -96,7 +96,7 @@ public class PointControllerTest {
     @Test
     @DirtiesContext
     public void cannotFindPointsForNonexistentId() throws Exception {
-        this.mockMvc.perform(get("/points/user/" + user1.getId().substring(2))).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(get("/points/user/" + user1.getHash().substring(2))).andExpect(status().is4xxClientError());
         this.mockMvc.perform(get("/points/quiz/2")).andExpect(status().is4xxClientError());
     }
     

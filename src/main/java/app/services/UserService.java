@@ -13,24 +13,22 @@ public class UserService {
     
     public User getUser(String username) {
         if (username==null) return null;
-        List<User> users = userRepo.findByName(username);
-        return users.isEmpty() ? null : users.get(0);
+        User u = userRepo.findByName(username);
+        return u;
     }
     
     public User getUser(User user) {
         if (user == null) return null;
-        return userRepo.findOne(user.getId());
+        return userRepo.findByHash(user.getHash());
     }
 
     public User getOrCreateUser(String username) {
         User u;
-        List<User> users = userRepo.findByName(username);
-        if (users.isEmpty()) {
+        u = userRepo.findByName(username);
+        if (u == null) {
             u = new User();
             u.setName(username);
             u = userRepo.save(u);
-        } else {
-            u = users.get(0);
         }
         return u;
     }

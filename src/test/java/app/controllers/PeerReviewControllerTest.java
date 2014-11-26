@@ -1,8 +1,10 @@
 package app.controllers;
 
 import app.Application;
+import app.domain.User;
 import app.repositories.PeerReviewRepository;
 import app.repositories.ReviewRatingRepository;
+import app.repositories.UserRepository;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,6 +45,9 @@ public class PeerReviewControllerTest {
     
     @Autowired
     private ReviewRatingRepository ratingRepo;
+    
+    @Autowired
+    private UserRepository userRepo;
     
     private final JsonParser jsonParser = new JsonParser();
 
@@ -111,6 +116,71 @@ public class PeerReviewControllerTest {
             Long answerId = TestHelper.getLongByKeyAndIndexFromJsonArray(content, "id", i);
             assertTrue(answerId.equals(aId2) || answerId.equals(aId3));
         }
+    }
+
+    @Test
+    @DirtiesContext
+    public void userWithBiggerWeightGetsMoreFeedback() throws Exception {
+        Long qId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+
+        Long aId1 = TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", qId);
+        Long aId2 = TestHelper.addAnAnswer(mockMvc, "question1", "answer2", "user2", qId);
+        Long aId3 = TestHelper.addAnAnswer(mockMvc, "question1", "answer3", "user3", qId);
+        
+        User u = userRepo.findByName("user2");
+        u.setReviewWeight(3.0);
+        userRepo.save(u);
+
+        TestHelper.addAReview(mockMvc, qId, aId1, "user5", "good answer1!");
+        TestHelper.addAReview(mockMvc, qId, aId1, "user6", "good answer2!");
+        TestHelper.addAReview(mockMvc, qId, aId2, "user4", "good answer3!");
+        TestHelper.addAReview(mockMvc, qId, aId3, "user5", "good answer4!");
+
+
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/quiz/" + qId + "/review_answers")
+                .param("username", "newuser")
+                .param("count", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        String content = response.getContentAsString();
+        Long answerId = TestHelper.getLongByKeyAndIndexFromJsonArray(content, "id", 0);
+        assertEquals(aId2, answerId);
+        
+        
+        TestHelper.addAReview(mockMvc, qId, aId2, "user7", "good answer4!");
+
+        response = mockMvc.perform(
+                get("/quiz/" + qId + "/review_answers")
+                .param("username", "newuser")
+                .param("count", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        content = response.getContentAsString();
+        answerId = TestHelper.getLongByKeyAndIndexFromJsonArray(content, "id", 0);
+        assertEquals(aId2, answerId);
+        
+        
+        TestHelper.addAReview(mockMvc, qId, aId2, "user8", "good answer4!");
+        TestHelper.addAReview(mockMvc, qId, aId2, "user9", "good answer4!");
+
+        response = mockMvc.perform(
+                get("/quiz/" + qId + "/review_answers")
+                .param("username", "newuser")
+                .param("count", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+
+        content = response.getContentAsString();
+        answerId = TestHelper.getLongByKeyAndIndexFromJsonArray(content, "id", 0);
+        
+        //answer aId2 already has >3 answers so its turn for user1 or user3 with fewer answers
+        assertNotEquals(aId2, answerId);
     }
 
     @Test

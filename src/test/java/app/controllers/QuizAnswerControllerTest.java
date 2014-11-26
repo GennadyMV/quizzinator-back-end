@@ -33,7 +33,6 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = Application.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class QuizAnswerControllerTest {
     @Autowired
     private QuizAnswerRepository quizAnswerRepository;
