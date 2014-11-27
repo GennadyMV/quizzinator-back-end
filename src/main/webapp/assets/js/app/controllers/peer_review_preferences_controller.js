@@ -5,7 +5,7 @@ QuizApp.controller('ImageController', ['$scope', '$routeParams', 'QuizAPI', func
 			success: function() {
 
 			}
-		})
+		});
 	}
 
 	$scope.delete_username = function(username) {
@@ -14,6 +14,6 @@ QuizApp.controller('ImageController', ['$scope', '$routeParams', 'QuizAPI', func
 			success: function() {
 
 			}
-		})
+		});
 	}
-}
+}]);
