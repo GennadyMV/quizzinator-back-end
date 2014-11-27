@@ -1,0 +1,21 @@
+<div ng-controller="PeerReviewPreferencesController">
+	<ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#/quiz/{{$parent.quiz.id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
+        <li><a href="#/quiz/{{$parent.quiz.id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
+        <li><a href="#/quiz/{{$parent.quiz.id}}/share"><i class="fa fa-share"></i> Share</a></li>
+        <li><a href="#/quiz/{{$parent.quiz.id}}/answers"><i class="fa fa-user"></i> Answers</a></li>
+    </ul>
+
+    <div class="page-header page-header-button">
+        <h1>Peer Review Preferences</h1>
+        <button class="btn btn-primary pull-right btn-header" ng-click="save_username()" id="save-username"><i class="fa fa-check"></i> Save</button>
+    </div>
+
+    <div>
+    	<label>Username</label>
+		<input type="text" class="form-control" placeholder="Username" value="username">
+		<button class="btn btn-primary pull-right btn-header" ng-click="save_username(username)"><i class="fa fa-check"></i>Save</button>
+		<button class="btn btn-primary pull-right btn-header" ng-click="delete_username(username)"><i class="fa fa-remove"></i>Delete</button>
+    </div>
+
+</div>
