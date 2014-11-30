@@ -111,9 +111,9 @@ public class TestHelper {
         JsonParser jp = new JsonParser();
         JsonArray ja = jp.parse(json).getAsJsonArray();
         JsonObject jo = ja.get(i).getAsJsonObject();
-        Long val = jo.get(key).getAsLong();
-        if(jo.get(key).isJsonNull()) return null;
-        return val;
+        JsonElement val = jo.get(key);
+        if(val.isJsonNull()) return null;
+        return val.getAsLong();
     }
     
     public static String getStringByKeyFromJson(String json, String key) {

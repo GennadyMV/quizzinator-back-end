@@ -59,7 +59,7 @@ public class ReviewService {
     public List<UsersReviewModel> getUserReviews(String hash) {
         List<UsersReviewModel> ret = new ArrayList<UsersReviewModel>();
         
-        User u = userRepo.findOne(hash);
+        User u = userRepo.findByHash(hash);
         
         List<QuizAnswer> userAnswers = answerRepo.findByUser(u);
         
@@ -90,7 +90,7 @@ public class ReviewService {
         }
         
         QuizAnswer qa = answerRepo.findOne(answerId);
-        qa.setReviewCount(qa.getReviewCount()+1);
+//        qa.setReviewCount(qa.getReviewCount()+1);
         review.setQuizAnswer(qa);
         
         User reviewer = userService.getOrCreateUser(review.getReviewer().getName());

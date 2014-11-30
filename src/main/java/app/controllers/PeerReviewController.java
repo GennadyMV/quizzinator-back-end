@@ -113,7 +113,7 @@ public class PeerReviewController {
     @RequestMapping(value = "/reviews", method = RequestMethod.GET, produces = "application/json")
     @Transactional
     public List<UsersReviewModel> userPeerReviewsByUsername(@RequestParam String username) {
-        String userhash = userRepo.findByName(username).get(0).getHash();
+        String userhash = userRepo.findByName(username).getHash();
         return reviewService.getUserReviews(userhash);
     }
     
@@ -130,7 +130,7 @@ public class PeerReviewController {
         
         User user;
         if (userhash != null && !userhash.isEmpty()) {
-            user = userRepo.findOne(userhash);
+            user = userRepo.findByHash(userhash);
         } else if (username != null) {
             user = userService.getOrCreateUser(username);
         } else {
