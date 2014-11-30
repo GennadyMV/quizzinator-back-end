@@ -4,8 +4,8 @@ import app.repositories.UserRepository;
 import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
-//import app.models.ReviewResponseModel;
 import app.domain.User;
+import app.exceptions.DeadlinePassedException;
 import app.exceptions.InvalidIdCombinationException;
 import app.models.NewAnswerResponseModel;
 import app.repositories.PeerReviewRepository;
@@ -35,6 +35,22 @@ public class QuizService {
     @Autowired
     private UserService userService;
     
+    public void validateAnswerQuizCombination(Long answerId, Long quizId) {
+        if (!isValidAnswerQuizCombination(answerId, quizId)) {
+            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
+        }
+    }
+    
+    public boolean isValidAnswerQuizCombination(Long answerId, Long quizId) {
+        QuizAnswer qa = answerRepo.findOne(answerId);
+        Quiz q = quizRepo.findOne(quizId);
+        
+        if (qa == null || q == null || qa.getQuiz() == null || !qa.getQuiz().getId().equals(quizId)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
     
     public NewAnswerResponseModel submitAnswer(QuizAnswer answer, Long quizId) {
         User u = userService.getOrCreateUser(answer.getUsername());
@@ -44,10 +60,22 @@ public class QuizService {
         answer.setQuiz(q);
         
         //find previous answer and mark this as an improvement
-        List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, u, new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
+        PageRequest pr = new PageRequest(0, 1, Sort.Direction.DESC, "answerDate");
+        List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, u, pr);
+        
         if (!previousAnswers.isEmpty()) {
+            //user has answered before
+            if (q.answeringExpired() && !q.improvingPossible()) {
+                throw new DeadlinePassedException();
+            }
+            
             answer.setPreviousAnswer(previousAnswers.get(0));
         } else {
+            //user tries to answer the quiz for the first time
+            if (q.answeringExpired()) {
+                throw new DeadlinePassedException();
+            }
+            
             answer.setPreviousAnswer(null);
         }
         
@@ -84,23 +112,6 @@ public class QuizService {
         QuizAnswer qa = answerRepo.findOne(answerId);
         return reviewRepo.findByQuizAnswer(qa);
     }
-    
-    public void validateAnswerQuizCombination(Long answerId, Long quizId) {
-        if (!isValidAnswerQuizCombination(answerId, quizId)) {
-            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
-        }
-    }
-    
-    public boolean isValidAnswerQuizCombination(Long answerId, Long quizId) {
-        QuizAnswer qa = answerRepo.findOne(answerId);
-        Quiz q = quizRepo.findOne(quizId);
-        
-        if (qa == null || q == null || qa.getQuiz() == null || !qa.getQuiz().getId().equals(quizId)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
@@ -110,11 +121,11 @@ public class QuizService {
             throw new app.exceptions.NotFoundException();
         }
         
-        
         if (users.isEmpty()) {
             q.setAnswered(false);
         } else {
-            List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, users.get(0), new PageRequest(0, 1, Sort.Direction.DESC, "answerDate"));
+            PageRequest pr = new PageRequest(0, 1, Sort.Direction.DESC, "answerDate");
+            List<QuizAnswer> previousAnswers = answerRepo.findByQuizAndUser(q, users.get(0), pr);
             if (previousAnswers.isEmpty()) {
                 q.setAnswered(false);
             } else {
@@ -124,14 +135,6 @@ public class QuizService {
         }
             
         return q;
-    }
-
-    public List<PeerReview> getReviewsByUserHash(String hash) {
-        User u = userRepo.findOne(hash);
-        
-        List<QuizAnswer> answers = answerRepo.findByUser(u);
-        
-        return reviewRepo.findByQuizAnswerIn(answers);
     }
 
     public void addPlaceHolderAnswer(String quizAnswer, Long quizId) {
@@ -153,7 +156,7 @@ public class QuizService {
         
         QuizAnswer qa = answerRepo.findOne(answerId);
         
-        //fix links, for every answer linking to this, make them link to this.previousAnswer 
+        //this fixes links, for every answer linking to this, make them link to this.previousAnswer 
         List<QuizAnswer> answers = answerRepo.findByPreviousAnswer(qa);
         for (QuizAnswer answer : answers) {
             answer.setPreviousAnswer(qa.getPreviousAnswer());

@@ -11,5 +11,5 @@ QuizApp.directive('shareLibs', function () {
                 
             $(elem).children().first().text(code);
         }
-    }
+    };
 });

@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -272,8 +273,8 @@ public class QuizControllerTest {
         quiz.setItems("[{}]");
         quizRepository.save(quiz);
         
-        assertFalse(quiz.isAnsweringExpired());
-        assertFalse(quiz.isReviewingExpired());
+        assertFalse(quiz.answeringExpired());
+        assertFalse(quiz.reviewingExpired());
     }
     
     @Test
@@ -283,12 +284,13 @@ public class QuizControllerTest {
         quiz.setIsOpen(false);
         quiz.setTitle("testquiz");
         quiz.setItems("[{}]");
-        quiz.setAnswerDeadline("03/11/2025");
-        quiz.setReviewDeadline("02/1/2037");
+        
+        quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("03-11-2025"));
+        quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("02-1-2037"));
         quizRepository.save(quiz);
         
-        assertFalse(quiz.isAnsweringExpired());
-        assertFalse(quiz.isReviewingExpired());
+        assertFalse(quiz.answeringExpired());
+        assertFalse(quiz.reviewingExpired());
     }
     
     @Test
@@ -298,12 +300,12 @@ public class QuizControllerTest {
         quiz.setIsOpen(false);
         quiz.setTitle("testquiz");
         quiz.setItems("[{}]");
-        quiz.setAnswerDeadline("08/06/2014");
-        quiz.setReviewDeadline("10/22/2014");
+        quiz.setAnswerDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("08-06-2014"));
+        quiz.setReviewDeadline(new SimpleDateFormat("MM-dd-yyyy").parse("10-22-2014"));
         quizRepository.save(quiz);
         
-        assertTrue(quiz.isAnsweringExpired());
-        assertTrue(quiz.isReviewingExpired());
+        assertTrue(quiz.answeringExpired());
+        assertTrue(quiz.reviewingExpired());
     }
     
     @Test
@@ -374,10 +376,6 @@ public class QuizControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("username", "masa"))
                 .andReturn();
-        
-        System.out.println("|||||||||||||||");
-        System.out.println(mvcResult.getResponse().getContentAsString());
-        System.out.println("|||||||||||||||");
         
         returnedQuiz = new JSONObject(mvcResult.getResponse().getContentAsString());
         answer = new JSONObject(

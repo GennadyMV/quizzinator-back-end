@@ -6,6 +6,7 @@ import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.domain.ReviewRating;
 import app.domain.User;
+import app.exceptions.DeadlinePassedException;
 import app.exceptions.InvalidIdCombinationException;
 import app.exceptions.InvalidParameterException;
 import app.exceptions.UnauthorizedRateException;
@@ -34,8 +35,8 @@ public class ReviewService {
     
     @Autowired
     private PeerReviewRepository reviewRepo;
-    @Autowired
     
+    @Autowired
     private UserRepository userRepo;
     
     @Autowired
@@ -82,6 +83,10 @@ public class ReviewService {
     public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
         if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) {
             throw new InvalidIdCombinationException("bad answerId, quizId combination!");
+        }
+        
+        if (quizRepo.findOne(quizId).reviewingExpired()) {
+            throw new DeadlinePassedException();
         }
         
         QuizAnswer qa = answerRepo.findOne(answerId);
@@ -141,5 +146,21 @@ public class ReviewService {
         List<PeerReview> reviews = reviewRepo.findForRate(u, q, pageRequest);
         
         return reviews;
+    }
+
+    public List<PeerReview> getReviewsByUsername(String username) {
+        User u = userService.getOrCreateUser(username);
+        
+        List<QuizAnswer> answers = answerRepo.findByUser(u);
+        
+        return reviewRepo.findByQuizAnswerIn(answers);
+    }
+
+    public List<PeerReview> getReviewsByQuizAndReviewee(Long quizId, String username) {
+        User u = userService.getOrCreateUser(username);
+        Quiz q = quizRepo.findOne(quizId);
+        
+        List<QuizAnswer> answers = answerRepo.findByQuizAndUser(q, u);
+        return reviewRepo.findByQuizAnswerIn(answers);
     }
 }

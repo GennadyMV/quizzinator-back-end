@@ -8,7 +8,7 @@ QuizApp.directive('sharePeerReview', function () {
 
             $(elem).find('.select-quiz-share-code').on('click', function () {
                 $(elem).find('textarea').select();
-            })
+            });
         }
-    }
+    };
 });

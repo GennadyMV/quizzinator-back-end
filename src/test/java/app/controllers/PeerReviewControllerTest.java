@@ -609,4 +609,32 @@ public class PeerReviewControllerTest {
         
         assertEquals(0, ratingRepo.count());
     }
+    
+    @Test
+    @DirtiesContext
+    public void canGetPeerReviewsGivenToUserForOneQuiz() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true, 2);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", quizId);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user3", quizId);
+        
+        
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "good job!");
+        TestHelper.addAReview(mockMvc, quizId, 3L, "reviewer_guy", "good job!");
+        
+        MvcResult result = mockMvc.perform(get("/quiz/" + quizId  + "/myReviews")
+                .param("username", "user1"))
+                .andReturn();
+        
+        JSONArray array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(2, array.length());
+        
+        result = mockMvc.perform(get("/quiz/" + quizId  + "/myReviews")
+                .param("username", "user3"))
+                .andReturn();
+        
+        array = new JSONArray(result.getResponse().getContentAsString());
+        assertEquals(1, array.length());
+    }
 }

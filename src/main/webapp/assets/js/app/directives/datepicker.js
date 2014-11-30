@@ -5,7 +5,8 @@ QuizApp.directive('datepicker', function(){
     },
     link: function(scope, elem, attrs){
       $(elem).datepicker({
+          format: 'yyyy-mm-dd'
       });
     }
-  }
+  };
 });

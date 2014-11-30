@@ -24,5 +24,5 @@ QuizApp.controller('CreateQuizController', ['$scope', '$location', 'QuizAPI', fu
 				};
 			}
 		});
-	}
+	};
 }]);

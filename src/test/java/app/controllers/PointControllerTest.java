@@ -4,9 +4,6 @@ import app.Application;
 import app.models.QuizPointModel;
 import app.domain.User;
 import app.models.UserPointModel;
-import app.repositories.PeerReviewRepository;
-import app.repositories.QuizAnswerRepository;
-import app.repositories.ReviewRatingRepository;
 import app.repositories.UserRepository;
 import com.google.gson.Gson;
 import static org.junit.Assert.assertEquals;
@@ -96,8 +93,15 @@ public class PointControllerTest {
         assertTrue(quizPoint.getRaters().contains(user2.getName()));
     }
     
+    @Test
+    @DirtiesContext
+    public void cannotFindPointsForNonexistentId() throws Exception {
+        this.mockMvc.perform(get("/points/user/" + user1.getId().substring(2))).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(get("/points/quiz/2")).andExpect(status().is4xxClientError());
+    }
+    
     private void initQuiz() throws Exception {
-        String jsonQuiz = "{\"title\":\"testquiz2\",\"items\":\"["
+        String jsonQuiz = "{\"title\":\"testquiz2\",\"reviewable\":\"true\",\"items\":\"["
                 + "{\\\"question\\\":\\\"testquestion1\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"003\\\"},"
                 + "{\\\"question\\\":\\\"testquestion2\\\",\\\"item_type\\\":\\\"open_question\\\",\\\"$$hashKey\\\":\\\"006\\\"}"
                 + "]\"}";
