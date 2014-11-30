@@ -1,0 +1,52 @@
+<label>{{item.title}}</label>
+<div class="sketchpad-container">
+  <div class="sketchpad-toolbar">
+    <div class="sketchpad-tool sketchpad-clear">
+      <button class="btn btn-default"><i class="fa fa-eraser"></i> Clear</button>
+    </div>
+
+    <div class="sketchpad-tool choose-stroke-color-to-sketchpad">
+      <label class="label-block">Choose color</label>
+      <div class="palette-container">
+        <div class="palette-color chosen" style="background-color: #000000"></div>
+        <div class="palette-color" style="background-color: #787878"></div>
+        <div class="palette-color" style="background-color: #CB2402"></div>
+        <div class="palette-color" style="background-color: #61AE24"></div>
+        <div class="palette-color" style="background-color: #00A1CB"></div>
+        <div class="palette-color" style="background-color: #F18D05"></div>
+        <div class="palette-color" style="background-color: #E54028"></div>
+        <div class="palette-color" style="background-color: #D70060"></div>
+        <div class="palette-color" style="background-color: #113F8C"></div>
+        <div class="palette-color" style="background-color: #ffffff; border: 1px solid rgb(220,220,220); width: 18px; height: 18px;"></div>
+      </div>
+    </div>
+
+    <div class="sketchpad-tool choose-stroke-width-to-sketchpad">
+      <label class="label-block">Choose with</label>
+      <div class="stroke-width-container">
+        <div class="stroke-width-delimeter stroke-width-thin" data-width="1">Thin</div>
+        <div class="stroke-width-delimeter chosen stroke-width-normal" data-width="5">Normal</div>
+        <div class="stroke-width-delimeter stroke-width-thick" data-width="9">Thick</div>
+      </div>
+    </div>
+
+    <div class="sketchpad-tool add-text-to-sketchpad">
+      <label class="label-block">Add text</label>
+      <textarea class="form-control" placeholder="My text"></textarea>
+      <button class="btn btn-default" style="margin-top: 5px"><i class="fa fa-pencil"></i> Add</button>
+      <div class="text-muted" style="margin-top: 10px">
+        Move the text by dragging and remove it by double clicking the left mouse button.
+      </div>
+    </div>
+
+    <div class="sketchpad-tool add-rectangle-to-sketchpad">
+      <label class="label-block">Add rectangle</label>
+      <button class="btn btn-default"><i class="fa fa-square-o"></i> Add</button>
+      <div class="text-muted" style="margin-top: 10px">
+        Move the rectangle by dragging the middle, resize by dragging bottom-right corner and remove it by double clicking the left mouse button.
+      </div>
+    </div>
+  </div>
+
+  <div class="sketchpad-paper" ng-model="item.value" sketchpad></div>
+</div>

@@ -1,13 +1,21 @@
-QuizApp.service('AnswerFormatter', ['$sce', function($sce){
+QuizApp.service('AnswerFormatter', ['$sce', '$rootScope', function($sce, $rootScope){
 	var _public = {};
+        var _apiurl;
 
-	var basic_input_formatter = function(item, type){
+	var _ignorable_output_types = ['code_sample', 'image', 'peer_reviews', 'text_container'];
+
+	var basic_input_formatter = function(item){
 		return {
 			question: item.question,
 			value: '',
-			item_type: item.item_type
-		}
-	}
+			item_type: item.item_type,
+                        event_handler: function(action, child, value){
+                            var obj = {action: action, element: item.item_type + '_' + item.index, child: child, value: value, actionTime: $.now()};
+                            //console.log('action: ' + obj.action + ', element: ' + obj.element + ', child: ' + obj.child + ', val: ' + obj.value );
+                            $rootScope._event_buffer.push(obj);
+                        }
+		};
+	};
 
 	var input_formatters = {
 		open_question: function(item){
@@ -28,7 +36,7 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 				return {
 					title: checkbox.title,
 					value: false
-				}
+				};
 			});
 
 			return format;
@@ -64,6 +72,7 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 			}
 
 			questions = item.questions.split('\n');
+
 			questions.forEach(function(question){
 				format['questions'].push({
 					question: question,
@@ -81,10 +90,39 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 			format['max'] = item.max;
 
 			return format;
-		}
-	}
+		},
+                image: function(item){
+                        var format = basic_input_formatter(item);
+                        format['imageUrl'] = _apiurl + "/images/" + item.imageId;
+                        delete format['value'];
+                        delete format['question'];
 
-	function basic_output_formatter(item){
+                        return format;
+                },
+		sketchpad: function(item){
+			var format = basic_input_formatter(item);
+			delete format['question'];
+
+			format['title'] = item.title;
+
+			return format;
+		},
+		peer_reviews: function(item){
+			var format = basic_input_formatter(item);
+			format['count'] = item.count;
+			delete format['question'];
+			delete format['value'];
+			return format;
+		},
+		my_peer_reviews: function(item){
+			var format = basic_input_formatter(item);
+			delete format['question'];
+			delete format['value'];
+			return format;
+		}
+	};
+
+	/*function basic_output_formatter(item){
 		return {
 			question: item.question,
 			value: item.value,
@@ -128,42 +166,67 @@ QuizApp.service('AnswerFormatter', ['$sce', function($sce){
 		},
 		slider_question: function(item){
 			return basic_output_formatter(item);
+		},
+		sketchpad: function(item){
+			var format = basic_output_formatter(item);
+			format['question'] = item.title;
+			return format;
 		}
-	}
+	}*/
 
-	_public.input = function(quiz){
+	_public.input = function(quiz, apiurl){
+        _apiurl = apiurl;
+
 		var formatted = {
 			title: quiz.title,
 			answered: quiz.answered,
 			id: quiz.id,
 			is_open: quiz.isOpen,
-			items: []
-		}
+			answering_expired: quiz.answeringExpired,
+			reviewing_expired: quiz.reviewingExpired,
+                        improving_possible: quiz.answerImprovingPossible,
+                        can_answer: !quiz.answeringExpired || quiz.answered && quiz.answerImprovingPossible,
+                        deadline: quiz.answerDeadline,
+                        review_deadline: quiz.reviewDeadline,
+                        improve_deadline: quiz.answerImproveDeadline,
+			my_latest_answer: quiz.myLatestAnswer ? angular.fromJson(angular.fromJson(quiz.myLatestAnswer).answer) : null,
+			items: [],
+                        event_handler: function (action, state){
+                            var obj = {action: 'click', element: 'quiz', value: state ? 'expanded' : 'collapsed', actionTime: $.now()};
+                            $rootScope._event_buffer.push(obj);
+                        }
+		};
 
 		var items = angular.fromJson(quiz.items);
+		
+                var i = 0;
 		items.forEach(function(item){
 			if(typeof input_formatters[item.item_type] === 'function'){
-				formatted.items.push(input_formatters[item.item_type](item));
+                                item.index = i;
+                                item = input_formatters[item.item_type](item);
+				formatted.items.push(item);
+                                i++;
 			}
 		});
 
 		return formatted;
-	}
+	};
 
 	_public.output = function(quiz){
 		var answers = [];
 
 		if (!quiz) return [];
+		for(var i = 0; i < quiz.items.length; i++){
+			var item = quiz.items[i];
+			item.index = i;
 
-		quiz.items.forEach(function(item){
-
-			if(typeof output_formatters[item.item_type] === 'function'){
-				answers.push(output_formatters[item.item_type](item));
+			if(_ignorable_output_types.indexOf(item.item_type) < 0){
+				answers.push(item);
 			}
-		});
-
+		}
+                
 		return answers;
-	}
+	};
 
 	return _public;
 }]);

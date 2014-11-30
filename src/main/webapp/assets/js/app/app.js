@@ -26,6 +26,10 @@ QuizApp.config(['$routeProvider', function($routeProvider){
 		templateUrl: 'assets/js/app/views/quiz/quiz_answers.html',
 		controller: 'QuizAnswersController'
 	})
+	.when('/quiz/:quizId/statistics', {
+		templateUrl: 'assets/js/app/views/quiz/quiz_statistics.html',
+		controller: 'QuizStatisticsController'
+	})
 	.when('/user/:userHash', {
 		templateUrl: '/assets/js/app/views/quiz/reviews.html',
 		controller: 'ReviewsController'
