@@ -168,7 +168,7 @@ public class QuizService {
         return qa;
     }
     
-    public UserData[] getUserData(long quizId) {
+    public List<UserData> getUserData(long quizId) {
         UserDataModel model = new UserDataModel();
         Quiz quiz = quizRepo.findOne(quizId);
         List<User> users = answerRepo.findUserByQuiz(quiz);

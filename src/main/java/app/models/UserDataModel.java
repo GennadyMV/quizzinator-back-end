@@ -6,6 +6,7 @@
 package app.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -22,13 +23,8 @@ public class UserDataModel {
         data.add(userdata);
     }
     
-    public UserData[] getData() {
-        UserData[] userdata = new UserData[data.size()];
-        
-        for(int i=0;i<data.size();i++){
-            userdata[i] = data.get(i);
-        }
-        return userdata;
+    public List<UserData> getData() {
+        return data;
     }
 
     public static class UserData {
