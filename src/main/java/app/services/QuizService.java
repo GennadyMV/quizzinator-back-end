@@ -8,10 +8,13 @@ import app.domain.User;
 import app.exceptions.DeadlinePassedException;
 import app.exceptions.InvalidIdCombinationException;
 import app.models.NewAnswerResponseModel;
+import app.models.UserDataModel;
+import app.models.UserDataModel.UserData;
 import app.repositories.PeerReviewRepository;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
 import java.util.List;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -163,5 +166,28 @@ public class QuizService {
         }
         answerRepo.delete(qa);
         return qa;
+    }
+    
+    public UserData[] getUserData(long quizId) {
+        UserDataModel model = new UserDataModel();
+        Quiz quiz = quizRepo.findOne(quizId);
+        List<User> users = answerRepo.findUserByQuiz(quiz);
+        
+        for(int i=0;i<users.size();i++) {
+            User user = users.get(i);
+            boolean improved = false;
+            QuizAnswer answer = answerRepo.findByQuizAndUserOrderByDateDesc(quiz, user).get(i);
+            while(!improved){
+                if(answer.getPreviousAnswer() != null && answer.getPeerReviews() != null) {
+                    improved = true;
+                } else if(answer.getPreviousAnswer() == null) {
+                    break;
+                }
+            }
+            model.addData(new UserData(user.getName(), answerRepo.countByUserAndQuiz(user,quiz), improved));
+            
+        }
+        
+        return model.getData();
     }
 }
