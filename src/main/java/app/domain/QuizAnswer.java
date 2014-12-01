@@ -48,7 +48,7 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     
     @NotBlank
     //should be lob, but for H2 length is required
-    @Column(length = 4000)
+    @Column(length = 40000)
     @Lob
     private String answer;
 

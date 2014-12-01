@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.domain.QuizAnswer;
+import app.domain.User;
 import app.exceptions.NotFoundException;
 import app.models.NewAnswerResponseModel;
 import app.repositories.QuizAnswerRepository;
@@ -77,5 +78,14 @@ public class QuizAnswerController {
             produces = "application/json; charset=UTF-8")
     public QuizAnswer deleteAnswer(@PathVariable Long quizId, @PathVariable Long answerId) {
         return quizService.deleteAnswer(quizId, answerId);
+    }
+    
+    @Transactional
+    @ResponseBody
+    @RequestMapping(value = "/answer/{quizId}/users", method = RequestMethod.GET,
+            produces = "application/json; charset=UTF-8")
+    public List<User> getUsersByQuiz(@PathVariable Long quizId) {
+        List<User> users = answerRepo.findUserByQuiz(quizRepo.findOne(quizId));
+        return users;
     }
 }
