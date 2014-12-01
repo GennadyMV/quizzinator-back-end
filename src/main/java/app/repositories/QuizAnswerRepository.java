@@ -26,7 +26,7 @@ public interface QuizAnswerRepository extends JpaRepository<QuizAnswer, Long> {
     public List<QuizAnswer> findByQuizAndUser(Quiz q, User user);
     public List<QuizAnswer> findByQuizAndUser(Quiz q, User user, Pageable pageable);
     public List<QuizAnswer> findByUser(User user);
-    public List<QuizAnswer> findByQuizAndUserOrderByDateDesc(Quiz quiz, User user);
+    public List<QuizAnswer> findByQuizAndUserOrderByAnswerDateDesc(Quiz quiz, User user);
     public Long countByUserAndQuiz(User user, Quiz quiz);
     public Long countByUserAndQuizAndAnswerDateBefore(User user, Quiz quiz, Date answerDate);
     @Query("select distinct qa.user from QuizAnswer qa where qa.quiz = :quiz")

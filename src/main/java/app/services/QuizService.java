@@ -176,7 +176,7 @@ public class QuizService {
         for(int i=0;i<users.size();i++) {
             User user = users.get(i);
             boolean improved = false;
-            QuizAnswer answer = answerRepo.findByQuizAndUserOrderByDateDesc(quiz, user).get(i);
+            QuizAnswer answer = answerRepo.findByQuizAndUserOrderByAnswerDateDesc(quiz, user).get(0);
             while(!improved){
                 if(answer.getPreviousAnswer() != null && answer.getPeerReviews() != null) {
                     improved = true;
