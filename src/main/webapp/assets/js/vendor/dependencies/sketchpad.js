@@ -39,7 +39,6 @@ jQuery.browser = browser;
  */
 
 (function(Raphael) {
-
 	/**
 	 * Function to create SketchPad object.
 	 */
@@ -896,7 +895,6 @@ Raphael.fn.display = function(elements) {
 		this[type]().attr(e);
 	}
 };
-
 
 /**
  * Utility functions to compare objects by Phil Rathe.
