@@ -1,6 +1,7 @@
 package app.services;
 
 import app.domain.Quiz;
+import app.domain.QuizAnswer;
 import app.domain.User;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
@@ -50,14 +51,42 @@ public class QuizServiceTest {
     public void tearDown() {
     }
 
-//    @Test
-//    public void testValidateAnswerQuizCombination() {
-//    }
+    @Test
+    public void testValidateAnswerQuizCombination() {
+        when(qr.findOne(1L)).thenReturn(null);
+        when(qar.findOne(1L)).thenReturn(null);
+        
+        boolean thrown = false;
+        try {
+            qs.validateAnswerQuizCombination(1L, 1L);
+        } catch (Exception e) {
+            thrown = true;
+        }
+        
+        assertTrue(thrown);
+    }
 
     @Test
     public void testIsValidAnswerQuizCombinationWithNonExistentQuizAndAnswer() {
         when(qr.findOne(1L)).thenReturn(null);
         when(qar.findOne(1L)).thenReturn(null);
+        assertFalse(qs.isValidAnswerQuizCombination(1L, 1L));
+    }
+
+    @Test
+    public void testIsValidAnswerQuizCombinationWithWrongAnswerId() {
+        Quiz q1 = mock(Quiz.class);
+        when(q1.getId()).thenReturn(1L);
+        
+        Quiz q2 = mock(Quiz.class);
+        when(q2.getId()).thenReturn(2L);
+        
+        QuizAnswer qa = mock(QuizAnswer.class);
+        when(qa.getQuiz()).thenReturn(q2);
+        
+        when(qr.findOne(1L)).thenReturn(q1);
+        when(qar.findOne(1L)).thenReturn(qa);
+        
         assertFalse(qs.isValidAnswerQuizCombination(1L, 1L));
     }
 
