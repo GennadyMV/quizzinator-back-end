@@ -6,11 +6,25 @@ import javax.persistence.FetchType;
 import javax.persistence.Lob;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+/**
+ * File saved to the database.
+ * Used for pictures uploaded by quiz creators.
+ */
 @Entity
 public class FileObject extends AbstractPersistable<Long> {
-
+    /**
+     * Original filename of the uploaded file.
+     */
     private String name;
+    
+    /**
+     * mime-type of the file
+     */
     private String mediaType;
+    
+    /**
+     * file size in bytes
+     */
     private Long size; 
 
     @Lob
