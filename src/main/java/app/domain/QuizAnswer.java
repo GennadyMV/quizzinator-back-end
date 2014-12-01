@@ -20,6 +20,9 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+/**
+ * Answer of a quiz.
+ */
 @Entity
 @Table(name = "answers")
 @JsonIgnoreProperties(value = "new")
@@ -32,39 +35,65 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     @JsonIgnore
     private List<PeerReview> peerReviews;
     
+    /**
+     * The answerer user.
+     */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
     
+    /**
+     * A string filed for username to be used when deserializing quiz from JSON
+     */
     @Transient
     private String username;
     
+    /**
+     * IP address of the user who submitted this answer.
+     * Saved for security reasons and to help removing malicious spam
+     */
     @JsonIgnore
     private String ip;
     
-    @URL
+    /**
+     * URL of the answer submitting POST-request.
+     */
     @JsonIgnore
     private String url;
     
-    @NotBlank
-    //should be lob, but for H2 length is required
+    /**
+     * The answer in JSON format.
+     * Contains an array of elements for every Quiz item. Never parsed or 
+     * interpreted in back-end. Passed to the front-end as it.
+     * Should be lob in database, but H2 requires defining a length
+     */
     @Column(length = 40000)
+    @NotBlank
     @Lob
     private String answer;
-
-//    @JsonIgnore
-//    @Column(nullable = false)
-//    private Integer reviewCount = 0;
     
+    /**
+     * Is this answer a placeholder.
+     * Placeholder answers can be created by the Quiz administrator to give the
+     * first answerers something to give review to.
+     */
     @JsonIgnore
     @Column(nullable = false)
     private Boolean placeholder = false;
     
+    /**
+     * Timestamp of the answer.
+     * Set in back-end before persisting.
+     */
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date answerDate;
     
-    @OneToOne(optional = true)
+    /**
+     * Link to user's previous answer.
+     * If a user answers multiple times to the quiz, answers are linked together
+     */
     @JsonIgnore
+    @OneToOne(optional = true)
     private QuizAnswer previousAnswer;
 
     public Quiz getQuiz() {
@@ -98,11 +127,11 @@ public class QuizAnswer extends AbstractPersistable<Long> {
     public void setIp(String ip) {
         this.ip = ip;
     }
-    
+
     public String getUrl() {
         return url;
     }
-    
+
     public void setUrl(String url) {
         this.url = url;
     }
@@ -129,14 +158,6 @@ public class QuizAnswer extends AbstractPersistable<Long> {
         if (this.user == null) return null;
         return this.user.getName();
     }
-
-//    public Integer getReviewCount() {
-//        return reviewCount;
-//    }
-//
-//    public void setReviewCount(Integer reviewCount) {
-//        this.reviewCount = reviewCount;
-//    }
 
     public Boolean getPlaceholder() {
         return placeholder;

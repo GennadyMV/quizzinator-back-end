@@ -9,22 +9,39 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import org.springframework.data.jpa.domain.AbstractPersistable;
-//TODO: this doesnt make much sense yet.
-//hash is (was?) supposed to protect peoples answers
 
+/**
+ * Users are course students or other unauthenticated participants who are able
+ * to answer quizzes, give and get peer review and rate reviews.
+ * 
+ * TODO: Some of this doesn't make much sense.
+ * hash is (was?) supposed to be used as a token to access one's own answers, but
+ * there are ways to gain unauthenticated access to these things and no real
+ * authentication of users
+ */
 @Entity(name = "review_user")
 @JsonIgnoreProperties(value = "new")
 @JsonSerialize(using = UserJsonSerializer.class)
 @JsonDeserialize(using = UserJsonDeserializer.class)
 public class User extends AbstractPersistable<Long> {
+    /**
+     * username.
+     * Must be unique.
+     */
     @Column(unique = true)
     private String name;
     
+    /**
+     * Hash of the username and salt.
+     * Not really used in any sensible manner at the moment.
+     */
     @Column(name = "user_hash", unique = true)
     private String hash;
     
-    //determines the amount of reviews given to user
-    //eg.  reviewWeight=2, user gets twice as much reviews as other users
+    /**
+     * Determines the amount of reviews given to user.
+     * eg. reviewWeight=2, user gets twice as much reviews as other users
+     */
     @Column(nullable = false)
     private Double reviewWeight = 1.0;
     
@@ -36,6 +53,10 @@ public class User extends AbstractPersistable<Long> {
         return name;
     }
 
+    /**
+     * Sets also the hash of the user using HashService
+     * @param name username
+     */
     public void setName(String name) {
         this.hash = HashService.HashUsername(name);
         this.name = name;

@@ -42,7 +42,7 @@ public class Quiz extends AbstractPersistable<Long> {
 
     /**
      * Last day to submit answers.
-     * Answers can be submitted arfter this deadline is answer improving is
+     * Answers can be submitted after this deadline is answer improving is
      * allowed by answerImproveStart and answerImproveDeadline.
      */
     @Temporal(TemporalType.DATE)

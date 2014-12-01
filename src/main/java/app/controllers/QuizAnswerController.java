@@ -38,6 +38,7 @@ public class QuizAnswerController {
             @Valid @RequestBody QuizAnswer quizAnswer, 
             HttpServletRequest request) {
         
+        quizAnswer.setUrl(request.getScheme() + "://" + request.getServerName() + ':' + request.getServerPort() + request.getRequestURI());
         quizAnswer.setIp(request.getRemoteAddr());
         return quizService.submitAnswer(quizAnswer, quizId);
     }
