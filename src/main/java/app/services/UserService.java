@@ -2,6 +2,7 @@ package app.services;
 
 import app.domain.User;
 import app.repositories.UserRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,4 +34,17 @@ public class UserService {
         return u;
     }
 
+    public List<User> getUsersWithWeight() {
+        return userRepo.findByReviewWeightGreaterThan(1.0);
+    }
+
+    public void setUsersWeight(List<String> usernames, Double weight) {
+        List<User> users = new ArrayList<User>(usernames.size());
+        for (String username : usernames) {
+            User u = getOrCreateUser(username);
+            users.add(u);
+            u.setReviewWeight(weight);
+        }
+        userRepo.save(users);
+    }
 }

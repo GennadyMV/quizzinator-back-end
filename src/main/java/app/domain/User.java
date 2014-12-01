@@ -3,14 +3,11 @@ package app.domain;
 import app.deserializers.UserJsonDeserializer;
 import app.serializers.UserJsonSerializer;
 import app.services.HashService;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.IdClass;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 //TODO: this doesnt make much sense yet.
 //hash is (was?) supposed to protect peoples answers

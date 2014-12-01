@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
+import app.models.UserDataModel.UserData;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
 import java.util.List;
@@ -93,5 +94,12 @@ public class QuizController {
         quizRepo.save(newQuiz);
         
         return "redirect:/quiz/" + quizId;
+    }
+    
+    @Transactional
+    @ResponseBody
+    @RequestMapping(value = "/{quizId}/userData", method = RequestMethod.GET, produces = "application/json")
+    public List<UserData> getUserData(@PathVariable Long quizId) {
+        return quizService.getUserData(quizId);
     }
 }
