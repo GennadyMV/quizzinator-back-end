@@ -141,16 +141,16 @@ public class PeerReviewController {
     @ResponseBody
     @RequestMapping(value = "/preferredUsers", method = RequestMethod.POST, consumes = "application/json")
     @Transactional
-    public String addPreferredUsers(@RequestBody List<User> users) {
-        userService.setUsersWeight(users, 2.0);
+    public String addPreferredUsers(@RequestBody List<String> usernames) {
+        userService.setUsersWeight(usernames, 2.0);
         return "";
     }
     
     @ResponseBody
     @RequestMapping(value = "/preferredUsers", method = RequestMethod.DELETE, consumes = "application/json")
     @Transactional
-    public String deletePreferredUsers(@RequestBody List<User> users) {
-        userService.setUsersWeight(users, 1.0);
+    public String deletePreferredUsers(@RequestBody List<String> usernames) {
+        userService.setUsersWeight(usernames, 1.0);
         return "";
     }
     
