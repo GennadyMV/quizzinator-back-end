@@ -31,7 +31,6 @@ public class PeerReviewController {
     @Autowired
     private UserService userService;
     
-    
     @Autowired
     private UserRepository userRepo;
     
@@ -137,5 +136,28 @@ public class PeerReviewController {
             throw new InvalidParameterException("username or userhash parameter expected");
         }
         reviewService.rateReview(quizId, answerId, reviewId, user, rating);
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/preferredUsers", method = RequestMethod.POST, consumes = "application/json")
+    @Transactional
+    public String addPreferredUsers(@RequestBody List<User> users) {
+        userService.setUsersWeight(users, 2.0);
+        return "";
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/preferredUsers", method = RequestMethod.DELETE, consumes = "application/json")
+    @Transactional
+    public String deletePreferredUsers(@RequestBody List<User> users) {
+        userService.setUsersWeight(users, 1.0);
+        return "";
+    }
+    
+    @ResponseBody
+    @RequestMapping(value = "/preferredUsers", method = RequestMethod.GET, produces = "application/json")
+    @Transactional
+    public List<User> listPreferredUsers() {
+        return userService.getUsersWithWeight();
     }
 }

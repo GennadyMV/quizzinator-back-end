@@ -33,4 +33,14 @@ public class UserService {
         return u;
     }
 
+    public List<User> getUsersWithWeight() {
+        return userRepo.findByReviewWeightGreaterThan(1.0);
+    }
+
+    public void setUsersWeight(List<User> users, Double weight) {
+        for (User user : users) {
+            user.setReviewWeight(weight);
+        }
+        userRepo.save(users);
+    }
 }
