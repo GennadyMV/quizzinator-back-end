@@ -1,3 +1,28 @@
+<ul class="nav nav-tabs" role="tablist">
+	<li><a href="#/quiz/{{quiz_id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
+	<li><a href="#/quiz/{{quiz_id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
+	<li><a href="#/quiz/{{quiz_id}}/share"><i class="fa fa-share"></i> Share</a></li>
+	<li><a href="#/quiz/{{quiz_id}}/answers"><i class="fa fa-user"></i> Answers</a></li>
+	<li class="active"><a href="#/quiz/{{quiz_id}}/statistics"><i class="fa fa-area-chart"></i> Statistics</a></li>
+</ul>
+
 <div class="page-header">
 	<h1>Statistics</h1>
 </div>
+
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Username</th>
+			<th>Number of answers</th>
+			<th>Has improved answer</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="stat in statistics">
+			<td>{{stat.username}}</td>
+			<td><span class="badge">{{stat.numberOfAnswers}}</span></td>
+			<td><span class="label" ng-class="{ 'label-danger': !stat.hasImproved, 'label-success': stat.hasImproved }"><span ng-show="stat.hasImproved">yes</span><span ng-hide="stat.hasImproved">no</span></span></td>
+		</tr>
+	</tbody>
+</table>

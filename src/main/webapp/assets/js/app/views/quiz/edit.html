@@ -4,6 +4,7 @@
         <li><a href="#/quiz/{{$parent.quiz.id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
         <li><a href="#/quiz/{{$parent.quiz.id}}/share"><i class="fa fa-share"></i> Share</a></li>
         <li><a href="#/quiz/{{$parent.quiz.id}}/answers"><i class="fa fa-user"></i> Answers</a></li>
+        <li><a href="#/quiz/{{quiz.id}}/statistics"><i class="fa fa-area-chart"></i> Statistics</a></li>
     </ul>
 
     <div class="page-header page-header-button">
@@ -28,7 +29,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label>Options</label>
-                
+
                 <div class="checkbox" style="margin-top: 0px;">
                     <label>
                         <input type="checkbox" ng-model="$parent.quiz.reviewable">
@@ -42,12 +43,12 @@
                         Open this quiz by default
                     </label>
                 </div>
-                
+
                 <div class="form-group" ng-show="$parent.quiz.reviewable">
                     <label>Number of review rounds</label>
                     <input type="text" class="form-control" ng-model="$parent.quiz.reviewRounds">
                 </div>
-                
+
                 <div class="form-group">
                     <label>Answer deadline</label>
                     <input type="text" class="form-control" ng-model="$parent.quiz.answerDeadline" datepicker>
