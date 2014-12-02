@@ -21,7 +21,11 @@ public class Quiz extends AbstractPersistable<Long> {
     @NotNull
     private String title;
 
-    //should be lob, but for H2 length is required
+    /**
+     * A json lob used by the front-end to render quiz fields, questions, items.
+     * Back-end never interprets this data, only passed to the front as is
+     * Should be lob in database, but H2 requires defining a length
+     */
     @Column(length = 4000)
     @Lob
     private String items;
@@ -30,29 +34,66 @@ public class Quiz extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "quiz")
     private List<QuizAnswer> quizAnswers;
 
+    /**
+     * Quiz answers can be peer reviewed.
+     */
     @NotNull
     private boolean reviewable;
 
+    /**
+     * Last day to submit answers.
+     * Answers can be submitted after this deadline is answer improving is
+     * allowed by answerImproveStart and answerImproveDeadline.
+     */
     @Temporal(TemporalType.DATE)
     private Date answerDeadline;
 
+    /**
+     * Last day to submit reviews for quiz answers.
+     */
     @Temporal(TemporalType.DATE)
     private Date reviewDeadline;
     
+    /**
+     * Answer improving period starts this day.
+     * Answers may be improved after the initial deadline (answerDeadline), 
+     * but no new answers are allowed after it.
+     */
     @Temporal(TemporalType.DATE)
     private Date answerImproveStart;
     
+    /**
+     * Answer improving period ends this day.
+     * After this no answers can be submitted at all.
+     */
     @Temporal(TemporalType.DATE)
     private Date answerImproveDeadline;
 
+    /**
+     * True if the user has answered the quiz already as least once.
+     * Not stored to database, set separately for each request in service.
+     */
     @Transient
     private boolean answered;
 
+    /**
+     * Quiz-box in site is expanded by default.
+     */
     private Boolean isOpen;
 
+    /**
+     * Number of answer pairs given to the user to be reviewed.
+     * By default user is offered only one pair of answers and they pick one and
+     * review it.
+     */
     @Column(nullable = false)
     private Integer reviewRounds = 1;
     
+    /**
+     * User's last answer to this quiz.
+     * This is not stored to database, but fetched separately in QuizService if
+     * needed
+     */
     @Transient
     private QuizAnswer myLatestAnswer;
 
@@ -86,11 +127,6 @@ public class Quiz extends AbstractPersistable<Long> {
 
     public void setReviewable(boolean reviewable) {
         this.reviewable = reviewable;
-    }
-
-    @JsonProperty(value = "answered")
-    public boolean isAnswered() {
-        return answered;
     }
 
     @JsonProperty(value = "answeringExpired")
@@ -128,6 +164,11 @@ public class Quiz extends AbstractPersistable<Long> {
     @JsonIgnore
     public void setAnswered(boolean answered) {
         this.answered = answered;
+    }
+
+    @JsonProperty(value = "answered")
+    public boolean isAnswered() {
+        return answered;
     }
 
     public void setIsOpen(Boolean isOpen) {

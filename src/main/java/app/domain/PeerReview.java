@@ -10,18 +10,35 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+/**
+ * Peer review given to an answer.
+ * Users can give textual peer reviews to answers submitted by other users
+ */
 @Entity
 @JsonIgnoreProperties(value = "new")
 public class PeerReview extends AbstractPersistable<Long> {
+    /**
+     * The answer this review is directed at
+     */
     @ManyToOne
     @JsonIgnore
     private QuizAnswer quizAnswer;
     
+    /**
+     * The user who gave this review.
+     */
     @ManyToOne
     private User reviewer;
     
+    /**
+     * Textual review of the answer.
+     * No HTML, only text.
+     */
     private String review;
     
+    /**
+     * Peer reviews can be rated as good or bad.
+     */
     @JsonIgnore
     @OneToMany(mappedBy = "review", fetch = FetchType.EAGER)
     private List<ReviewRating> ratings;
@@ -62,6 +79,12 @@ public class PeerReview extends AbstractPersistable<Long> {
         this.ratings = ratings;
     }
     
+    /**
+     * Sums the ratings of this review.
+     * If the value is negative, review has received more negative than positive
+     * ratings.
+     * @return a negative or positive integer. smaller is worse
+     */
     public Integer getTotalRating() {
         int total = 0;
         for (ReviewRating rating : ratings) {

@@ -31,7 +31,16 @@ module.exports = function(grunt) {
         'css/site.min.css': ['css/site.min.css', 'css/vendor/*.css']
       }
     }
-  }
+		},
+		concat: {
+			options: {
+				separator: ';'
+			},
+			dist: {
+        src: ['js/vendor/dependencies/jquery.min.js', 'js/vendor/dependencies/jquery-ui.min.js' ,'js/vendor/dependencies/angular.min.js','js/vendor/dependencies/*.js', 'js/app/app.js', 'js/app/services/*.js', 'js/app/directives/*.js', 'js/app/controllers/*.js', 'js/ui/application.js'],
+        dest: 'js/quiznator.min.js'
+			}
+		}
   });
 
   grunt.loadNpmTasks('grunt-contrib-cssmin');
