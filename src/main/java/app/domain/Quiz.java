@@ -26,6 +26,7 @@ public class Quiz extends AbstractPersistable<Long> {
      * A json lob used by the front-end to render quiz fields, questions, items.
      * Back-end never interprets this data, only passed to the front as is
      * Should be lob in database, but H2 requires defining a length
+     * Type-annotation is for PostgreSQL
      */
     @Column(length = 4000)
     @Type(type = "text")
