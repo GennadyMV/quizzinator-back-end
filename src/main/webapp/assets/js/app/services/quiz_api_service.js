@@ -27,7 +27,7 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                         options.error();
                     });
         }
-          
+
         _public.vote_review = function(options){
           $http({
             method: 'POST',
@@ -169,8 +169,8 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
         _public.upload_image = function(options) {
             var data = new FormData();
             data.append('image', options.image);
-            
-            
+
+
             $http.post('images', data, {
                 transformRequest: angular.identity,
                 headers: {'Content-Type': undefined}
@@ -199,8 +199,12 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                 url: '' + options.username
             })
             .success(function(){
-                
+
             })
+        }
+
+        _public.get_statistics = function(options){
+          $http.get('quiz/' + options.quiz_id + '/userData').success(function(data){ options.success(data); });
         }
 
 
