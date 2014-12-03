@@ -13,6 +13,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Entity
@@ -27,6 +28,7 @@ public class Quiz extends AbstractPersistable<Long> {
      * Should be lob in database, but H2 requires defining a length
      */
     @Column(length = 4000)
+    @Type(type = "text")
     @Lob
     private String items;
 
