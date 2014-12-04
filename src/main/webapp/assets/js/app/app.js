@@ -30,6 +30,10 @@ QuizApp.config(['$routeProvider', function($routeProvider){
 		templateUrl: 'assets/js/app/views/quiz/quiz_statistics.html',
 		controller: 'QuizStatisticsController'
 	})
+	.when('/quiz/:quizId/review-preferences', {
+		templateUrl: 'assets/js/app/views/quiz/peer_review_preferences.html',
+		controller: 'ReviewPreferencesController'
+	})
 	.when('/user/:userHash', {
 		templateUrl: '/assets/js/app/views/quiz/reviews.html',
 		controller: 'ReviewsController'
