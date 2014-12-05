@@ -183,20 +183,34 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
             });
         }
 
-        _public.save_username = function(options) {
+        _public.save_usernames = function(options) {
             $http({
                 method: 'POST',
-                url: '' + options.username
+                url: 'preferredUsers/',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: options.usernames
             })
             .success(function(){
 
             })
         }
 
-        _public.delete_username = function(options) {
+        _public.delete_usernames = function(options) {
             $http({
-                method: 'POST',
-                url: '' + options.username
+                method: 'DELETE',
+                url: 'preferredUsers/'
+            })
+            .success(function(){
+
+            })
+        }
+
+        _public.get_usernames = function(options) {
+            $http({
+                metod: 'GET',
+                url: 'preferredUsers/'
             })
             .success(function(){
 

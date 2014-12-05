@@ -16,8 +16,8 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
+import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.URL;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
@@ -66,8 +66,10 @@ public class QuizAnswer extends AbstractPersistable<Long> {
      * Contains an array of elements for every Quiz item. Never parsed or 
      * interpreted in back-end. Passed to the front-end as it.
      * Should be lob in database, but H2 requires defining a length
+     * Type-annotation is for PostgreSQL
      */
     @Column(length = 40000)
+    @Type(type = "text")
     @NotBlank
     @Lob
     private String answer;
