@@ -200,7 +200,11 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
         _public.delete_usernames = function(options) {
             $http({
                 method: 'DELETE',
-                url: 'preferredUsers/'
+                url: 'preferredUsers/',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                data: options.usernames
             })
             .success(function(){
 
@@ -212,8 +216,8 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                 metod: 'GET',
                 url: 'preferredUsers/'
             })
-            .success(function(){
-
+            .success(function(data){
+                options.success(data);
             })
         }
 

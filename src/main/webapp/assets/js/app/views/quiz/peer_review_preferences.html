@@ -9,18 +9,18 @@
 
     <div class="page-header page-header-button">
         <h1>Peer Review Preferences</h1>
-        <button class="btn btn-primary pull-right btn-header" ng-click="save_usernames()" id="save-usernames"><i class="fa fa-check"></i> Save</button>
-
     </div>
 
     <div class="form-group">
         <label>Usernames</label>
-        <textarea class="form-control" rows="8" placeholder="Put each username on a separate line" ng-model="usernames"></textarea>
+        <textarea class="form-control" rows="8" placeholder="Put each username on a separate line" ng-model="username_field"></textarea>
+        <button class="btn btn-primary pull-right btn-header" ng-click="delete_usernames()" id="delete-usernames"><i class="fa fa-close"></i> Delete</button>
+        <button class="btn btn-primary pull-right btn-header" ng-click="save_usernames()" id="save-usernames"><i class="fa fa-check"></i> Save</button>
     </div>
 
 
+    <label>Current preferred users</label>
     <div class="current-preferred-users" ng-repeat="name in current_usernames">
-        <label>Current preferred users</label>
         {{name}}
     </div>
 
