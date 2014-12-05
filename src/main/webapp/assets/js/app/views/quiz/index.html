@@ -7,9 +7,8 @@
 	<li class="media" ng-repeat="quiz in quizes">
 		<div class="pull-left" style="margin-right: 25px;">
 			<button class="btn btn-primary btn-sm btn-block" ng-click="clone_quiz(quiz)" id="clone-quiz"><i class="fa fa-flask"></i> Clone</button>
-			<a href="#" class="btn btn-danger btn-sm btn-block"><i class="fa fa-times"></i> Remove</a>
 		</div>
-            
+
 
 		<div class="media-body">
 			<h4 class="media-heading"><a href="#/quiz/{{quiz.id}}/edit">{{quiz.title}}</a></h4>
