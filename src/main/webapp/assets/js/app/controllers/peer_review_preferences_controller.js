@@ -24,15 +24,6 @@ QuizApp.controller('ReviewPreferencesController', ['$scope', '$routeParams', 'Qu
 		});
 	}
 
-	$scope.delete_usernames = function() {
-		$scope.usernames = $scope.username_field.split('\n');
-		QuizAPI.delete_usernames({
-			usernames: $scope.usernames,
-			success: function() {
-
-			}
-		});
-	}
 
 	$scope.get_usernames = function() {
 		QuizAPI.get_usernames({
