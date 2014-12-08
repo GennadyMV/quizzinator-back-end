@@ -220,10 +220,6 @@ public class QuizAnswerControllerTest {
         MvcResult result = mockMvc.perform(get("/quiz/1/answer")).andReturn();
         JSONArray array = new JSONArray(result.getResponse().getContentAsString());
         assertEquals(3, array.length());
-        
-//        result = mockMvc.perform(get("/answer")).andReturn();
-//        array = new JSONArray(result.getResponse().getContentAsString());
-//        assertEquals(6, array.length());
     }
     
     @Test

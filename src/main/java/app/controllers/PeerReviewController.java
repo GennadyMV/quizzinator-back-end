@@ -2,7 +2,6 @@ package app.controllers;
 
 import app.domain.PeerReview;
 import app.domain.QuizAnswer;
-import app.domain.ReviewRating;
 import app.domain.User;
 import app.exceptions.InvalidParameterException;
 import app.models.UsersReviewModel;
@@ -44,13 +43,6 @@ public class PeerReviewController {
     @Autowired
     private ReviewService reviewService;
     
-//    @ResponseBody
-//    @RequestMapping(value = "/review", method = RequestMethod.GET, produces="application/json")
-//    @Transactional
-//    public List<PeerReview> getReviews() {
-//        return reviewRepo.findAll();
-//    }
-    
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/reviews", method = RequestMethod.GET, produces="application/json")
     @Transactional
@@ -75,7 +67,7 @@ public class PeerReviewController {
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.GET, produces="application/json")
     @Transactional
     public List<PeerReview> getAnswerReviews(@PathVariable Long quizId, @PathVariable Long answerId) {
-        return quizService.getReviewsByAnswer(answerId, quizId);
+        return reviewService.getReviewsByAnswer(answerId, quizId);
     }
     
     @ResponseBody
@@ -84,7 +76,7 @@ public class PeerReviewController {
     public PeerReview getReview(@PathVariable Long quizId, @PathVariable Long answerId, @PathVariable Long reviewId) {
         quizService.validateAnswerQuizCombination(answerId, quizId);
         reviewService.validateAnswerReviewCombination(answerId, reviewId);
-        return reviewRepo.findOne(reviewId);
+        return reviewService.getReview(reviewId);
     }
     
     @ResponseBody

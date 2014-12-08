@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -94,7 +93,6 @@ public class ReviewService {
         }
         
         QuizAnswer qa = answerRepo.findOne(answerId);
-//        qa.setReviewCount(qa.getReviewCount()+1);
         review.setQuizAnswer(qa);
         
         User reviewer = userService.getOrCreateUser(review.getReviewer().getName());
@@ -138,7 +136,6 @@ public class ReviewService {
             reviewRating = oldRating.get(0);
         } else {
             reviewRating = new ReviewRating();
-            review.incrementRateCount();
         }
         
         reviewRating.setReview(review);
@@ -153,19 +150,19 @@ public class ReviewService {
         User u = userService.getOrCreateUser(username);
         Quiz q = quizRepo.findOne(quizId);
         
-        PageRequest pageRequest = new PageRequest(0, reviewCount, Sort.Direction.ASC, "rateCount");
-//        PageRequest pageRequest = new PageRequest(0, reviewCount);
+        PageRequest pageRequest = new PageRequest(0, reviewCount);
         List<PeerReview> reviews = reviewRepo.findForRate(u, q, pageRequest);
         
-        return reviews;
+        return fillRateInfoFields(reviews);
     }
 
     public List<PeerReview> getReviewsByUsername(String username) {
         User u = userService.getOrCreateUser(username);
         
         List<QuizAnswer> answers = answerRepo.findByUser(u);
+        List<PeerReview> reviews = reviewRepo.findByQuizAnswerIn(answers);
         
-        return reviewRepo.findByQuizAnswerIn(answers);
+        return fillRateInfoFields(reviews);
     }
 
     public List<PeerReview> getReviewsByQuizAndReviewee(Long quizId, String username) {
@@ -181,6 +178,28 @@ public class ReviewService {
         } else {
             reviews = reviewRepo.findByQuizAnswerIn(answers);
         }
+        return fillRateInfoFields(reviews);
+    }
+    
+    public List<PeerReview> fillRateInfoFields(List<PeerReview> reviews) {
+        for (PeerReview review : reviews) {
+            review.setTotalRating(ratingRepo.sumRatingByReview(review));
+            review.setRateCount(ratingRepo.countByReview(review));
+        }
         return reviews;
+    }
+
+    public PeerReview getReview(Long reviewId) {
+        List<PeerReview> review = new ArrayList<PeerReview>();
+        review.add(reviewRepo.findOne(reviewId));
+        review = fillRateInfoFields(review);
+        return review.get(0);
+    }
+    
+    public List<PeerReview> getReviewsByAnswer(Long answerId, Long quizId) {
+        quizService.validateAnswerQuizCombination(answerId, quizId);
+        
+        QuizAnswer qa = answerRepo.findOne(answerId);
+        return fillRateInfoFields(reviewRepo.findByQuizAnswer(qa));
     }
 }

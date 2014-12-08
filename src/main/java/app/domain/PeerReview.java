@@ -3,11 +3,10 @@ package app.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
@@ -18,7 +17,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @JsonIgnoreProperties(value = "new")
 public class PeerReview extends AbstractPersistable<Long> {
     /**
-     * The answer this review is directed at
+     * The answer this review is directed at.
      */
     @ManyToOne
     @JsonIgnore
@@ -40,12 +39,17 @@ public class PeerReview extends AbstractPersistable<Long> {
      * Peer reviews can be rated as good or bad.
      */
     @JsonIgnore
-    @OneToMany(mappedBy = "review", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "review")
     private List<ReviewRating> ratings;
     
-    //TODO: get rid of this. replace with a COUNT query when needed
-    @Column(nullable = false)
-    private Integer rateCount = 0;
+    @Transient
+    private Long rateCount;
+    
+    @Transient
+    private Long totalRating;
+
+    public PeerReview() {
+    }
     
     public QuizAnswer getQuizAnswer() {
         return quizAnswer;
@@ -79,35 +83,23 @@ public class PeerReview extends AbstractPersistable<Long> {
         this.ratings = ratings;
     }
     
-    /**
-     * Sums the ratings of this review.
-     * If the value is negative, review has received more negative than positive
-     * ratings.
-     * @return a negative or positive integer. smaller is worse
-     */
-    public Integer getTotalRating() {
-        int total = 0;
-        if (ratings != null) {
-            for (ReviewRating rating : ratings) {
-                total += rating.getRating();
-            }
-        }
-        return total;
+    public Long getTotalRating() {
+        return totalRating == null ? 0 : totalRating;
+    }
+
+    public void setTotalRating(Long totalRating) {
+        this.totalRating = totalRating;
+    }
+
+    public Long getRateCount() {
+        return rateCount == null ? 0 : rateCount;
+    }
+
+    public void setRateCount(Long rateCount) {
+        this.rateCount = rateCount;
     }
     
     public Long getAnswerId() {
         return this.quizAnswer.getId();
-    }
-
-    public Integer getRateCount() {
-        return rateCount;
-}
-
-    public void setRateCount(Integer rateCount) {
-        this.rateCount = rateCount;
-    }
-
-    public void incrementRateCount() {
-        this.rateCount++;
     }
 }

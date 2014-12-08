@@ -324,6 +324,7 @@ public class PeerReviewControllerTest {
         
         //get review
         MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
+                .andDo(print())
                 .andReturn().getResponse();
         
         Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
