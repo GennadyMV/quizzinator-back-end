@@ -55,6 +55,12 @@ public class ReviewService {
             return true;
         }
     }
+
+    public void validateAnswerReviewCombination(Long answerId, Long reviewId) {
+        if (!this.isValidAnswerReviewCombination(answerId, reviewId)) {
+            throw new InvalidIdCombinationException("bad answerId, reviewId combination!");
+        }
+    }
     
     public List<UsersReviewModel> getUserReviews(String hash) {
         List<UsersReviewModel> ret = new ArrayList<UsersReviewModel>();
@@ -81,9 +87,7 @@ public class ReviewService {
     }
     
     public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
-        if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) {
-            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
-        }
+        quizService.validateAnswerQuizCombination(answerId, quizId);
         
         if (quizRepo.findOne(quizId).reviewingExpired()) {
             throw new DeadlinePassedException();
@@ -101,14 +105,20 @@ public class ReviewService {
         return newReview;
     }
 
+    
+    /**
+     * Saves new peer review rating.
+     * Checks for parameter sanity and replaces existing rating if user tries to
+     * rate multiple times
+     * @param quizId
+     * @param answerId
+     * @param reviewId
+     * @param user
+     * @param rating
+     */
     public void rateReview(Long quizId, Long answerId, Long reviewId, User user, Integer rating) {
-        if (!quizService.isValidAnswerQuizCombination(answerId, quizId)) {
-            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
-        }
-        
-        if (!this.isValidAnswerReviewCombination(answerId, reviewId)) {
-            throw new InvalidIdCombinationException("bad answerId, reviewId combination!");
-        }
+        quizService.validateAnswerQuizCombination(answerId, quizId);
+        validateAnswerReviewCombination(answerId, reviewId);
         
         if (rating==0) {
             throw new InvalidParameterException("like value must be -1 or 1");
@@ -134,6 +144,7 @@ public class ReviewService {
         reviewRating.setReview(review);
         reviewRating.setRater(user);
         reviewRating.setRating(rating);
+        
         ratingRepo.save(reviewRating);
         reviewRepo.save(review);
     }
@@ -143,6 +154,7 @@ public class ReviewService {
         Quiz q = quizRepo.findOne(quizId);
         
         PageRequest pageRequest = new PageRequest(0, reviewCount, Sort.Direction.ASC, "rateCount");
+//        PageRequest pageRequest = new PageRequest(0, reviewCount);
         List<PeerReview> reviews = reviewRepo.findForRate(u, q, pageRequest);
         
         return reviews;
@@ -161,6 +173,14 @@ public class ReviewService {
         Quiz q = quizRepo.findOne(quizId);
         
         List<QuizAnswer> answers = answerRepo.findByQuizAndUser(q, u);
-        return reviewRepo.findByQuizAnswerIn(answers);
+        List<PeerReview> reviews;
+        
+        if (answers.isEmpty()) {
+            //empty list
+            reviews = new ArrayList<PeerReview>(0);
+        } else {
+            reviews = reviewRepo.findByQuizAnswerIn(answers);
+        }
+        return reviews;
     }
 }

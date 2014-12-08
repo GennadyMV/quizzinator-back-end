@@ -42,7 +42,7 @@ public class PeerReview extends AbstractPersistable<Long> {
     @JsonIgnore
     @OneToMany(mappedBy = "review", fetch = FetchType.EAGER)
     private List<ReviewRating> ratings;
-
+    
     //TODO: get rid of this. replace with a COUNT query when needed
     @Column(nullable = false)
     private Integer rateCount = 0;
@@ -99,7 +99,7 @@ public class PeerReview extends AbstractPersistable<Long> {
 
     public Integer getRateCount() {
         return rateCount;
-    }
+}
 
     public void setRateCount(Integer rateCount) {
         this.rateCount = rateCount;

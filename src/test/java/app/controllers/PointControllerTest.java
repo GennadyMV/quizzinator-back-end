@@ -155,12 +155,12 @@ public class PointControllerTest {
         mockMvc.perform(post("/quiz/1/answer/1/review/1/rate")
                 .param("userhash", user1.getHash())
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         mockMvc.perform(post("/quiz/1/answer/2/review/2/rate")
                 .param("userhash", user2.getHash())
                 .param("rating", "-1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
     }
     
     private void initOverlappingPoints() throws Exception {
@@ -197,11 +197,11 @@ public class PointControllerTest {
         mockMvc.perform(post("/quiz/1/answer/4/review/3/rate")
                 .param("userhash", user1.getHash())
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         mockMvc.perform(post("/quiz/1/answer/3/review/4/rate")
                 .param("userhash", user2.getHash())
                 .param("rating", "-1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
     }
 }

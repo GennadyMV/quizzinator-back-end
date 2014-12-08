@@ -24,5 +24,6 @@ public interface PeerReviewRepository extends JpaRepository<PeerReview, Long> {
             + " and pr not in ("
             + "   select rr2.review from ReviewRating rr2 where rater = :user"
             + ")")
+            //+ " order by count(distinct rr)")
     public List<PeerReview> findForRate(@Param("user") User rater, @Param("quiz") Quiz quiz, Pageable pageable);
 }

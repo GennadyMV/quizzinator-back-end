@@ -319,7 +319,7 @@ public class PeerReviewControllerTest {
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
                 .param("userhash", userhash)
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         
         //get review
@@ -342,7 +342,7 @@ public class PeerReviewControllerTest {
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
                 .param("userhash", userhash)
                 .param("rating", "-1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         
         //get review
@@ -617,12 +617,12 @@ public class PeerReviewControllerTest {
         mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
             .param("username", "user1")
             .param("rating", "1"))
-            .andExpect(status().isOk());
+            .andExpect(status().is3xxRedirection());
         
         mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
             .param("username", "user1")
             .param("rating", "-1"))
-            .andExpect(status().isOk());
+            .andExpect(status().is3xxRedirection());
         
         
         MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answerId + "/review"))
@@ -651,14 +651,14 @@ public class PeerReviewControllerTest {
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
                 .param("userhash", userhash)
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         assertEquals(1, ratingRepo.count());
         
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/2/rate")
                 .param("username", "masa")
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         assertEquals(2, ratingRepo.count());
     }
