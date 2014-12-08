@@ -207,7 +207,7 @@ QuizApp.service('QuizAPI', ['$http', 'AnswerFormatter', function ($http) {
                 data: options.usernames
             })
             .success(function(){
-
+                options.success();
             })
         }
 
