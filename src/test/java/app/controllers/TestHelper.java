@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class TestHelper {
     public static Long addQuizWithOneQuestion(MockMvc mockMvc, 
@@ -74,14 +75,17 @@ public class TestHelper {
         return userhash;
     }
     
-    public static void addAReview(MockMvc mockMvc, Long quizId, Long answerId, String reviewer, String review) throws Exception {
+    public static Long addAReview(MockMvc mockMvc, Long quizId, Long answerId, String reviewer, String review) throws Exception {
         String jsonReview = 
                 "{\"reviewer\":\"" + reviewer + "\"," +
                 "\"review\":\"" + review + "\"}";
         
         String url = "/quiz/" + quizId + "/answer/"+ answerId +"/review";
         
-        mockMvc.perform(post(url).content(jsonReview).contentType(MediaType.APPLICATION_JSON));
+        MockHttpServletResponse response;
+        response = mockMvc.perform(post(url).content(jsonReview).contentType(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+        
+        return TestHelper.getLongByKeyFromJson(response.getContentAsString(), "id");
     }
     
     public static void addAReviewRating(MockMvc mockMvc, Long quizId, Long answerId, Long reviewId, String rater, Integer rating) throws Exception {

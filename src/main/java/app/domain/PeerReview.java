@@ -87,8 +87,10 @@ public class PeerReview extends AbstractPersistable<Long> {
      */
     public Integer getTotalRating() {
         int total = 0;
-        for (ReviewRating rating : ratings) {
-            total += rating.getRating();
+        if (ratings != null) {
+            for (ReviewRating rating : ratings) {
+                total += rating.getRating();
+            }
         }
         return total;
     }

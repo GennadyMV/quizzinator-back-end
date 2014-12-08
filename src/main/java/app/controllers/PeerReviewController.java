@@ -44,12 +44,12 @@ public class PeerReviewController {
     @Autowired
     private ReviewService reviewService;
     
-    @ResponseBody
-    @RequestMapping(value = "/review", method = RequestMethod.GET, produces="application/json")
-    @Transactional
-    public List<PeerReview> getReviews() {
-        return reviewRepo.findAll();
-    }
+//    @ResponseBody
+//    @RequestMapping(value = "/review", method = RequestMethod.GET, produces="application/json")
+//    @Transactional
+//    public List<PeerReview> getReviews() {
+//        return reviewRepo.findAll();
+//    }
     
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/reviews", method = RequestMethod.GET, produces="application/json")
@@ -104,11 +104,12 @@ public class PeerReviewController {
     @ResponseBody
     @RequestMapping(value = "/quiz/{quizId}/answer/{answerId}/review", method = RequestMethod.POST, consumes = "application/json")
     @Transactional
-    public void newReview(
+    public PeerReview newReview(
             @Valid @RequestBody PeerReview review,
             @PathVariable Long quizId,
             @PathVariable Long answerId) {
-        reviewService.saveNewReview(review, answerId, quizId);
+        
+        return reviewService.saveNewReview(review, answerId, quizId);
     }
     
     @ResponseBody

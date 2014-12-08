@@ -64,14 +64,14 @@ public class QuizAnswerController {
         return answerRepo.findByQuiz(quizRepo.findOne(quizId));
     }
     
-    @Transactional
-    @ResponseBody
-    @RequestMapping(value = "/answer", method = RequestMethod.GET,
-            produces = "application/json; charset=UTF-8")
-    public List<QuizAnswer> getAllAnswers() {
-        List<QuizAnswer> answers = answerRepo.findAll();
-        return answers;
-    }
+//    @Transactional
+//    @ResponseBody
+//    @RequestMapping(value = "/answer", method = RequestMethod.GET,
+//            produces = "application/json; charset=UTF-8")
+//    public List<QuizAnswer> getAllAnswers() {
+//        List<QuizAnswer> answers = answerRepo.findAll();
+//        return answers;
+//    }
     
     @Transactional
     @ResponseBody
