@@ -1,5 +1,9 @@
 QuizApp.controller('ReviewPreferencesController', ['$scope', '$routeParams', 'QuizAPI', function($scope, $routeParams, QuizAPI){
-	
+	function users_to_array(users){
+		return users.split('\n');
+	}
+
+
 	$scope.init = function() {
 		$scope.get_usernames();
 	}
@@ -12,23 +16,22 @@ QuizApp.controller('ReviewPreferencesController', ['$scope', '$routeParams', 'Qu
 
 			}
 		});
-	}
-
-	$scope.delete_usernames = function() {
-		$scope.usernames = $scope.username_field.split('\n');
 		QuizAPI.delete_usernames({
-			usernames: $scope.usernames,
+			usernames: $($scope.current_usernames).not($scope.usernames).get(),
 			success: function() {
-
+				$scope.current_usernames = $scope.usernames;
 			}
 		});
 	}
+
 
 	$scope.get_usernames = function() {
 		QuizAPI.get_usernames({
 			success: function(preferred_users) {
 				$scope.current_usernames = preferred_users;
+				$scope.username_field = preferred_users.join('\n');
 			}
 		});
 	}
+
 }]);
