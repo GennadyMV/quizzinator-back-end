@@ -99,6 +99,8 @@ public class Quiz extends AbstractPersistable<Long> {
      */
     @Transient
     private QuizAnswer myLatestAnswer;
+    
+    private String owner;
 
     public String getTitle() {
         return title;
@@ -228,5 +230,13 @@ public class Quiz extends AbstractPersistable<Long> {
 
     public void setAnswerImproveDeadline(Date answerImproveDeadline) {
         this.answerImproveDeadline = answerImproveDeadline;
+    }
+    
+    public String getOwner() {
+        return owner;
+    }
+    
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
