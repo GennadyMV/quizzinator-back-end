@@ -1,4 +1,4 @@
 <label>{{answer.question}}</label>
-<span ng-repeat="check in answer.value">
-	{{check}}<span ng-show="$index != answer.value.length - 1">, </span>
+<span ng-repeat="checkbox in answer.checkboxes | filter:{ value: true }">
+	{{checkbox.title}}<span ng-show="$index != answer.checkboxes.length - 1">, </span>
 </span>
