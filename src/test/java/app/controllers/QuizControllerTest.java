@@ -391,38 +391,56 @@ public class QuizControllerTest {
         assertTrue(answer.equals("hehe"));
     }
     
-//    @Test
-//    @DirtiesContext
-//    public void testGetUserData() throws Exception {
-//        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz", "question1", true);
-//        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
-////        TestHelper.addAnAnswer(mockMvc, "question1", "haha", "vilkku", 2L);
-//        
-////        TestHelper.addAReview(mockMvc, 1L, 1L, "vilkku", "perus masa");
-////        
-////        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
-//        
-//        MvcResult mvcResult = this.mockMvc.perform(get("/quiz/1/userData")
-//                .contentType(MediaType.APPLICATION_JSON))
-//                .andReturn();
-//        
-//        System.out.println("aaaaaaaaaaaaaa");
-//        System.out.println(mvcResult.getResponse().getContentAsString());
-//        
-//        JSONArray returnedData = new JSONArray(mvcResult.getResponse().getContentAsString());
-//        
-//        JSONObject item = returnedData.getJSONObject(0);
-////        JSONObject item2 = returnedData.getJSONObject(1);
-//        
-////        assertTrue(item.getString("username").equals("masa"));
-////        assertTrue(item.getString("numberOfAnswers").equals(1));
-////        assertTrue(item.getBoolean("hasImproved"));
-//        
-////        assertTrue(item2.getString("username").equals("vilkku"));
-////        assertTrue(item2.getString("numberOfAnswers").equals(1));
-////        assertFalse(item2.getBoolean("hasImproved"));
-////        
-//    }
+    @Test
+    @DirtiesContext
+    public void testGetUserDataWithoutImproving() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
+        
+        MvcResult mvcResult = this.mockMvc.perform(get("/quiz/1/userData")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        
+        System.out.println("aaaaaaaaaaaaaa");
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        
+        JSONArray returnedData = new JSONArray(mvcResult.getResponse().getContentAsString());
+        
+        JSONObject item = returnedData.getJSONObject(0);
+        
+        assertTrue(item.getString("username").equals("masa"));
+        assertTrue(item.getLong("numberOfAnswers") == 1);
+        assertFalse(item.getBoolean("hasImproved"));
+        
+    }
+    
+     @Test
+    @DirtiesContext
+    public void testGetUserDataWithImproving() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
+        TestHelper.addAnAnswer(mockMvc, "question1", "haha", "vilkku", 1L);
+        
+        TestHelper.addAReview(mockMvc, 1L, 1L, "vilkku", "perus masa");
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
+        
+        MvcResult mvcResult = this.mockMvc.perform(get("/quiz/1/userData")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        
+        System.out.println("aaaaaaaaaaaaaa");
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        
+        JSONArray returnedData = new JSONArray(mvcResult.getResponse().getContentAsString());
+        
+        JSONObject item = returnedData.getJSONObject(0);
+        
+        assertTrue(item.getString("username").equals("masa"));
+        assertTrue(item.getLong("numberOfAnswers") == 2);
+        assertTrue(item.getBoolean("hasImproved"));
+        
+    }
     
     private void postTestquiz1() throws Exception {
         String jsonQuiz = "{\"title\":\"testquiz1\",\"isOpen\":\"true\",\"items\":\"["
