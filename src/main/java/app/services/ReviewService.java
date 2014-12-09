@@ -164,7 +164,20 @@ public class ReviewService {
         
         return fillRateInfoFields(reviews);
     }
+    
+    public List<PeerReview> getReviewsByAnswer(Long answerId, Long quizId) {
+        quizService.validateAnswerQuizCombination(answerId, quizId);
+        
+        QuizAnswer qa = answerRepo.findOne(answerId);
+        return fillRateInfoFields(reviewRepo.findByQuizAnswer(qa));
+    }
 
+    /**
+     * Finds reviews by reviewee username and quiz id
+     * @param quizId
+     * @param username reviewee username
+     * @return 
+     */
     public List<PeerReview> getReviewsByQuizAndReviewee(Long quizId, String username) {
         User u = userService.getOrCreateUser(username);
         Quiz q = quizRepo.findOne(quizId);
@@ -181,6 +194,12 @@ public class ReviewService {
         return fillRateInfoFields(reviews);
     }
     
+    /**
+     * Fills totalRating and ratingCount fields.
+     * Gets data for fields from the database for every PeerReview object in list
+     * @param reviews list of PeerReviews to handle
+     * @return the same list with same objects
+     */
     public List<PeerReview> fillRateInfoFields(List<PeerReview> reviews) {
         for (PeerReview review : reviews) {
             review.setTotalRating(ratingRepo.sumRatingByReview(review));
@@ -189,17 +208,16 @@ public class ReviewService {
         return reviews;
     }
 
+    /**
+     * Get single PeerReview by id.
+     * Uses findOne from repo and fills transient fields totalRating and rateCount
+     * @param reviewId
+     * @return object from database
+     */
     public PeerReview getReview(Long reviewId) {
-        List<PeerReview> review = new ArrayList<PeerReview>();
-        review.add(reviewRepo.findOne(reviewId));
-        review = fillRateInfoFields(review);
-        return review.get(0);
-    }
-    
-    public List<PeerReview> getReviewsByAnswer(Long answerId, Long quizId) {
-        quizService.validateAnswerQuizCombination(answerId, quizId);
-        
-        QuizAnswer qa = answerRepo.findOne(answerId);
-        return fillRateInfoFields(reviewRepo.findByQuizAnswer(qa));
+        PeerReview review = reviewRepo.findOne(reviewId);
+        review.setTotalRating(ratingRepo.sumRatingByReview(review));
+        review.setRateCount(ratingRepo.countByReview(review));
+        return review;
     }
 }
