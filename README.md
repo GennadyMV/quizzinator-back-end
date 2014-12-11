@@ -1,6 +1,6 @@
 #Kysely- ja vertaispalautesovellus
 
-<a href="https://github.com/kaint-ohtu/ohtu/wiki"><h2>Wiki</h2></a>
+<h2><a href="https://github.com/kaint-ohtu/ohtu/wiki">Wiki</a></h2>
 
 ##CI-palvelin ja sovelluksen tuotantoversio
 [![Build Status](http://aale.users.cs.helsinki.fi/build_pass.php)](http://ohtu.jamo.io/job/kaint-ohtu/)
