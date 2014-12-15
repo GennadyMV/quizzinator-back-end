@@ -2,14 +2,17 @@ package app.controllers;
 
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
-import app.models.UserDataModel.UserData;
+import app.models.UserData;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,7 +34,21 @@ public class QuizController {
     @RequestMapping(method = RequestMethod.GET, produces="application/json")
     @Transactional
     public List<Quiz> getQuizzes() {
-        return quizRepo.findAll();
+        List<Quiz> quizes = new ArrayList<Quiz>();
+        
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name = auth.getName();
+        
+        long count = quizRepo.count();
+        for (long i = 1; i <= count; i++) {
+            Quiz quiz = quizRepo.findOne(i);
+            
+            if (quiz.getOwner().equals(name)) {
+                quizes.add(quiz);
+            }
+        }
+        
+        return quizes;
     }
     
     @ResponseBody
@@ -51,6 +68,10 @@ public class QuizController {
     @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
     @Transactional
     public String newQuiz(@Valid @RequestBody Quiz quiz) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String owner = auth.getName();
+        quiz.setOwner(owner);
+        
         Long id = quizRepo.save(quiz).getId();
         
         return "redirect:/quiz/" + id;

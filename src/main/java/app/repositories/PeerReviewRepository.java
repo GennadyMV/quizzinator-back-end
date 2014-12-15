@@ -17,12 +17,14 @@ public interface PeerReviewRepository extends JpaRepository<PeerReview, Long> {
     
     //find peer reviews for a user to be rated
     //this query filters out user's own PeerReviews and PeerReviews already rated by the user
-    @Query("select distinct pr from PeerReview pr"
+    @Query("select pr from PeerReview pr"
             + " left join pr.ratings rr"
             + " inner join pr.quizAnswer qa"
             + " where pr.reviewer <> :user and qa.quiz = :quiz"
             + " and pr not in ("
             + "   select rr2.review from ReviewRating rr2 where rater = :user"
-            + ")")
+            + ")"
+            + " group by pr"
+            + " order by count(distinct rr)")
     public List<PeerReview> findForRate(@Param("user") User rater, @Param("quiz") Quiz quiz, Pageable pageable);
 }

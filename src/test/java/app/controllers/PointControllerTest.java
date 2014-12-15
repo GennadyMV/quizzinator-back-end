@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,6 +50,8 @@ public class PointControllerTest {
     @Before
     public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken("era", "jorma");
+        SecurityContextHolder.getContext().setAuthentication(token);
         gson = new Gson();
         
         initQuiz();
@@ -155,12 +159,12 @@ public class PointControllerTest {
         mockMvc.perform(post("/quiz/1/answer/1/review/1/rate")
                 .param("userhash", user1.getHash())
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         mockMvc.perform(post("/quiz/1/answer/2/review/2/rate")
                 .param("userhash", user2.getHash())
                 .param("rating", "-1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
     }
     
     private void initOverlappingPoints() throws Exception {
@@ -197,11 +201,11 @@ public class PointControllerTest {
         mockMvc.perform(post("/quiz/1/answer/4/review/3/rate")
                 .param("userhash", user1.getHash())
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         mockMvc.perform(post("/quiz/1/answer/3/review/4/rate")
                 .param("userhash", user2.getHash())
                 .param("rating", "-1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
     }
 }

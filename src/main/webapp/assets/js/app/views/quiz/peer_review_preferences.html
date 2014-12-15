@@ -14,11 +14,9 @@
 
     <div class="form-group">
         <label>Usernames</label>
-        <textarea class="form-control" rows="8" placeholder="Put each username on a separate line" ng-model="username_field"></textarea>
-        <button class="btn btn-primary pull-right btn-header" ng-click="delete_usernames()" id="delete-usernames"><i class="fa fa-close"></i> Delete</button>
+        <textarea class="form-control" rows="8" ng-model="username_field"></textarea>
         <button class="btn btn-primary pull-right btn-header" ng-click="save_usernames()" id="save-usernames"><i class="fa fa-check"></i> Save</button>
     </div>
-
 
     <label>Current preferred users</label>
     <div class="current-preferred-users" ng-repeat="name in current_usernames">

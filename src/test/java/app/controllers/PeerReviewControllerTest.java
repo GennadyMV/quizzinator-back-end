@@ -18,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -26,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -54,14 +57,16 @@ public class PeerReviewControllerTest {
     @Before
     public void setUp() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken("era", "jorma");
+        SecurityContextHolder.getContext().setAuthentication(token);
     }
 
-    @Test
-    public void controllerReturnsEmptyListWhenNothingAdded() throws Exception {
-        this.mockMvc.perform(get("/review"))
-                .andExpect(status().isOk())
-                .andExpect(content().string("[]"));
-    }
+//    @Test
+//    public void controllerReturnsEmptyListWhenNothingAdded() throws Exception {
+//        this.mockMvc.perform(get("/review"))
+//                .andExpect(status().isOk())
+//                .andExpect(content().string("[]"));
+//    }
 
     @Test
     public void controllerReturnsErrorIfQuizOrAnswerDoesntExist() throws Exception {
@@ -80,9 +85,8 @@ public class PeerReviewControllerTest {
         TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user2", 1L);
         TestHelper.addAReview(mockMvc, 1L, 1L, "user2", "good answer!");
 
-        MvcResult mvcAnswer = this.mockMvc.perform(get("/quiz/1/answer/1/review"))
-                .andExpect(status().isOk())
-                .andReturn();
+        mockMvc.perform(get("/quiz/1/answer/1/review"))
+                .andExpect(status().isOk());
 
         assertTrue(reviewRepo.findOne(1L).getReviewer().getName().equals("user2"));
         assertTrue(reviewRepo.findOne(1L).getReview().equals("good answer!"));
@@ -319,16 +323,50 @@ public class PeerReviewControllerTest {
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
                 .param("userhash", userhash)
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         
         //get review
         MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/1/review"))
+                .andDo(print())
                 .andReturn().getResponse();
         
         Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
-        Integer expected = 1;
-        assertEquals(expected, rating);
+        Integer count = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rateCount", 0);
+        Integer expectedRating = 1;
+        Integer expectedCount = 1;
+        assertEquals(expectedRating, rating);
+        assertEquals(expectedCount, count);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testReviewRatingWithManyUsers() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "this is for review and a good answer", "reviewme", quizId);
+        TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "thats great, but use camelcase");
+        
+        //rate review as good
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/"+answerId+"/review/1/rate")
+                .param("username", "user2")
+                .param("rating", "1"));
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/"+answerId+"/review/1/rate")
+                .param("username", "user3")
+                .param("rating", "1"));
+        mockMvc.perform(post("/quiz/"+quizId+"/answer/"+answerId+"/review/1/rate")
+                .param("userhash", "user4")
+                .param("rating", "1"));
+        
+        //get review
+        MockHttpServletResponse response = mockMvc.perform(get("/quiz/"+quizId+"/answer/"+answerId+"/review"))
+                .andReturn().getResponse();
+        
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
+        Integer count = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rateCount", 0);
+        Integer expectedRating = 3;
+        Integer expectedCount = 3;
+        assertEquals(expectedRating, rating);
+        assertEquals(expectedCount, count);
     }
     
     @Test
@@ -342,7 +380,7 @@ public class PeerReviewControllerTest {
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
                 .param("userhash", userhash)
                 .param("rating", "-1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         
         //get review
@@ -350,8 +388,11 @@ public class PeerReviewControllerTest {
                 .andReturn().getResponse();
         
         Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
-        Integer expected = -1;
-        assertEquals(expected, rating);
+        Integer count = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rateCount", 0);
+        Integer expectedRating = -1;
+        Integer expectedCount = 1;
+        assertEquals(expectedRating, rating);
+        assertEquals(expectedCount, count);
     }
     
     
@@ -605,6 +646,48 @@ public class PeerReviewControllerTest {
 
     }
     
+    @Test
+    @DirtiesContext
+    public void testLeastRatedReviewsAreReturnedForRating() throws Exception {
+        Long quizId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        Long answerId = TestHelper.addAnAnswer(mockMvc, "question1", "answeranswer :)", "reviewme", quizId);
+        
+        String reviewUrl = "/quiz/"+quizId+"/answer/"+answerId+"/review/";
+        
+        Long reviewId1 = TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "thats great, but use camelcase");
+        Long reviewId2 = TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer2", "what is that? i dont even");
+        Long reviewId3 = TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer3", "ok");
+        
+        //rate review 1 three times
+        mockMvc.perform(post(reviewUrl+reviewId1+"/rate").param("username", "user2").param("rating", "1"));
+        mockMvc.perform(post(reviewUrl+reviewId1+"/rate").param("username", "user3").param("rating", "-1"));
+        mockMvc.perform(post(reviewUrl+reviewId1+"/rate").param("userhash", "user4").param("rating", "1"));
+        
+        //rate review 2 two times
+        mockMvc.perform(post(reviewUrl+reviewId2+"/rate").param("username", "user2").param("rating", "-1"));
+        mockMvc.perform(post(reviewUrl+reviewId2+"/rate").param("userhash", "user3").param("rating", "1"));
+        
+        //rate review 3 once
+        mockMvc.perform(post(reviewUrl+reviewId3+"/rate").param("username", "user2").param("rating", "-1"));
+        
+        //get one review
+        MockHttpServletResponse response = mockMvc.perform(get("/quiz/" + quizId + "/reviews")
+            .param("reviewCount", "1").param("username", "user9")).andReturn().getResponse();
+        
+        //review with least ratings should be returned
+        Long returnedReviewId = TestHelper.getLongByKeyAndIndexFromJsonArray(response.getContentAsString(), "id", 0);
+        assertEquals(reviewId3, returnedReviewId);
+        
+        mockMvc.perform(post(reviewUrl+reviewId3+"/rate").param("username", "user3").param("rating", "1"));
+        mockMvc.perform(post(reviewUrl+reviewId3+"/rate").param("username", "user4").param("rating", "-1"));
+        
+        //now review no. 2 should have least ratings
+        response = mockMvc.perform(get("/quiz/" + quizId + "/reviews")
+            .param("reviewCount", "1").param("username", "user9")).andReturn().getResponse();
+        
+        returnedReviewId = TestHelper.getLongByKeyAndIndexFromJsonArray(response.getContentAsString(), "id", 0);
+        assertEquals(reviewId2, returnedReviewId);
+    }
     
     @Test
     @DirtiesContext
@@ -615,28 +698,36 @@ public class PeerReviewControllerTest {
         TestHelper.addAReview(mockMvc, quizId, answerId, "reviewer_guy", "good job!");
         
         mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
-            .param("username", "user1")
+            .param("username", "user2")
             .param("rating", "1"))
-            .andExpect(status().isOk());
+            .andExpect(status().is3xxRedirection());
         
         mockMvc.perform(post("/quiz/" + quizId + "/answer/" + answerId + "/review/1/rate")
-            .param("username", "user1")
+            .param("username", "user2")
             .param("rating", "-1"))
-            .andExpect(status().isOk());
+            .andExpect(status().is3xxRedirection());
         
         
         MvcResult result = mockMvc.perform(get("/quiz/" + quizId + "/answer/" + answerId + "/review"))
             .andExpect(status().isOk())
             .andReturn();
         
-        String response = result.getResponse().getContentAsString();
+        MockHttpServletResponse response = result.getResponse();
         
         //only one review is expected
-        assertEquals(1, jsonParser.parse(response).getAsJsonArray().size());
+        assertEquals(1, jsonParser.parse(response.getContentAsString()).getAsJsonArray().size());
         
-        //jsonParser.parse(response).getAsJsonArray().get(0).getAsJsonObject().get("rateCount").getAsInt()
-        assertEquals(1, jsonParser.parse(response).getAsJsonArray().get(0).getAsJsonObject().get("rateCount").getAsInt());
+        response = mockMvc.perform(get("/quiz/"+quizId+"/reviews")
+            .param("reviewCount", "1").param("username", "user3"))
+            .andDo(print())
+            .andReturn().getResponse();
         
+        Integer rating = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "totalRating", 0);
+        Integer count = TestHelper.getIntegerByKeyAndIndexFromJsonArray(response.getContentAsString(), "rateCount", 0);
+        Integer expectedRating = -1;
+        Integer expectedCount = 1;
+        assertEquals(expectedRating, rating);
+        assertEquals(expectedCount, count);
     }
     
     @Test
@@ -651,14 +742,14 @@ public class PeerReviewControllerTest {
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
                 .param("userhash", userhash)
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         assertEquals(1, ratingRepo.count());
         
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/2/rate")
                 .param("username", "masa")
                 .param("rating", "1"))
-                .andExpect(status().isOk());
+                .andExpect(status().is3xxRedirection());
         
         assertEquals(2, ratingRepo.count());
     }
@@ -671,7 +762,6 @@ public class PeerReviewControllerTest {
         TestHelper.addAReview(mockMvc, quizId, 1L, "reviewer_guy", "thats great, but use camelcase");
         TestHelper.addAReview(mockMvc, quizId, 1L, "other_guy", "thats great, but use camelcase");
         
-        //rate review as good
         mockMvc.perform(post("/quiz/"+quizId+"/answer/1/review/1/rate")
                 .param("userhash", "")
                 .param("rating", "1"))

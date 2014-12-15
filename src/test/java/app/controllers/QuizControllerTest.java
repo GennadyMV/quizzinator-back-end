@@ -19,6 +19,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -49,6 +51,8 @@ public class QuizControllerTest {
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken("era", "jorma");
+        SecurityContextHolder.getContext().setAuthentication(token);
     }
 
     @Test
@@ -385,6 +389,57 @@ public class QuizControllerTest {
         
         assertTrue(returnedQuiz.getBoolean("answered"));
         assertTrue(answer.equals("hehe"));
+    }
+    
+    @Test
+    @DirtiesContext
+    public void testGetUserDataWithoutImproving() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
+        
+        MvcResult mvcResult = this.mockMvc.perform(get("/quiz/1/userData")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        
+        System.out.println("aaaaaaaaaaaaaa");
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        
+        JSONArray returnedData = new JSONArray(mvcResult.getResponse().getContentAsString());
+        
+        JSONObject item = returnedData.getJSONObject(0);
+        
+        assertTrue(item.getString("username").equals("masa"));
+        assertTrue(item.getLong("numberOfAnswers") == 1);
+        assertFalse(item.getBoolean("hasImproved"));
+        
+    }
+    
+     @Test
+    @DirtiesContext
+    public void testGetUserDataWithImproving() throws Exception {
+        TestHelper.addQuizWithOneQuestion(mockMvc, "quiz", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
+        TestHelper.addAnAnswer(mockMvc, "question1", "haha", "vilkku", 1L);
+        
+        TestHelper.addAReview(mockMvc, 1L, 1L, "vilkku", "perus masa");
+        
+        TestHelper.addAnAnswer(mockMvc, "question1", "hehe", "masa", 1L);
+        
+        MvcResult mvcResult = this.mockMvc.perform(get("/quiz/1/userData")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andReturn();
+        
+        System.out.println("aaaaaaaaaaaaaa");
+        System.out.println(mvcResult.getResponse().getContentAsString());
+        
+        JSONArray returnedData = new JSONArray(mvcResult.getResponse().getContentAsString());
+        
+        JSONObject item = returnedData.getJSONObject(0);
+        
+        assertTrue(item.getString("username").equals("masa"));
+        assertTrue(item.getLong("numberOfAnswers") == 2);
+        assertTrue(item.getBoolean("hasImproved"));
+        
     }
     
     private void postTestquiz1() throws Exception {

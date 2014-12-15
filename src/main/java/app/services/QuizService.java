@@ -1,20 +1,17 @@
 package app.services;
 
 import app.repositories.UserRepository;
-import app.domain.PeerReview;
 import app.domain.Quiz;
 import app.domain.QuizAnswer;
 import app.domain.User;
 import app.exceptions.DeadlinePassedException;
 import app.exceptions.InvalidIdCombinationException;
 import app.models.NewAnswerResponseModel;
-import app.models.UserDataModel;
-import app.models.UserDataModel.UserData;
-import app.repositories.PeerReviewRepository;
+import app.models.UserData;
 import app.repositories.QuizAnswerRepository;
 import app.repositories.QuizRepository;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +25,6 @@ public class QuizService {
     
     @Autowired
     private QuizRepository quizRepo;
-    
-    @Autowired
-    private PeerReviewRepository reviewRepo;
     
     @Autowired
     private UserRepository userRepo;
@@ -106,15 +100,6 @@ public class QuizService {
         
         return qas;
     }
-    
-    public List<PeerReview> getReviewsByAnswer(Long answerId, Long quizId) {
-        if (!isValidAnswerQuizCombination(answerId, quizId)) {
-            throw new InvalidIdCombinationException("bad answerId, quizId combination!");
-        }
-        
-        QuizAnswer qa = answerRepo.findOne(answerId);
-        return reviewRepo.findByQuizAnswer(qa);
-    }
 
     public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
@@ -169,12 +154,11 @@ public class QuizService {
     }
     
     public List<UserData> getUserData(long quizId) {
-        UserDataModel model = new UserDataModel();
+        List<UserData> data = new ArrayList<UserData>();
         Quiz quiz = quizRepo.findOne(quizId);
         List<User> users = answerRepo.findUserByQuiz(quiz);
         
-        for(int i=0;i<users.size();i++) {
-            User user = users.get(i);
+        for (User user : users) {
             boolean improved = false;
             QuizAnswer answer = answerRepo.findByQuizAndUserOrderByAnswerDateDesc(quiz, user).get(0);
             while(!improved){
@@ -184,10 +168,9 @@ public class QuizService {
                     break;
                 }
             }
-            model.addData(new UserData(user.getName(), answerRepo.countByUserAndQuiz(user,quiz), improved));
-            
+            data.add(new UserData(user.getName(), answerRepo.countByUserAndQuiz(user, quiz), improved));
         }
         
-        return model.getData();
+        return data;
     }
 }
