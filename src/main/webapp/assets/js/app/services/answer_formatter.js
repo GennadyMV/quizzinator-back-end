@@ -1,6 +1,6 @@
 QuizApp.service('AnswerFormatter', ['$sce', '$rootScope', function($sce, $rootScope){
 	var _public = {};
-        var _apiurl;
+    var _apiurl;
 
 	var _ignorable_output_types = ['code_sample', 'image', 'peer_reviews', 'text_container'];
 
@@ -11,7 +11,6 @@ QuizApp.service('AnswerFormatter', ['$sce', '$rootScope', function($sce, $rootSc
 			item_type: item.item_type,
                         event_handler: function(action, child, value){
                             var obj = {action: action, element: item.item_type + '_' + item.index, child: child, value: value, actionTime: $.now()};
-                            //console.log('action: ' + obj.action + ', element: ' + obj.element + ', child: ' + obj.child + ', val: ' + obj.value );
                             $rootScope._event_buffer.push(obj);
                         }
 		};
@@ -121,58 +120,6 @@ QuizApp.service('AnswerFormatter', ['$sce', '$rootScope', function($sce, $rootSc
 			return format;
 		}
 	};
-
-	/*function basic_output_formatter(item){
-		return {
-			question: item.question,
-			value: item.value,
-			item_type: item.item_type
-		}
-	}
-
-	var output_formatters = {
-		open_question: function(item){
-			var format = basic_output_formatter(item);
-
-			if(item['max_length']){
-				format['value'] = format['value'].substring(0, item['max_length']);
-			}
-
- 			return format;
-		},
-		scale_question: function(item){
-			var format = basic_output_formatter(item);
-
-			format['question'] = item['title'];
-			format['value'] = item['questions'];
-
-			return format;
-		},
-		multiple_choice_question: function(item){
-			return basic_output_formatter(item);
-		},
-		checkbox_question: function(item){
-			var format = basic_output_formatter(item);
-
-			var chosen = $.grep(item.checkboxes, function(checkbox){
-				return checkbox.value;
-			});
-
-			format['value'] = $.map(chosen, function(checkbox){
-				return checkbox.title;
-			});
-
-			return format;
-		},
-		slider_question: function(item){
-			return basic_output_formatter(item);
-		},
-		sketchpad: function(item){
-			var format = basic_output_formatter(item);
-			format['question'] = item.title;
-			return format;
-		}
-	}*/
 
 	_public.input = function(quiz, apiurl){
         _apiurl = apiurl;

@@ -1,5 +1,7 @@
 QuizApp.controller('ReviewPreferencesController', ['$scope', '$routeParams', 'QuizAPI', function($scope, $routeParams, QuizAPI){
-	
+
+	$scope.quiz_id = $routeParams.quizId;
+
 	$scope.init = function() {
 		$scope.get_usernames();
 	}
