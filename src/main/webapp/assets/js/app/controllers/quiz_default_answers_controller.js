@@ -1,7 +1,8 @@
 QuizApp.controller('QuizDefaultAnswersController', ['$scope', '$routeParams', 'AnswerFormatter', 'QuizAPI', function($scope, $routeParams, AnswerFormatter, QuizAPI){
+
 	$scope.quiz_id = $routeParams.quizId;
 
-	QuizAPI.get_quiz({ 
+	QuizAPI.get_quiz({
 		id: $routeParams.quizId,
 		success: function(quiz){
 			$scope.quiz = AnswerFormatter.input(quiz);
@@ -11,10 +12,12 @@ QuizApp.controller('QuizDefaultAnswersController', ['$scope', '$routeParams', 'A
 	});
 
 	$scope.get_item_template = function(item){
-		console.log(item.item_type);
 		return '/assets/js/app/views/quiz/default_answers/' + item.item_type + '.html';
 	}
 
+	/**
+	* Creates a default answer
+	*/
 	$scope.create_default_answer = function() {
 		QuizAPI.create_default_answer({
 			answers: AnswerFormatter.output($scope.quiz),
@@ -33,6 +36,5 @@ QuizApp.controller('QuizDefaultAnswersController', ['$scope', '$routeParams', 'A
 			}
 		});
 	}
-
 
 }]);

@@ -1,4 +1,5 @@
 QuizApp.controller('ReviewsController', ['$scope', '$location', '$routeParams', 'QuizAPI', function($scope, $location, $routeParams, QuizAPI){
+
 	QuizAPI.get_reviews({
 		user_hash: $routeParams.userHash,
 		success: function(quizes){
@@ -40,4 +41,5 @@ QuizApp.controller('ReviewsController', ['$scope', '$location', '$routeParams', 
 	$scope.get_answer_template = function(item){
 		return '/assets/js/app/views/quiz/answer_formats/' + item.item_type + '.html';
 	}
+	
 }]);

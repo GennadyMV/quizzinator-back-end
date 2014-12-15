@@ -1,4 +1,5 @@
 QuizApp.controller('ManageQuizController', ['$scope', function($scope){
+
 	$scope.quiz = {
 		title: '',
 		reviewable: true,
@@ -130,10 +131,19 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 		}
 	];
 
+	/**
+	* Gives the template file of the given item
+	* @param item which template is needed
+	* @return path to the template
+	*/
 	$scope.get_item_template = function(item){
 		return '/assets/js/app/views/widgets/' + item.item_type + '.html';
 	};
 
+	/**
+	*	Add a checkbox to a given item
+	* @param item to which checkbox will be added
+	*/
 	$scope.add_checkbox = function(item){
 		item.checkboxes.push({
 			title: item.new_checkbox.title
@@ -142,10 +152,18 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 		item.new_checkbox = {};
 	};
 
+	/**
+	* Removes the given item
+	* @param item to be removed
+	*/
 	$scope.remove_item = function(index){
 		$scope.quiz.items.splice(index, 1);
 	};
 
+	/**
+	*	Add a option to a given item
+	* @param item to which option will be added
+	*/
 	$scope.add_option = function(item){
 		item.options.push({
 			title: item.new_option.title
@@ -154,11 +172,20 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 		item.new_option = {};
 	};
 
+	/**
+	* Removes option from given item in given index
+	* @param item from which the option will be removed and the index of the option
+	*/
 	$scope.remove_option = function(item, index){
 		item.options.splice(index, 1);
 	};
 
+	/**
+	* Removes checkbox from given item in given index
+	* @param item from which the checkbox will be removed and the index of the option
+	*/
 	$scope.remove_checkbox = function(item, index){
 		item.checkboxes.splice(index, 1);
 	};
+
 }]);

@@ -1,4 +1,5 @@
 QuizApp.controller('QuizStatisticsController', ['$scope', '$routeParams', 'QuizAPI', function($scope, $routeParams, QuizAPI){
+
 	$scope.quiz_id = $routeParams.quizId;
 
 	QuizAPI.get_statistics({
@@ -7,4 +8,5 @@ QuizApp.controller('QuizStatisticsController', ['$scope', '$routeParams', 'QuizA
 			$scope.statistics = data;
 		}
 	});
+
 }]);
