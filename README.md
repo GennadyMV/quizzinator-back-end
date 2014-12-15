@@ -1,5 +1,7 @@
 #Kysely- ja vertaispalautesovellus
 
+<h2><a href="https://github.com/kaint-ohtu/ohtu/wiki">Wiki</a></h2>
+
 ##CI-palvelin ja sovelluksen tuotantoversio
 [![Build Status](http://aale.users.cs.helsinki.fi/build_pass.php)](http://ohtu.jamo.io/job/kaint-ohtu/)
 
@@ -20,6 +22,8 @@
   * <a href="https://docs.google.com/spreadsheets/d/1Xot8hRt5YE8zuefBnMY5mBqg8NW_S08eirnrJYMIfL8/edit?usp=sharing">Sprint 3</a>
   * <a href="https://docs.google.com/spreadsheets/d/15h7aF3LZXElpEop0R7-sU7mrtbq1p-rsDrLGC2Z1RBA/edit?usp=sharing">Sprint 4</a>
   * <a href="https://docs.google.com/spreadsheets/d/1ldjfHsaW_c7F-qe8c7vX4HkAc0j9eIhzuUL79h6B39g/edit?usp=sharing">Sprint 5</a>
+  * <a href="https://docs.google.com/spreadsheets/d/1TsVPghzjwTLExeELDZYZl0if5HDm0TDglQBriZx7daE/edit?usp=sharing">Sprint 6</a>
+  * <a href="https://docs.google.com/spreadsheets/d/1AHW3DauwLKwvMRnd98bvYZ-Z4FcACs9uWE3qTk7iFeU/edit?usp=sharing">Sprint 7</a>
 
 ##Definition of Done
 <a href="https://docs.google.com/document/d/1SwcFxa7qVOEfSLvijWc41dPDn3b5w8IVEJnMN5KYqR0/edit?usp=sharing">Definition of Done
