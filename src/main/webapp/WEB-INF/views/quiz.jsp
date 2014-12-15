@@ -25,9 +25,9 @@
         </c:forEach>
     </table>
     </c:if>
-    
 
-    <h2>Lis‰‰ kysely</h2>
+
+    <h2>Lis√§√§ kysely</h2>
     <form method="post" action="/quiz">
         <textarea name="title"></textarea><br>
         <button type="submit">tallenna</button>
