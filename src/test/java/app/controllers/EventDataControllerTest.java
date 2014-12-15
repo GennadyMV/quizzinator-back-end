@@ -6,7 +6,6 @@ import app.repositories.EventDataRepository;
 import app.repositories.QuizRepository;
 import app.repositories.UserRepository;
 import java.sql.Timestamp;
-import javax.transaction.Transactional;
 import org.json.JSONArray;
 import org.junit.Before;
 import org.junit.Test;
