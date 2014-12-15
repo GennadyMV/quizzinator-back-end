@@ -44,6 +44,12 @@ public class ReviewService {
     @Autowired
     private ReviewRatingRepository ratingRepo;
     
+    /**
+     * Check if the review with this id is related to the answer
+     * @param answerId
+     * @param reviewId
+     * @return 
+     */
     public boolean isValidAnswerReviewCombination(Long answerId, Long reviewId) {
         QuizAnswer qa = answerRepo.findOne(answerId);
         PeerReview pr = reviewRepo.findOne(reviewId);
@@ -55,12 +61,22 @@ public class ReviewService {
         }
     }
 
+    /**
+     * Validata id combination and throw an exception if it's invalid
+     * @param answerId
+     * @param reviewId 
+     */
     public void validateAnswerReviewCombination(Long answerId, Long reviewId) {
         if (!this.isValidAnswerReviewCombination(answerId, reviewId)) {
             throw new InvalidIdCombinationException("bad answerId, reviewId combination!");
         }
     }
     
+    /**
+     * Returns all reviews given to user's answers
+     * @param hash user's hash
+     * @return 
+     */
     public List<UsersReviewModel> getUserReviews(String hash) {
         List<UsersReviewModel> ret = new ArrayList<UsersReviewModel>();
         
@@ -85,6 +101,13 @@ public class ReviewService {
         return ret;
     }
     
+    /**
+     * Save a review
+     * @param review
+     * @param answerId target of this review
+     * @param quizId
+     * @return saved peer review object
+     */
     public PeerReview saveNewReview(PeerReview review, Long answerId, Long quizId) {
         quizService.validateAnswerQuizCombination(answerId, quizId);
         
@@ -146,6 +169,13 @@ public class ReviewService {
         reviewRepo.save(review);
     }
 
+    /**
+     * Get peer reviews related to a quiz, for rating.
+     * @param quizId
+     * @param reviewCount number of reviews to return
+     * @param username the requesting user's name
+     * @return 
+     */
     public List<PeerReview> getReviewsByQuizForRating(Long quizId, Integer reviewCount, String username) {
         User u = userService.getOrCreateUser(username);
         Quiz q = quizRepo.findOne(quizId);
@@ -156,6 +186,11 @@ public class ReviewService {
         return fillRateInfoFields(reviews);
     }
 
+    /**
+     * Get reviews given to a user
+     * @param username
+     * @return 
+     */
     public List<PeerReview> getReviewsByUsername(String username) {
         User u = userService.getOrCreateUser(username);
         
@@ -165,6 +200,12 @@ public class ReviewService {
         return fillRateInfoFields(reviews);
     }
     
+    /**
+     * Get all reviews of an answer.
+     * @param answerId
+     * @param quizId
+     * @return 
+     */
     public List<PeerReview> getReviewsByAnswer(Long answerId, Long quizId) {
         quizService.validateAnswerQuizCombination(answerId, quizId);
         

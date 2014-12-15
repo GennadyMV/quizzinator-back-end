@@ -1,5 +1,8 @@
 package app.models;
 
+/**
+ * Data access object for user's points
+ */
 public class UserPointModel {
     private final String username;
     private final Integer answerCount;

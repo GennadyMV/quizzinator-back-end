@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+/**
+ * Administrators can create quizzes
+ */
 @Entity
 public class Admin extends AbstractPersistable<Long> {
     

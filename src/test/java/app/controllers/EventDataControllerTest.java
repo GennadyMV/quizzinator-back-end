@@ -51,7 +51,6 @@ public class EventDataControllerTest {
     
     @Test
     @DirtiesContext
-    @Transactional
     public void testAddEventDataExistingUser() throws Exception {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         TestHelper.addAnAnswer(mockMvc, "question1", "heh", "pertti", 1L);
@@ -76,7 +75,6 @@ public class EventDataControllerTest {
     
     @Test
     @DirtiesContext
-    @Transactional
     public void testAddClickDataNonExistentUser() throws Exception {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         
@@ -101,7 +99,6 @@ public class EventDataControllerTest {
     
     @Test
     @DirtiesContext
-    @Transactional
     public void testGetUserClickData() throws Exception {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         
@@ -123,7 +120,6 @@ public class EventDataControllerTest {
     
     @Test
     @DirtiesContext
-    @Transactional
     public void testGetQuizClickData() throws Exception {
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
         TestHelper.addQuizWithOneQuestion(mockMvc, "quiz2", "question1", true);

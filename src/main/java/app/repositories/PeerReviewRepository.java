@@ -14,9 +14,14 @@ public interface PeerReviewRepository extends JpaRepository<PeerReview, Long> {
     public List<PeerReview> findByQuizAnswer(QuizAnswer answer);
     public List<PeerReview> findByQuizAnswerIn(List<QuizAnswer> answers);
     public List<PeerReview> findByReviewer(User reviewer);
-    
-    //find peer reviews for a user to be rated
-    //this query filters out user's own PeerReviews and PeerReviews already rated by the user
+    /**
+     * Find peer reviews for a user to be rated.
+     * This query filters out user's own PeerReviews and PeerReviews already rated by the user
+     * @param rater
+     * @param quiz
+     * @param pageable
+     * @return 
+     */
     @Query("select pr from PeerReview pr"
             + " left join pr.ratings rr"
             + " inner join pr.quizAnswer qa"

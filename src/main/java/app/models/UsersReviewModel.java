@@ -5,6 +5,9 @@ import app.domain.QuizAnswer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
+/**
+ * Data access object for listing user's answer's reviews
+ */
 public class UsersReviewModel {
     private Long quizId;
     private String title;

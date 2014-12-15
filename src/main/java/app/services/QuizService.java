@@ -6,6 +6,7 @@ import app.domain.QuizAnswer;
 import app.domain.User;
 import app.exceptions.DeadlinePassedException;
 import app.exceptions.InvalidIdCombinationException;
+import app.exceptions.NotFoundException;
 import app.models.NewAnswerResponseModel;
 import app.models.UserData;
 import app.repositories.QuizAnswerRepository;
@@ -32,12 +33,22 @@ public class QuizService {
     @Autowired
     private UserService userService;
     
+    /**
+     * Validate an answer quiz combination and throw an exception if invalid
+     * @param answerId
+     * @param quizId 
+     */
     public void validateAnswerQuizCombination(Long answerId, Long quizId) {
         if (!isValidAnswerQuizCombination(answerId, quizId)) {
             throw new InvalidIdCombinationException("bad answerId, quizId combination!");
         }
     }
     
+    /**
+     * Check if an answer to this quiz exists with an id
+     * @param answerId
+     * @param quizId 
+     */
     public boolean isValidAnswerQuizCombination(Long answerId, Long quizId) {
         QuizAnswer qa = answerRepo.findOne(answerId);
         Quiz q = quizRepo.findOne(quizId);
@@ -49,6 +60,12 @@ public class QuizService {
         }
     }
     
+    /**
+     * Save a new answer
+     * @param answer
+     * @param quizId
+     * @return a model with necessary data for the user
+     */
     public NewAnswerResponseModel submitAnswer(QuizAnswer answer, Long quizId) {
         User u = userService.getOrCreateUser(answer.getUsername());
         answer.setUser(u);
@@ -89,11 +106,19 @@ public class QuizService {
         return model;
     }
     
+    
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user) {
         int answerCount = quiz.getReviewRounds()*2;
         return getAnswersForReview(quiz, user, answerCount);
     }
     
+    /**
+     * Get answers to be reviewed by a user
+     * @param quiz
+     * @param user
+     * @param answerCount number of answers
+     * @return list of reviewable answers
+     */
     public List<QuizAnswer> getAnswersForReview(Quiz quiz, User user, int answerCount) {
         Pageable pageable = new PageRequest(0, answerCount);
         List<QuizAnswer> qas = answerRepo.findQuizzesToReview(quiz, user, pageable);
@@ -101,12 +126,18 @@ public class QuizService {
         return qas;
     }
 
+    /**
+     * Get a quiz by id and set it's transient fields according to user.
+     * @param id id of the quiz
+     * @param username name of the user
+     * @return quiz object with information about user's last answer
+     */
     public Quiz getQuizForUsername(Long id, String username) {
         Quiz q = quizRepo.findOne(id);
         User u = userRepo.findByName(username);
         
         if (q == null) {
-            throw new app.exceptions.NotFoundException();
+            throw new NotFoundException();
         }
         
         if (u == null) {
@@ -125,6 +156,11 @@ public class QuizService {
         return q;
     }
 
+    /**
+     * Save an answer to be shown if no real answers have been submitted
+     * @param quizAnswer answer data
+     * @param quizId 
+     */
     public void addPlaceHolderAnswer(String quizAnswer, Long quizId) {
         Quiz quiz = quizRepo.findOne(quizId);
         QuizAnswer answer = new QuizAnswer();
@@ -135,10 +171,21 @@ public class QuizService {
         answerRepo.save(answer);
     }
     
+    /**
+     * Find the placeholder answers of a quiz
+     * @param quizId
+     * @return 
+     */
     public List<QuizAnswer> getPlaceholderAnswers(Long quizId) {
         return answerRepo.findByQuizAndPlaceholderIsTrue(quizRepo.findOne(quizId));
     }
 
+    /**
+     * Delete an answer
+     * @param quizId related quiz
+     * @param answerId answer's id
+     * @return the deleted answer
+     */
     public QuizAnswer deleteAnswer(Long quizId, Long answerId) {
         validateAnswerQuizCombination(answerId, quizId);
         
@@ -153,6 +200,11 @@ public class QuizService {
         return qa;
     }
     
+    /**
+     * Get all users' answer statistics about a quiz
+     * @param quizId quiz which answer's we are interested in
+     * @return 
+     */
     public List<UserData> getUserData(long quizId) {
         List<UserData> data = new ArrayList<UserData>();
         Quiz quiz = quizRepo.findOne(quizId);

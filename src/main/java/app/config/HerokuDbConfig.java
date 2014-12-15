@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
- @Profile("heroku")
+@Profile("heroku")
 @Configuration
 public class HerokuDbConfig {
     @Bean
@@ -17,7 +17,7 @@ public class HerokuDbConfig {
         URI dbUri;
         try {
             // herokun dburl format:
-            // postgres://user3123:passkja83kd8@ec2-117-21-174-214.compute-1.amazonaws.com:6212/db982398
+            // postgres://username:passssword@data.base.server:6212/databasename
             String username;
             String password;
             String url;
