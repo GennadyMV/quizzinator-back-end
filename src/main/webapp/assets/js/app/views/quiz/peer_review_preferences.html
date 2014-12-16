@@ -1,10 +1,11 @@
 <div ng-controller="ReviewPreferencesController" ng-init="init()">
 	<ul class="nav nav-tabs" role="tablist">
-        <li><a href="#/quiz/{{$parent.quiz.id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
-        <li><a href="#/quiz/{{$parent.quiz.id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
-        <li><a href="#/quiz/{{$parent.quiz.id}}/share"><i class="fa fa-share"></i> Share</a></li>
-        <li><a href="#/quiz/{{$parent.quiz.id}}/answers"><i class="fa fa-user"></i> Answers</a></li>
-        <li class="active"><a href="#/quiz/{{$parent.quiz.id}}/review-preferences"><i class="fa fa-pencil"></i> Review Preferences</a></li>
+        <li><a href="#/quiz/{{quiz_id}}/edit"><i class="fa fa-pencil"></i> Edit</a></li>
+        <li><a href="#/quiz/{{quiz_id}}/default-answers"><i class="fa fa-list"></i> Default answers</a></li>
+        <li><a href="#/quiz/{{quiz_id}}/share"><i class="fa fa-share"></i> Share</a></li>
+        <li><a href="#/quiz/{{quiz_id}}/answers"><i class="fa fa-user"></i> Answers</a></li>
+				<li><a href="#/quiz/{{quiz_id}}/statistics"><i class="fa fa-area-chart"></i> Statistics</a></li>
+        <li class="active"><a href="#/quiz/{{quiz_id}}/review-preferences"><i class="fa fa-pencil"></i> Review Preferences</a></li>
     </ul>
 
     <div class="page-header page-header-button">
@@ -15,6 +16,11 @@
         <label>Usernames</label>
         <textarea class="form-control" rows="8" ng-model="username_field"></textarea>
         <button class="btn btn-primary pull-right btn-header" ng-click="save_usernames()" id="save-usernames"><i class="fa fa-check"></i> Save</button>
+    </div>
+
+    <label>Current preferred users</label>
+    <div class="current-preferred-users" ng-repeat="name in current_usernames">
+        {{name}}
     </div>
 
 </div>

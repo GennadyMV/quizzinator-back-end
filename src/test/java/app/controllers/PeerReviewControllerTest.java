@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -120,6 +121,84 @@ public class PeerReviewControllerTest {
             Long answerId = TestHelper.getLongByKeyAndIndexFromJsonArray(content, "id", i);
             assertTrue(answerId.equals(aId2) || answerId.equals(aId3));
         }
+    }
+    
+    @Test
+    @DirtiesContext
+    public void userWeightCanBeSet() throws Exception {
+        Long qId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", qId);
+        
+        assertEquals(1.0, userRepo.findByName("user1").getReviewWeight(), 0);
+        //existing user
+        mockMvc.perform(
+                post("/preferredUsers")
+                .content("[\"user1\"]")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        
+        assertEquals(2.0, userRepo.findByName("user1").getReviewWeight(), 0);
+        
+        //unknown user
+        mockMvc.perform(
+                post("/preferredUsers")
+                .content("[\"user2\"]")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        
+        assertEquals(2.0, userRepo.findByName("user2").getReviewWeight(), 0);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void userWeightCanBeReset() throws Exception {
+        Long qId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", qId);
+        
+        assertEquals(1.0, userRepo.findByName("user1").getReviewWeight(), 0);
+        //set
+        mockMvc.perform(
+                post("/preferredUsers")
+                .content("[\"user1\"]")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        
+        assertEquals(2.0, userRepo.findByName("user1").getReviewWeight(), 0);
+        
+        //and reset
+        mockMvc.perform(
+                delete("/preferredUsers")
+                .content("[\"user1\"]")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        
+        assertEquals(1.0, userRepo.findByName("user1").getReviewWeight(), 0);
+    }
+    
+    @Test
+    @DirtiesContext
+    public void userWeightCanBeListed() throws Exception {
+        Long qId = TestHelper.addQuizWithOneQuestion(mockMvc, "quiz1", "question1", true);
+        TestHelper.addAnAnswer(mockMvc, "question1", "answer1", "user1", qId);
+        
+        assertEquals(1.0, userRepo.findByName("user1").getReviewWeight(), 0);
+        //set
+        mockMvc.perform(
+                post("/preferredUsers")
+                .content("[\"user2\"]")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        
+        //list
+        MockHttpServletResponse response = mockMvc.perform(
+                get("/preferredUsers"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse();
+        
+        JsonArray ja = jsonParser.parse(response.getContentAsString()).getAsJsonArray();
+        assertEquals(1, ja.size());
+        assertTrue(ja.get(0).getAsString().equals("user2"));
     }
 
     @Test

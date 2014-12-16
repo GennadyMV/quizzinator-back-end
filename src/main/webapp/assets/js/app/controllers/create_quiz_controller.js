@@ -1,11 +1,15 @@
 QuizApp.controller('CreateQuizController', ['$scope', '$location', 'QuizAPI', function($scope, $location, QuizAPI){
+
+	/**
+	* Saves the current quiz
+	*/
 	$scope.save_quiz = function(){
 		QuizAPI.create_quiz({
 			quiz: $scope.$parent.quiz,
 			success: function(quiz){
 				$scope.$parent.quiz = {
 					title: '',
-          			reviewable: false,
+					reviewable: false,
 					reviewRounds: 1,
 					items: []
 				};
@@ -25,4 +29,5 @@ QuizApp.controller('CreateQuizController', ['$scope', '$location', 'QuizAPI', fu
 			}
 		});
 	};
+	
 }]);

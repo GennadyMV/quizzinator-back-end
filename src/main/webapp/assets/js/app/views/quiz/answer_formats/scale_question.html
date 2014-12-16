@@ -1,4 +1,4 @@
-<label>{{answer.question}}</label>
-<span ng-repeat="question in answer.value">
-	{{question.question}} <span class="text-muted">{{question.value}}</span><span ng-show="$index != answer.value.length - 1">, </span>
+<label>{{answer.title}}</label>
+<span ng-repeat="question in answer.questions">
+	{{question.question}} <span class="text-muted">{{question.value}}</span><span ng-show="$index != answer.questions.length - 1">, </span>
 </span>

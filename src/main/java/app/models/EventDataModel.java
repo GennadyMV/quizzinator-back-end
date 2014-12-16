@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
- * data about tracked events from user's web browser
+ * tracked events from user's web browser are recieved in this format
  */
 public class EventDataModel {
     private String user;

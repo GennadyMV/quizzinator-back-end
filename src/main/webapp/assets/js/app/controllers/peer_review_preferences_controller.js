@@ -1,13 +1,14 @@
 QuizApp.controller('ReviewPreferencesController', ['$scope', '$routeParams', 'QuizAPI', function($scope, $routeParams, QuizAPI){
-	function users_to_array(users){
-		return users.split('\n');
-	}
 
+	$scope.quiz_id = $routeParams.quizId;
 
 	$scope.init = function() {
 		$scope.get_usernames();
 	}
 
+	/**
+	* Saves the given usernames as peer review preferences
+	*/
 	$scope.save_usernames = function() {
 		$scope.usernames = $scope.username_field.split('\n');
 		QuizAPI.save_usernames({
@@ -24,7 +25,9 @@ QuizApp.controller('ReviewPreferencesController', ['$scope', '$routeParams', 'Qu
 		});
 	}
 
-
+	/**
+	* Fetch the usernames of current peer review references
+	*/
 	$scope.get_usernames = function() {
 		QuizAPI.get_usernames({
 			success: function(preferred_users) {

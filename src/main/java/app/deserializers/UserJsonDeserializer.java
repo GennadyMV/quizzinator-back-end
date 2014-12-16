@@ -7,6 +7,11 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import java.io.IOException;
 
+/**
+ * Special JSON deserializer for User class.
+ * creates a User object with username from a json string
+ * @author aaro
+ */
 public class UserJsonDeserializer extends JsonDeserializer<User> {
 
     @Override

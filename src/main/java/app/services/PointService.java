@@ -18,6 +18,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Service for retrieving points and stats
+ */
 @Component
 public class PointService {
     
@@ -36,6 +39,11 @@ public class PointService {
     @Autowired
     private ReviewRatingRepository ratingRepo;
     
+    /**
+     * Find user data and present it in a DAO
+     * @param userhash user's hash
+     * @return 
+     */
     public UserPointModel getPointsForUser(String userhash) {
         User user = userRepo.findByHash(userhash);
         
@@ -49,6 +57,12 @@ public class PointService {
                                 ratingRepo.findByRater(user).size());
     }
     
+    /**
+     * Find data about quiz's answers, reviews and review's ratings and
+     * return it in a DAO
+     * @param id id of the quiz
+     * @return 
+     */
     public QuizPointModel getPointsForQuiz(Long id) {
         Quiz quiz = quizRepo.findOne(id);
         
@@ -61,23 +75,20 @@ public class PointService {
         List<String> raters = new ArrayList<String>();
         
         List<QuizAnswer> quizAnswers = quiz.getQuizAnswers();
-        for (int i = 0; i < quizAnswers.size(); i++) {
-            QuizAnswer answer = quizAnswers.get(i);
-            
+        for (QuizAnswer answer : quizAnswers) {
             if (!answerers.contains(answer.getUser().getName())) {
                 answerers.add(answer.getUser().getName());
             }
             
             List<PeerReview> reviews = answer.getPeerReviews();
-            for (int j = 0; j < reviews.size(); j++) {
-                if (!reviewers.contains(reviews.get(j).getReviewer().getName())) {
-                    reviewers.add(reviews.get(j).getReviewer().getName());
+            for (PeerReview review : reviews) {
+                if (!reviewers.contains(review.getReviewer().getName())) {
+                    reviewers.add(review.getReviewer().getName());
                 }
-                
-                List<ReviewRating> ratings = ratingRepo.findByReview(reviews.get(j));
-                for (int k = 0; k < ratings.size(); k++) {
-                    if (!raters.contains(ratings.get(k).getRater().getName())) {
-                        raters.add(ratings.get(k).getRater().getName());
+                List<ReviewRating> ratings = ratingRepo.findByReview(review);
+                for (ReviewRating rating : ratings) {
+                    if (!raters.contains(rating.getRater().getName())) {
+                        raters.add(rating.getRater().getName());
                     }
                 }
             }
