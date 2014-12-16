@@ -5,7 +5,6 @@ import app.domain.QuizAnswer;
 import app.models.UserData;
 import app.repositories.QuizRepository;
 import app.services.QuizService;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -34,19 +33,12 @@ public class QuizController {
     @RequestMapping(method = RequestMethod.GET, produces="application/json")
     @Transactional
     public List<Quiz> getQuizzes() {
-        List<Quiz> quizes = new ArrayList<Quiz>();
+        List<Quiz> quizes;
         
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String name = auth.getName();
         
-        long count = quizRepo.count();
-        for (long i = 1; i <= count; i++) {
-            Quiz quiz = quizRepo.findOne(i);
-            
-            if (quiz.getOwner().equals(name)) {
-                quizes.add(quiz);
-            }
-        }
+        quizes = quizRepo.findByOwner(name);
         
         return quizes;
     }
