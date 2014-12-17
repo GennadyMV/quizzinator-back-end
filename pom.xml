@@ -227,6 +227,7 @@
                             <outputFileName>quiz-plugin.min.css</outputFileName>
                             <skipCache>true</skipCache>
                             <overwrite>true</overwrite>
+                            <skip>${skipDownload}</skip>
                         </configuration>
                     </execution>
                     <execution>
@@ -241,6 +242,7 @@
                             <outputFileName>quiz-plugin.min.js</outputFileName>
                             <skipCache>true</skipCache>
                             <overwrite>true</overwrite>
+                            <skip>${skipDownload}</skip>
                         </configuration>
                     </execution>
                 </executions>
