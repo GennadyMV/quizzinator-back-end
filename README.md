@@ -30,7 +30,7 @@
 </a>
 
 ##Lisenssi
-MIT ehkäpä
+MIT
 
 ###Kolmannen osapuolen komponenttien lisenssit
 | komponentti            | lisenssi                    |
