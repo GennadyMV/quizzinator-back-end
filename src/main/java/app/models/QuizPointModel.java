@@ -3,6 +3,9 @@ package app.models;
 import app.domain.Quiz;
 import java.util.List;
 
+/**
+ * This model is shown to the admin who wants to see summary of quiz participants
+ */
 public class QuizPointModel {
     private final Quiz quiz;
     private final List<String> answerers;

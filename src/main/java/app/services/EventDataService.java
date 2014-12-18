@@ -14,6 +14,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Handles event tracking data recieved from user
+ */
 @Component
 public class EventDataService {
     
@@ -26,6 +29,11 @@ public class EventDataService {
     @Autowired
     private UserService userService;
     
+    /**
+     * Get all user's events
+     * @param name name of the user
+     * @return 
+     */
     public List<EventData> getUserEvents(String name) {
         User user = userService.getUser(name);
         
@@ -36,6 +44,11 @@ public class EventDataService {
         return eventRepo.findByUser(user);
     }
     
+    /**
+     * Get all events related to a quiz
+     * @param id quiz's id
+     * @return 
+     */
     public List<EventData> getQuizEvents(Long id) {
         Quiz quiz = quizRepo.findOne(id);
         
@@ -46,6 +59,10 @@ public class EventDataService {
         return eventRepo.findByQuiz(quiz);
     }
     
+    /**
+     * Save new data recieved from a user
+     * @param model a DAO containing events
+     */
     public void addEventData(EventDataModel model) {
         User user = userService.getOrCreateUser(model.getUser());
         Quiz quiz = quizRepo.findOne(model.getQuizId());

@@ -12,11 +12,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
-
+/**
+ * Service for admin user management
+ */
 @Service("userDetailsService")
-@Transactional()
+@Transactional
 public class CustomUserDetailsService implements UserDetailsService {
     
     @Autowired
@@ -25,6 +28,12 @@ public class CustomUserDetailsService implements UserDetailsService {
     public CustomUserDetailsService() {
     }
     
+    /**
+     * Find user's data by username
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException 
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         List<Admin> admins = adminRepo.findByName(username);
@@ -37,7 +46,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
-        return new org.springframework.security.core.userdetails.User(
+        return new User(
             admin.getName(),
             admin.getPassword().toLowerCase(),
             enabled,
@@ -51,6 +60,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authList = getGrantedAuthorities();
         return authList;
     }
+    
     private List<GrantedAuthority> getGrantedAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ADMIN"));

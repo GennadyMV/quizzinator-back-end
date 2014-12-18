@@ -1,5 +1,8 @@
 package app.models;
 
+/**
+ * A data access object to list user info in admin page
+ */
 public class UserData {
     private String username;
     private Long numberOfAnswers;
