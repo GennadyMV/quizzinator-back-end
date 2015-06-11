@@ -73,20 +73,30 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items[0].options.length).toBe(0);
   });
 
-  it('should be able to add scale questions', function(){
+  it('should be able to add an multiple choice question with explanations item ', function(){
     scope.widgets[5].creator();
+    expect(scope.quiz.items[0].item_type).toBe('multiple_choice_question_expl');
+
+    scope.quiz.items[0].question = 'Pick one!';
+
+    expect(scope.quiz.items.length).toBe(1);
+    expect(scope.quiz.items[0].question).toBe('Pick one!');
+  });
+
+  it('should be able to add scale questions', function(){
+    scope.widgets[6].creator();
 
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('scale_question');
   });
   it('should be able to add slider questions', function(){
-    scope.widgets[6].creator();
+    scope.widgets[7].creator();
 
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('slider_question');
   });
   it('should be able to add image questions', function(){
-    scope.widgets[8].creator();
+    scope.widgets[9].creator();
 
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('image');
@@ -127,7 +137,7 @@ describe('ManageQuizController', function(){
   });
 
 	it('should be able to add a sketchpad', function(){
-		scope.widgets[7].creator();
+		scope.widgets[8].creator();
 
 		expect(scope.quiz.items.length).toBe(1);
 		expect(scope.quiz.items[0].item_type).toBe('sketchpad');

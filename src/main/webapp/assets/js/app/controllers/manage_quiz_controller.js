@@ -59,6 +59,17 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 				});
 			}
 		},
+                {
+			name: 'Multiple choice question with explanations',
+			creator: function(){
+				$scope.quiz.items.push({
+					question: '',
+					options: [],
+					new_option: {},
+					item_type: 'multiple_choice_question_expl'
+				});
+			}
+		},
 		{
 			name: 'Scale question',
 			creator: function(){
@@ -161,12 +172,28 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 	};
 
 	/**
-	*	Add a option to a given item
+	* Add a option to a given item
 	* @param item to which option will be added
 	*/
 	$scope.add_option = function(item){
 		item.options.push({
 			title: item.new_option.title
+		});
+
+		item.new_option = {};
+	};
+        
+        /**
+         * Adds a title, explanation and correctness to a given item.
+         * 
+         * @param {type} item
+         * @returns {undefined}
+         */
+        $scope.add_option_expl = function(item){
+		item.options.push({
+			title: item.new_option.title,
+                        explanation: item.new_option.explanation,
+                        correct: item.new_option.correct
 		});
 
 		item.new_option = {};

@@ -30,6 +30,12 @@ QuizApp.service('AnswerFormatter', ['$sce', '$rootScope', function($sce, $rootSc
 
 			return format;
 		},
+                multiple_choice_question_expl: function(item){
+			var format = basic_input_formatter(item);
+			format['options'] = item.options;
+
+			return format;
+		},
 		checkbox_question: function(item){
 			var format = basic_input_formatter(item);
 			format['checkboxes'] = $.map(item.checkboxes, function(checkbox){

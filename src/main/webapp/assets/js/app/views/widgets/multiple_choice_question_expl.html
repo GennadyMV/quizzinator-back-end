@@ -1,0 +1,33 @@
+<h4 class="quiz-item-title">
+	<i class="fa fa-arrows"></i> Multiple choice question with explanations
+	<button class="btn btn-sm btn-danger pull-right" ng-click="remove_item($index)"><i class="fa fa-times"></i></button>
+</h4>
+
+<div class="form-group">
+	<label>Question</label>
+	<input type="text" class="form-control" placeholder="Question" ng-model="item.question">
+</div>
+
+<div class="form-group">
+	<label>Options</label>
+	<ul class="media-list" ui-sortable="{'opacity': '0.5', 'cursor': 'move'}" ng-model="item.options">
+		<li class="media radio" ng-repeat="option in item.options">
+			<button class="btn btn-xs btn-danger pull-left" ng-click="remove_option(item, $index)"><i class="fa fa-times"></i></button>
+			<label style="cursor: move">
+				<input type="radio" disabled>
+				{{option.title}} ({{option.explanation}}) ({{option.correct}})
+			</label>
+		</li>
+	</ul>
+</div>
+
+<form class="form-inline" style="margin-bottom: 15px">
+	<div class="form-group">
+		<input type="text" style="width: 300px" class="form-control" placeholder="Option" ng-model="item.new_option.title"></input>
+		<input type="text" style="width: 300px" class="form-control" placeholder="Option explanation" ng-model="item.new_option.explanation"></input>
+		Correct: <input type="checkbox" ng-model="item.new_option.correct"></input>
+        </div>
+	<div class="form-group">
+		<button class="btn btn-success" ng-click="add_option_expl(item)"><i class="fa fa-plus"></i> Add option</button>
+	</div>
+</form>
