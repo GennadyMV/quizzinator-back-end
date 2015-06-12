@@ -82,6 +82,36 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].question).toBe('Pick one!');
   });
+  
+  it('should be able to add an option to a multiple choice question with an explanation', function(){
+    scope.widgets[5].creator();
+    scope.quiz.items[0].new_option = {
+      title: 'Pick me!',
+      explanation: 'Heres why!'
+    }
+
+    scope.add_option_expl(scope.quiz.items[0]);
+
+    expect(scope.quiz.items[0].options.length).toBe(1);
+    expect(scope.quiz.items[0].options[0].title).toBe('Pick me!');
+    expect(scope.quiz.items[0].options[0].explanation).toBe('Heres why!');
+  });
+
+  it('should be able to add an option to a multiple choice question with an explanation and mark it correct', function(){
+    scope.widgets[5].creator();
+    scope.quiz.items[0].new_option = {
+      title: 'Pick me!',
+      explanation: 'Heres why!',
+      correct: true
+    }
+
+    scope.add_option_expl(scope.quiz.items[0]);
+
+    expect(scope.quiz.items[0].options.length).toBe(1);
+    expect(scope.quiz.items[0].options[0].title).toBe('Pick me!');
+    expect(scope.quiz.items[0].options[0].explanation).toBe('Heres why!');
+    expect(scope.quiz.items[0].options[0].correct).toBe(true);
+  });
 
   it('should be able to add scale questions', function(){
     scope.widgets[6].creator();
