@@ -37,7 +37,7 @@ describe('ManageQuizController', function(){
   });
 
   it('should be able to add an multiple choice question item', function(){
-    scope.widgets[4].creator();
+    scope.widgets[5].creator();
     expect(scope.quiz.items[0].item_type).toBe('multiple_choice_question');
 
     scope.quiz.items[0].question = 'Pick one!';
@@ -47,7 +47,7 @@ describe('ManageQuizController', function(){
   });
 
   it('should be able to add an option to a multiple choice question', function(){
-    scope.widgets[4].creator();
+    scope.widgets[5].creator();
     scope.quiz.items[0].new_option = {
       title: 'Pick me!'
     }
@@ -59,7 +59,7 @@ describe('ManageQuizController', function(){
   });
 
   it('should be able to remove an option from a multiple choice question', function(){
-    scope.widgets[4].creator();
+    scope.widgets[5].creator();
     scope.quiz.items[0].new_option = {
       title: 'Pick me!'
     }
@@ -74,7 +74,7 @@ describe('ManageQuizController', function(){
   });
 
   it('should be able to add an multiple choice question with explanations item ', function(){
-    scope.widgets[5].creator();
+    scope.widgets[6].creator();
     expect(scope.quiz.items[0].item_type).toBe('multiple_choice_question_expl');
 
     scope.quiz.items[0].question = 'Pick one!';
@@ -84,7 +84,7 @@ describe('ManageQuizController', function(){
   });
   
   it('should be able to add an option to a multiple choice question with an explanation', function(){
-    scope.widgets[5].creator();
+    scope.widgets[6].creator();
     scope.quiz.items[0].new_option = {
       title: 'Pick me!',
       explanation: 'Heres why!'
@@ -98,7 +98,7 @@ describe('ManageQuizController', function(){
   });
 
   it('should be able to add an option to a multiple choice question with an explanation and mark it correct', function(){
-    scope.widgets[5].creator();
+    scope.widgets[6].creator();
     scope.quiz.items[0].new_option = {
       title: 'Pick me!',
       explanation: 'Heres why!',
@@ -114,19 +114,19 @@ describe('ManageQuizController', function(){
   });
 
   it('should be able to add scale questions', function(){
-    scope.widgets[6].creator();
+    scope.widgets[7].creator();
 
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('scale_question');
   });
   it('should be able to add slider questions', function(){
-    scope.widgets[7].creator();
+    scope.widgets[8].creator();
 
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('slider_question');
   });
   it('should be able to add image questions', function(){
-    scope.widgets[9].creator();
+    scope.widgets[10].creator();
 
     expect(scope.quiz.items.length).toBe(1);
     expect(scope.quiz.items[0].item_type).toBe('image');
@@ -140,8 +140,17 @@ describe('ManageQuizController', function(){
     expect(scope.quiz.items[0].code).toContain('int luku');
   });
 
-  it('should be able to add a checkbox question', function(){
+  it('should be able to add code typing exercise', function(){
     scope.widgets[3].creator();
+    scope.quiz.items[0].code = 'int luku = 4;';
+
+    expect(scope.quiz.items.length).toBe(1);
+    expect(scope.quiz.items[0].item_type).toBe('code_typing');
+    expect(scope.quiz.items[0].code).toContain('int luku');
+  });
+  
+  it('should be able to add a checkbox question', function(){
+    scope.widgets[4].creator();
     scope.quiz.items[0].question = 'Choose one or more';
 
     expect(scope.quiz.items.length).toBe(1);
@@ -149,7 +158,7 @@ describe('ManageQuizController', function(){
   });
 
   it('should be able to add checkboxes to a checkbox question and remove checkboxes from it', function(){
-    scope.widgets[3].creator();
+    scope.widgets[4].creator();
     scope.quiz.items[0].question = 'Choose one or more';
     scope.quiz.items[0].new_checkbox = {
       title: 'Choose this'
@@ -167,7 +176,7 @@ describe('ManageQuizController', function(){
   });
 
 	it('should be able to add a sketchpad', function(){
-		scope.widgets[8].creator();
+		scope.widgets[9].creator();
 
 		expect(scope.quiz.items.length).toBe(1);
 		expect(scope.quiz.items[0].item_type).toBe('sketchpad');

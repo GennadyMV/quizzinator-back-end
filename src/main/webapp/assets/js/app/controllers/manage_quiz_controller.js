@@ -37,6 +37,16 @@ QuizApp.controller('ManageQuizController', ['$scope', function($scope){
 				});
 			}
 		},
+                {
+			name: 'Code typing',
+			creator: function(){
+				$scope.quiz.items.push({
+					item_type: 'code_typing',
+					code: '',
+					language: 'java'
+				});
+			}
+		},
 		{
 			name: 'Checkbox question',
 			creator: function(){

@@ -61,6 +61,13 @@ QuizApp.service('AnswerFormatter', ['$sce', '$rootScope', function($sce, $rootSc
 
 			return format;
 		},
+                code_typing: function(item){
+			var format = basic_input_formatter(item);
+			format['code'] = item.code;
+			delete format['value'];
+
+			return format;
+		},
 		scale_question: function(item){
 			var format = basic_input_formatter(item);
 
