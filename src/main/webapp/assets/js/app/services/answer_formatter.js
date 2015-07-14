@@ -150,6 +150,7 @@ QuizApp.service('AnswerFormatter', ['$sce', '$rootScope', function($sce, $rootSc
 			deadline: quiz.answerDeadline,
 			review_deadline: quiz.reviewDeadline,
 			improve_deadline: quiz.answerImproveDeadline,
+			answer_forward: quiz.answerForward,
 			my_latest_answer: quiz.myLatestAnswer ? angular.fromJson(angular.fromJson(quiz.myLatestAnswer).answer) : null,
 			items: [],
 			event_handler: function (action, state){
