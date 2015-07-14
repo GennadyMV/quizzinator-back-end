@@ -83,7 +83,12 @@ public class Quiz extends AbstractPersistable<Long> {
      * Quiz-box in site is expanded by default.
      */
     private Boolean isOpen;
-
+    
+    /**
+     * Link to open when the student is finished with the quiz.
+     */
+    private String answerForward;
+    
     /**
      * Number of answer pairs given to the user to be reviewed.
      * By default user is offered only one pair of answers and they pick one and
@@ -238,5 +243,13 @@ public class Quiz extends AbstractPersistable<Long> {
     
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getAnswerForward() {
+        return answerForward;
+    }
+
+    public void setAnswerForward(String answerForward) {
+        this.answerForward = answerForward;
     }
 }
